@@ -1,0 +1,67 @@
+# 默认忽略的文件
+/shelf/
+/workspace.xml
+# 基于编辑器的 HTTP 客户端请求
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# IntelliJ IDEA 相关
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Maven 相关
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+dependency-reduced-pom.xml
+build/
+
+# Node.js 相关
+node_modules/
+.npm/
+.npmrc
+yarn.lock
+yarn-error.log
+package-lock.json
+
+# Spring Boot 相关
+application.properties
+application.yml
+application-dev.properties
+application-prod.properties
+application-test.properties
+application-*.properties
+application-*.yml
+
+# Vue 3 相关
+/dist/
+/.nuxt/
+/.cache/
+/.nuxt/dist/
+/.nuxt/static/
+/.nuxt/components/
+/.nuxt/2fa/
+/.nuxt/build/
+/.nuxt/.cache/
+/.nuxt/.nuxt/
+/.nuxt/.output/
+/.nuxt/.temp/
+/.nuxt/.cache/
+/.nuxt/.nuxt/
+/.nuxt/.output/
+/.nuxt/.temp/
+
+# 其他
+*.log
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
+.DS_Store
+Thumbs.db

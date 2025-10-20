@@ -1,12 +1,12 @@
-package com.wdd.security.config;
+package com.wddyxd.security.config;
 
 
-import com.wdd.security.filter.TokenAuthFilter;
-import com.wdd.security.filter.TokenLoginFilter;
-import com.wdd.security.security.DefaultPasswordEncoder;
-import com.wdd.security.security.TokenLogoutHandler;
-import com.wdd.security.security.TokenManager;
-import com.wdd.security.security.UnauthEntryPoint;
+import com.wddyxd.security.filter.TokenAuthFilter;
+import com.wddyxd.security.filter.TokenLoginFilter;
+import com.wddyxd.security.security.DefaultPasswordEncoder;
+import com.wddyxd.security.security.TokenLogoutHandler;
+import com.wddyxd.security.security.TokenManager;
+import com.wddyxd.security.security.UnauthEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;

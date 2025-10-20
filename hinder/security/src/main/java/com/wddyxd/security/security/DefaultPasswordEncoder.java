@@ -1,4 +1,4 @@
-package com.wdd.security.security;
+package com.wddyxd.security.security;
 
 
 import com.wddyxd.common.utils.MD5Encoder;

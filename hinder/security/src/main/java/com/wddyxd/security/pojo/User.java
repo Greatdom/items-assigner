@@ -1,4 +1,4 @@
-package com.wdd.security.pojo;
+package com.wddyxd.security.pojo;
 
 
 import java.io.Serializable;

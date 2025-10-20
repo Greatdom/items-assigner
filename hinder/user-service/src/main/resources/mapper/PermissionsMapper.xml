@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wddyxd.userservice.mapper.PermissionsMapper">
+    <resultMap id="permissionMap" type="com.wddyxd.userservice.pojo.Permissions">
+        <result property="id" column="id"/>
+        <result property="pid" column="pid"/>
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="permissionValue" column="permission_value"/>
+        <result property="path" column="path"/>
+        <result property="component" column="component"/>
+    </resultMap>
+
+
+
+    <select id="selectPermissionValueByUserId" resultType="String">
+    	select
+        p.permission_value
+        from user_role ur
+        inner join role_permissions rp on rp.role_id = ur.role_id
+        inner join permissions p on p.id = rp.permissions_id
+        where ur.user_id = #{userId}
+        and p.type = 2
+    </select>
+
+
+</mapper>

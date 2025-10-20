@@ -1,10 +1,10 @@
-package com.wdd.security.filter;
+package com.wddyxd.security.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wdd.security.pojo.SecurityUser;
-import com.wdd.security.pojo.User;
-import com.wdd.security.security.TokenManager;
+import com.wddyxd.security.pojo.SecurityUser;
+import com.wddyxd.security.pojo.User;
+import com.wddyxd.security.security.TokenManager;
 import com.wddyxd.common.utils.ResponseUtil;
 import com.wddyxd.common.utils.Result;
 import jakarta.servlet.FilterChain;

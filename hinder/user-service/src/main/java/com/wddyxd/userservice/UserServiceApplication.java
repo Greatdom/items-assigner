@@ -8,7 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 
 @SpringBootApplication
 @ComponentScan("com.wddyxd")
-@EnableWebSecurity
+@MapperScan("com.wddyxd.userservice.mapper")
+//@EnableWebSecurity
 public class UserServiceApplication {
 
     public static void main(String[] args) {

@@ -20,6 +20,7 @@
 <!--        <module>common</module>-->
         <module>common</module>
         <module>security</module>
+        <module>feign-api</module>
     </modules>
     <properties>
         <java.version>21</java.version>

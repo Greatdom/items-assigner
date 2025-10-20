@@ -30,14 +30,6 @@ yarn.lock
 yarn-error.log
 package-lock.json
 
-# Spring Boot 相关
-application.properties
-application.yml
-application-dev.properties
-application-prod.properties
-application-test.properties
-application-*.properties
-application-*.yml
 
 # Vue 3 相关
 /dist/

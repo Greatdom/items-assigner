@@ -10,6 +10,7 @@ import com.wddyxd.userservice.service.IRoleService;
 import com.wddyxd.userservice.service.IUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,5 +53,21 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
         roleMap.put("assignRoles", assignRoles);
         roleMap.put("allRolesList", allRolesList);
         return roleMap;
+    }
+
+    @Override
+    public void assignRole(Long userId, Long[] roleIds) {
+        userRoleService.remove(new QueryWrapper<UserRole>().eq("user_id", userId));
+
+        List<UserRole> userRoleList = new ArrayList<>();
+        for(Long roleId : roleIds) {
+            if(StringUtils.isEmpty(roleId)) continue;
+            UserRole userRole = new UserRole();
+            userRole.setUserId(userId);
+            userRole.setRoleId(roleId);
+
+            userRoleList.add(userRole);
+        }
+        userRoleService.saveBatch(userRoleList);
     }
 }

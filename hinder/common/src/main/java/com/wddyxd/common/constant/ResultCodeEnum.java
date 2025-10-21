@@ -16,10 +16,10 @@ public enum ResultCodeEnum {
     AUTH_FAILED_ERROR(403, "认证失败"),
 
 
-    SYSTEM_ERROR(500, "功能未完成"),
+    FUNCTION_ERROR(500, "功能未完成"),
     PASSWORD_ENCODE_ERROR(501, "密码编码错误"),
 
-    PARAM_PASSWORD_ERROR(1000, "未知错误"),
+    UNKNOWN_ERROR(1000, "未知错误"),
     ;
 
     public Integer code;

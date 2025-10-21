@@ -26,17 +26,24 @@ public class RoleController {
 
     @GetMapping("/list")
     public Result<List<Role>> list(){
+        //TODO 未来做成分页
         return Result.success(roleService.list());
     }
 
 
     //根据用户获取角色数据
-    @GetMapping("/toAssign/{userId}")
+    @GetMapping("/getByUser/{userId}")
     public Result<Map<String, Object>> toAssign(@PathVariable String userId) {
         Map<String, Object> roleMap = roleService.findRoleByUserId(userId);
         return Result.success(roleMap);
     }
 
+    //角色分配
+    @PostMapping("/assignRole")
+    public Result<Role> doAssign(@RequestParam Long userId,@RequestParam Long[] roleIds) {
+        roleService.assignRole(userId,roleIds);
+        return Result.success();
+    }
 
     //CRUD
     @PostMapping("/add")

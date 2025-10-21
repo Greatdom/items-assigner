@@ -15,7 +15,6 @@ import com.wddyxd.userservice.pojo.User;
 public interface IUserService extends IService<User> {
     Result<User> login(User user);
 
-    void assignRole(Long userId, Long[] roleId);
 
     public User selectByUsername(String username);
 

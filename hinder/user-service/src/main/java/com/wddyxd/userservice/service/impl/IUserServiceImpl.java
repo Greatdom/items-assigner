@@ -39,21 +39,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         return Result.success(dbUser);
     }
 
-    @Override
-    public void assignRole(Long userId, Long[] roleIds) {
-        userRoleService.remove(new QueryWrapper<UserRole>().eq("user_id", userId));
 
-        List<UserRole> userRoleList = new ArrayList<>();
-        for(Long roleId : roleIds) {
-            if(StringUtils.isEmpty(roleId)) continue;
-            UserRole userRole = new UserRole();
-            userRole.setUserId(userId);
-            userRole.setRoleId(roleId);
-
-            userRoleList.add(userRole);
-        }
-        userRoleService.saveBatch(userRoleList);
-    }
 
     @Override
     public User selectByUsername(String username) {

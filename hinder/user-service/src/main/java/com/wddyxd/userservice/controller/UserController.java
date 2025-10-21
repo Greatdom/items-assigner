@@ -1,6 +1,7 @@
 package com.wddyxd.userservice.controller;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.User;
@@ -37,12 +38,7 @@ public class UserController {
     public Result<User> login(@RequestBody User user){
         return userService.login(user);
     }
-    @PostMapping("/assignRole")
-    public Result<User> assignRole(@RequestParam Long userId, @RequestParam Long[] roleIds){
-        //TODO 分配角色
-        userService.assignRole(userId,roleIds);
-        return Result.success();
-    }
+
     @GetMapping("/me")
     public Result<User> me(){
         //TODO 获取当前登录用户
@@ -63,9 +59,10 @@ public class UserController {
         return Result.success(userService.getById(id));
     }
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('user.list')")
+//    @PreAuthorize("hasAuthority('user.list')")
     @Operation(summary = "获取用户列表", description = "根据条件获取用户列表")
     public Result<List<User>> selectAll(){
+        //TODO 要做成分页的
         return Result.success(userService.list());
     }
 
@@ -86,6 +83,6 @@ public class UserController {
     @DeleteMapping("/delete/{id}")
     public Result<User> delete(@PathVariable Long id){
         //TODO 删除用户
-        return Result.success();
+        return Result.error(ResultCodeEnum.FUNCTION_ERROR);
     }
 }

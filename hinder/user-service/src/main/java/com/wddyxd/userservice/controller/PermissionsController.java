@@ -26,8 +26,7 @@ public class PermissionsController {
 
     @GetMapping("/menu")
     public Result<List<JSONObject>> SelectMenu(){
-        //TODO获取权限菜单
-        //获取当前登录用户用户名
+        //TODO获取权限菜单,要做成获取角色用户名来得到菜单
         List<JSONObject> list = permissionsService.SelectMenu();
         return Result.success(list);
     }

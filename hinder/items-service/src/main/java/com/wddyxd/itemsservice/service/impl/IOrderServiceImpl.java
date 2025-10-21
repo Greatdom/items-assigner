@@ -36,6 +36,7 @@ public class IOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implement
         Result<User> userResult = userClient.FindById(order.getUserId());
         System.out.println(userResult.getCode()+"   "+userResult.getMsg());
         User user = userResult.getData();
+        //TODO 要是获取用户信息失败，则返回null
         OrderDTO orderDTO = BeanUtil.copyProperties(order, OrderDTO.class);
         orderDTO.setUser(user);
         return Result.success(orderDTO);

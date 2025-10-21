@@ -40,8 +40,8 @@ public class Result<T> {
 
     public static <T> Result<T> error(){
         Result<T> tResult = new Result<>();
-        tResult.setCode(ResultCodeEnum.SYSTEM_ERROR.code);
-        tResult.setMsg(ResultCodeEnum.SYSTEM_ERROR.msg);
+        tResult.setCode(ResultCodeEnum.UNKNOWN_ERROR.code);
+        tResult.setMsg(ResultCodeEnum.UNKNOWN_ERROR.msg);
         return tResult;
     }
     public static <T> Result<T> error(Integer code, String msg){

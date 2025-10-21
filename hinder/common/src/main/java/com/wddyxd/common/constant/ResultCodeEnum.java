@@ -9,7 +9,7 @@ package com.wddyxd.common.constant;
  **/
 
 public enum ResultCodeEnum {
-    SUCCESS(200, "成功"),
+    SUCCESS(200, "操作成功"),
 
     PARAM_ERROR(400, "参数异常"),
     TOKEN_CHECK_FAILED_ERROR(401, "没有授权"),

@@ -1,6 +1,7 @@
 package com.wddyxd.userservice.controller;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.Role;
 import com.wddyxd.userservice.service.IRoleService;
@@ -34,6 +35,7 @@ public class RoleController {
     //根据用户获取角色数据
     @GetMapping("/getByUser/{userId}")
     public Result<Map<String, Object>> toAssign(@PathVariable String userId) {
+        //TODO 这个方法不完善
         Map<String, Object> roleMap = roleService.findRoleByUserId(userId);
         return Result.success(roleMap);
     }
@@ -51,5 +53,4 @@ public class RoleController {
         roleService.save(role);
         return Result.success();
     }
-
 }

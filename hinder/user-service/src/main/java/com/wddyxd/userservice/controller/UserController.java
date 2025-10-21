@@ -11,9 +11,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: items-assigner
@@ -42,6 +44,9 @@ public class UserController {
     @GetMapping("/me")
     public Result<User> me(){
         //TODO 获取当前登录用户
+//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//        User userInfo = userService.getUserInfo(username);
+//        return Result.success(userInfo);
         return null;
     }
     @PostMapping("/logout")
@@ -70,6 +75,7 @@ public class UserController {
     @PostMapping("/add")
     public Result<User> add(@RequestBody User user){
         user.setPassword(MD5Encoder.encrypt(user.getPassword()));
+        //TODO要自定义方法判断去重
         userService.save(user);
         return Result.success();
     }

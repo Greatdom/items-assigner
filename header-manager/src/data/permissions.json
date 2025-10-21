@@ -1,0 +1,8 @@
+[
+  {"id": "1", "code": "user:add", "name": "添加用户", "type": "button"},
+  {"id": "2", "code": "user:edit", "name": "编辑用户", "type": "button"},
+  {"id": "3", "code": "user:delete", "name": "删除用户", "type": "button"},
+  {"id": "4", "code": "user:view", "name": "查看用户", "type": "menu"},
+  {"id": "5", "code": "system:config", "name": "系统配置", "type": "menu"},
+  {"id": "6", "code": "system:view", "name": "查看系统", "type": "menu"}
+]

@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/test?useSSL=false
+    url: jdbc:mysql://localhost:3306/items-assigner?useSSL=false
     username: root
     password: Aa1341512355
     driver-class-name: com.mysql.cj.jdbc.Driver

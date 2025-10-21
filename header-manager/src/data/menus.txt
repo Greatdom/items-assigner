@@ -1,0 +1,59 @@
+"data": [
+        {
+            "redirect": "noredirect",
+            "path": null,
+            "component": "Layout",
+            "hidden": false,
+            "children": [
+                {
+                    "path": "/user",
+                    "component": null,
+                    "hidden": false,
+                    "meta": {
+                        "title": "用户微服务"
+                    },
+                    "name": "name_3"
+                },
+                {
+                    "path": "/user/list",
+                    "component": "/permissions/user/list",
+                    "hidden": true,
+                    "meta": {
+                        "title": "用户管理"
+                    },
+                    "name": "name_4"
+                },
+                {
+                    "path": "/role/add",
+                    "component": "/permissions/user/form",
+                    "hidden": true,
+                    "meta": {
+                        "title": "添加"
+                    },
+                    "name": "name_6"
+                },
+                {
+                    "path": "/role/update/:id",
+                    "component": "/permissions/user/form",
+                    "hidden": true,
+                    "meta": {
+                        "title": "更新"
+                    },
+                    "name": "name_7"
+                },
+                {
+                    "path": "/role/list",
+                    "component": "/permissions/role/list",
+                    "hidden": true,
+                    "meta": {
+                        "title": "角色管理"
+                    },
+                    "name": "name_5"
+                }
+            ],
+            "meta": {
+                "title": "权限管理"
+            },
+            "name": "name_2"
+        }
+    ]

@@ -1,6 +1,7 @@
 package com.wddyxd.userservice.controller;
 
 
+import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.service.IUserService;
@@ -68,12 +69,15 @@ public class UserController {
         return Result.success(userService.list());
     }
 
+    //添加用户
     @PostMapping("/add")
     public Result<User> add(@RequestBody User user){
+        user.setPassword(MD5Encoder.encrypt(user.getPassword()));
         userService.save(user);
         return Result.success();
     }
 
+    //更改用户信息
     @PutMapping("/update")
     public Result<User> update(@RequestBody User user){
         userService.updateById(user);
@@ -81,7 +85,7 @@ public class UserController {
     }
     @DeleteMapping("/delete/{id}")
     public Result<User> delete(@PathVariable Long id){
-        userService.removeById(id);
+        //TODO 删除用户
         return Result.success();
     }
 }

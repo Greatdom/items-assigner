@@ -1,9 +1,9 @@
 package com.wddyxd.userservice.pojo;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
+import java.util.Date;
 
 /**
  * @program: items-assigner
@@ -18,28 +18,10 @@ public class RolePermissions {
     private Long id;
     private Long roleId;
     private Long permissionsId;
+    private Boolean isDeleted;
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
-
-    public Long getPermissionsId() {
-        return permissionsId;
-    }
-
-    public void setPermissionsId(Long permissionsId) {
-        this.permissionsId = permissionsId;
-    }
 }

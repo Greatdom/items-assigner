@@ -1,6 +1,9 @@
 package com.wddyxd.common.utils;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -32,7 +35,7 @@ public class MD5Encoder {
             return new String(chars);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-            throw new RuntimeException("MD5加密出错！！+" + e);
+            throw new CustomException(ResultCodeEnum.PASSWORD_ENCODE_ERROR);
         }
     }
 

@@ -1,11 +1,9 @@
 package com.wddyxd.userservice.pojo;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,43 +23,25 @@ public class Permissions {
     private String permissionValue;
     private String path;
     private String component;
+    private String icon;
+    private Integer status;
+    private Boolean isDeleted;
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
 
-
-    //    @ApiModelProperty(value = "层级")
+    //层级
     @TableField(exist = false)
     private Integer level;
 
-    //    @ApiModelProperty(value = "下级")
+    //下级
     @TableField(exist = false)
     private List<Permissions> children;
 
-    //    @ApiModelProperty(value = "是否选中")
+    //是否选中
     @TableField(exist = false)
     private boolean isSelect;
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public List<Permissions> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Permissions> children) {
-        this.children = children;
-    }
-
-    public boolean isSelect() {
-        return isSelect;
-    }
-
-    public void setSelect(boolean select) {
-        isSelect = select;
-    }
 
     public Long getId() {
         return id;
@@ -117,5 +97,69 @@ public class Permissions {
 
     public void setComponent(String component) {
         this.component = component;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public List<Permissions> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Permissions> children) {
+        this.children = children;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
     }
 }

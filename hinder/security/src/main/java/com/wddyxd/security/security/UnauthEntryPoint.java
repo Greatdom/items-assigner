@@ -1,6 +1,7 @@
 package com.wddyxd.security.security;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.utils.ResponseUtil;
 import com.wddyxd.common.utils.Result;
 import jakarta.servlet.ServletException;
@@ -21,6 +22,6 @@ import java.io.IOException;
 public class UnauthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        ResponseUtil.out(httpServletResponse, Result.error("未授权"));
+        ResponseUtil.out(httpServletResponse, Result.error(ResultCodeEnum.TOKEN_CHECK_FAILED_ERROR));
     }
 }

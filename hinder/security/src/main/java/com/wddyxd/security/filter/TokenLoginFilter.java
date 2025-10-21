@@ -2,6 +2,7 @@ package com.wddyxd.security.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.security.pojo.User;
 import com.wddyxd.security.security.TokenManager;
@@ -82,6 +83,6 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     //3 认证失败调用的方法
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
-        ResponseUtil.out(response, Result.error("认证失败"));
+        ResponseUtil.out(response, Result.error(ResultCodeEnum.AUTH_FAILED_ERROR));
     }
 }

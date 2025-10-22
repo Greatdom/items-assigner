@@ -1,59 +1,69 @@
-"data": [
+{
+    "code": 200,
+    "msg": "操作成功",
+    "data": [
         {
             "redirect": "noredirect",
-            "path": null,
+            "path": "/user",
             "component": "Layout",
             "hidden": false,
             "children": [
                 {
-                    "path": "/user",
-                    "component": null,
+                    "path": "/user/list",
+                    "component": "/components/user/list",
                     "hidden": false,
                     "meta": {
-                        "title": "用户微服务"
+                        "icon": null,
+                        "title": "用户管理"
                     },
                     "name": "name_3"
                 },
                 {
-                    "path": "/user/list",
-                    "component": "/permissions/user/list",
+                    "path": "/user/add",
+                    "component": "/components/user/form",
                     "hidden": true,
                     "meta": {
-                        "title": "用户管理"
-                    },
-                    "name": "name_4"
-                },
-                {
-                    "path": "/role/add",
-                    "component": "/permissions/user/form",
-                    "hidden": true,
-                    "meta": {
+                        "icon": null,
                         "title": "添加"
                     },
                     "name": "name_6"
                 },
                 {
-                    "path": "/role/update/:id",
-                    "component": "/permissions/user/form",
+                    "path": "/user/update",
+                    "component": "/components/user/form",
                     "hidden": true,
                     "meta": {
+                        "icon": null,
                         "title": "更新"
                     },
                     "name": "name_7"
                 },
                 {
-                    "path": "/role/list",
-                    "component": "/permissions/role/list",
-                    "hidden": true,
+                    "path": "/permissions/list",
+                    "component": "/components/permissions/list",
+                    "hidden": false,
                     "meta": {
+                        "icon": null,
+                        "title": "权限管理"
+                    },
+                    "name": "name_4"
+                },
+                {
+                    "path": "/role/list",
+                    "component": "/components/role/list",
+                    "hidden": false,
+                    "meta": {
+                        "icon": null,
                         "title": "角色管理"
                     },
                     "name": "name_5"
                 }
             ],
             "meta": {
-                "title": "权限管理"
+                "icon": null,
+                "title": "用户微服务"
             },
             "name": "name_2"
         }
     ]
+}

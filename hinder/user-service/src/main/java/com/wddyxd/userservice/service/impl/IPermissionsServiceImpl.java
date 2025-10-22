@@ -45,7 +45,7 @@ public class IPermissionsServiceImpl extends ServiceImpl<PermissionsMapper, Perm
     public List<JSONObject> SelectMenu() {
         List<Permissions> list = baseMapper.selectList(null);
         List<Permissions> permissionList = PermissionsHelper.build(list);
-        List<JSONObject> result = MenuHelper.bulid(permissionList);
+        List<JSONObject> result = MenuHelper.build(permissionList);
         return result;
     }
 

@@ -7,7 +7,7 @@ import { ElMessage } from 'element-plus'
 const service = axios.create({
     // baseURL: process.env.BASE_API, // api 的 base_url
     //TODO 可以写配置文件
-    baseURL: 'http://localhost:8222',
+    baseURL: 'http://localhost:10010',
     timeout: 20000 // 请求超时时间
 })
 
@@ -33,15 +33,17 @@ service.interceptors.response.use(
         /**
          * code为非20000是抛错 可结合自己业务进行修改
          */
-        const res = response.data
+        const res:any = response.data
+        const msg:string = res.msg
+
         // debugger
         if (res.code !== 200) {
             ElMessage({
-                message: res.message,
+                message: msg,
                 type: 'error',
                 duration: 5 * 1000
             })
-            return Promise.reject('error')
+            return Promise.reject(msg)
         } else {
             return response.data
         }

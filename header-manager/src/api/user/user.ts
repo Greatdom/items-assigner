@@ -1,13 +1,12 @@
 import request from '@/utils/request'
 
 // 登录
-export function login(type: string,username: string, password: string) {
+export function login(username: string, password: string) {
     // debugger
     return request({
         url: '/user/user/login',
         method: 'post',
         data: {
-            type,//用什么方法登录
             username,//账号/手机/邮箱
             password //密码/验证码
         }

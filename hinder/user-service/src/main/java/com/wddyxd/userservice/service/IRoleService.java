@@ -14,7 +14,8 @@ import java.util.Map;
  **/
 
 public interface IRoleService extends IService<Role> {
-    Map<String, Object> findRoleByUserId(String userId);
 
     void assignRole(Long userId, Long[] roleIds);
+
+    Map<String, Object> getByUser(String userId);
 }

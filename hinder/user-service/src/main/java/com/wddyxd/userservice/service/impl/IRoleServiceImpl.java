@@ -31,7 +31,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
     private IUserRoleService userRoleService;
 
     @Override
-    public Map<String, Object> findRoleByUserId(String userId) {
+    public Map<String, Object> getByUser(String userId) {
         //查询所有的角色
         List<Role> allRolesList =baseMapper.selectList(null);
 

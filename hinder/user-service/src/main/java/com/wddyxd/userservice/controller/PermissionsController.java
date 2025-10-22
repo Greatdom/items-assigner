@@ -32,17 +32,16 @@ public class PermissionsController {
     }
 
     //TODO 给角色分配权限
-    @PostMapping("/assign")
-    public Result<?> doAssign(Long roleId,Long[] permissionIds) {
+    @PostMapping("/doAssign")
+    public Result<?> doAssign(@RequestParam Long roleId,@RequestParam Long[] permissionIds) {
             permissionsService.assignPermissions(roleId,permissionIds);
             return Result.success();
     }
 
-//    //TODO 根据角色获取菜单
-//    @GetMapping("toAssign/{roleId}")
-//    public Result<List<JSONObject>> toAssign(@PathVariable String roleId) {
-//        List<Permissions> list = permissionService.selectAllMenu(roleId);
-//        return R.ok().data("children", list);
+    //TODO 根据角色获取菜单
+//    @GetMapping("/all")
+//    public Result<List<Permissions>> SelectAll(){
+//        return Result.success(permissionsService.queryAllMenus());
 //    }
 
 

@@ -34,15 +34,15 @@ public class RoleController {
 
     //根据用户获取角色数据
     @GetMapping("/getByUser/{userId}")
-    public Result<Map<String, Object>> toAssign(@PathVariable String userId) {
+    public Result<Map<String, Object>> getByUser(@PathVariable String userId) {
         //TODO 这个方法不完善
-        Map<String, Object> roleMap = roleService.findRoleByUserId(userId);
+        Map<String, Object> roleMap = roleService.getByUser(userId);
         return Result.success(roleMap);
     }
 
     //角色分配
     @PostMapping("/assignRole")
-    public Result<Role> doAssign(@RequestParam Long userId,@RequestParam Long[] roleIds) {
+    public Result<Role> assignRole(@RequestParam Long userId,@RequestParam Long[] roleIds) {
         roleService.assignRole(userId,roleIds);
         return Result.success();
     }

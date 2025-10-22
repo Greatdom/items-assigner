@@ -14,6 +14,8 @@ public enum ResultCodeEnum {
     PARAM_ERROR(400, "参数异常"),
     TOKEN_CHECK_FAILED_ERROR(401, "没有授权"),
     AUTH_FAILED_ERROR(403, "认证失败"),
+    USER_NOT_EXIST_ERROR(404, "用户不存在"),
+    PASSWORD_ERROR(405, "密码错误"),
 
 
     FUNCTION_ERROR(500, "功能未完成"),

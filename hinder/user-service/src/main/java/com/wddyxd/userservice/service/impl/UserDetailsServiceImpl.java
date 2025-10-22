@@ -1,5 +1,7 @@
 package com.wddyxd.userservice.service.impl;
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.service.IPermissionsService;
@@ -29,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userService.selectByUsername(username);
         //判断
         if(user == null) {
-            throw new UsernameNotFoundException("用户不存在");
+            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         }
 
 

@@ -27,15 +27,15 @@ public class PermissionsController {
     @GetMapping("/menu")
     public Result<List<JSONObject>> SelectMenu(){
         //TODO获取权限菜单,要做成获取角色用户名来得到菜单
-        List<JSONObject> list = permissionsService.SelectMenu();
-        return Result.success(list);
+            List<JSONObject> list = permissionsService.SelectMenu();
+            return Result.success(list);
     }
 
     //TODO 给角色分配权限
     @PostMapping("/assign")
     public Result<?> doAssign(Long roleId,Long[] permissionIds) {
-        permissionsService.assignPermissions(roleId,permissionIds);
-        return Result.success();
+            permissionsService.assignPermissions(roleId,permissionIds);
+            return Result.success();
     }
 
 //    //TODO 根据角色获取菜单
@@ -52,7 +52,7 @@ public class PermissionsController {
     //CRUD
     @GetMapping("/all")
     public Result<List<Permissions>> SelectAll(){
-        return Result.success(permissionsService.queryAllMenus());
+            return Result.success(permissionsService.queryAllMenus());
     }
     @GetMapping("/one")
     public Result<?> SelectOne(){

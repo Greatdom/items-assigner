@@ -7,7 +7,7 @@ import { ElMessage } from 'element-plus'
 const service = axios.create({
     // baseURL: process.env.BASE_API, // api 的 base_url
     //TODO 可以写配置文件
-    baseURL: 'http://localhost:10010',
+    baseURL: 'http://localhost:10010/api',
     timeout: 20000 // 请求超时时间
 })
 

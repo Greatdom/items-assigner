@@ -12,16 +12,29 @@ spring:
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/user/**
+            - Path=/api/user/**  # 添加/api前缀
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}  # 移除转发到服务的/api前缀
         - id: items-service
           uri: lb://items-service
           predicates:
-            - Path=/items/**
+            - Path=/api/items/**  # 添加/api前缀
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}  # 移除转发到服务的/api前缀
+#        - id: user-service
+#          uri: lb://user-service
+#          predicates:
+#            - Path=/user/**
+#        - id: items-service
+#          uri: lb://items-service
+#          predicates:
+#            - Path=/items/**
       globalcors:
         corsConfigurations:
           '[/**]':
             allowedOrigins:
               - "http://localhost:5173"     # ?????????
+              - "http://localhost:5173/api"     # ?????????
               - "http://127.0.0.1:5173"     # ???????????
             allowedMethods: "*"
             allowedHeaders: "*"

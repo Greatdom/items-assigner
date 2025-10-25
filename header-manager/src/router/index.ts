@@ -48,6 +48,7 @@ export const constantRoutes = [
                     requiresAuth: true,
                     hasPermission: (user:any, route:any) => {
                         // 1. 有 user.list 权限直接通过
+                        console.log(user.permissions)
                         return user.permissions?.includes('user.list');
                     }
                 }
@@ -96,13 +97,14 @@ router.beforeEach(async (to, from, next) => {
     }
 
     // 2. 已登录但未加载用户信息（如刷新页面），先加载个人信息
-    if (to.meta.requiresAuth && isLogin && userStore.currentUser.id===-1) {
+    if (to.meta.requiresAuth && isLogin && userStore.currentUser.id<=0) {
         await userStore.getCurrentUser() // 从接口加载用户信息（含权限）
     }
 
     // 3. 权限判断：如果路由有自定义权限函数，执行判断
     if (to.meta.requiresAuth && to.meta.hasPermission) {
         // const hasAccess = to.meta.hasPermission(userStore.currentUser, to)
+        //TODO 调试发现没有调用此方法或没有识别到userStore的currentUser
         const hasAccess = (to.meta.hasPermission as (user: any, route: any) => boolean)(userStore.currentUser, to)
         if (!hasAccess) {
             return next('/403') // 无权限跳转403页面

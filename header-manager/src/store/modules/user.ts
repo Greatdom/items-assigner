@@ -36,7 +36,6 @@ export const useUserStore = defineStore('user', ()=>{
                 console.log("STORE:"+data)
                 setToken(data)
                 SET_TOKEN(data)
-
                 resolve(response)
             }).catch(error => {
                 reject(error)

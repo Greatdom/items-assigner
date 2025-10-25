@@ -14,7 +14,7 @@ public class CurrentUserDTO {
     private Long id;
     private String username;
     private String nickName;
-    private String avatar;
+    private String salt;
     private List<String> roles; //角色名称
     private List<String> permissionValueList; //权限值
 
@@ -42,12 +42,12 @@ public class CurrentUserDTO {
         this.nickName = nickName;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getSalt() {
+        return salt;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public List<String> getRoles() {

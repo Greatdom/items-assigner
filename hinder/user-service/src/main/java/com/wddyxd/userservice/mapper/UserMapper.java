@@ -4,6 +4,8 @@ package com.wddyxd.userservice.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wddyxd.userservice.pojo.User;
 
+import java.util.List;
+
 /**
  * @program: items-assigner
  * @description: user 数据库接口
@@ -12,4 +14,5 @@ import com.wddyxd.userservice.pojo.User;
  **/
 
 public interface UserMapper extends BaseMapper<User> {
+    List<String> selectRoleNamesByUserId(Long id);
 }

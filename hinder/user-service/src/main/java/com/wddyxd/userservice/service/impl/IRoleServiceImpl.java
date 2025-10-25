@@ -30,6 +30,8 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
     @Autowired
     private IUserRoleService userRoleService;
 
+
+
     @Override
     public Map<String, Object> getByUser(String userId) {
         //查询所有的角色

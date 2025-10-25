@@ -4,6 +4,7 @@ package com.wddyxd.userservice.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
 
 /**
  * @program: 新建文件夹
@@ -18,5 +19,5 @@ public interface IUserService extends IService<User> {
 
     public User selectByUsername(String username);
 
-    Result<User> me();
+    Result<CurrentUserDTO> me();
 }

@@ -5,6 +5,7 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
 import com.wddyxd.userservice.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public Result<User> me(){
+    public Result<CurrentUserDTO> me(){
         //TODO 获取当前登录用户
 //        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //        User userInfo = userService.getUserInfo(username);

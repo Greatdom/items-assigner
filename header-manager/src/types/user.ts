@@ -6,7 +6,7 @@ export interface CurrentUser {
     id: number;
     username: string;
     nickName: string;
-    avatar: string;
+    salt: string;
     permissionValueList: string[];
     roles: string[];
 }

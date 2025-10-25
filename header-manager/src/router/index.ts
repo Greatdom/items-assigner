@@ -1,43 +1,115 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import Layout from '@/views/layout/Layout.vue'
+import {useUserStore} from "@/store/modules/user.ts";
 
 
-/**
- * hidden: true                   若设置为true，该路由将不会在侧边栏中显示（默认值为false）
- * alwaysShow: true               若设置为true，无论子路由数量多少，都会始终显示父菜单
- *                                若不设置此属性，仅当子路由数量超过1个时，才会以嵌套模式显示父菜单；
- *                                若子路由数量为1个，则不会显示父菜单，直接显示子菜单
- * redirect: noredirect           若设置为"redirect:noredirect"，则在面包屑中不会触发重定向（无跳转箭头）
- *                                若设置为具体路径（如"/dashboard"），则点击父菜单时会重定向到该路径
- * name:'router-name'             路由的唯一名称，此名称会被<keep-alive>组件使用（必须设置！！！）
- *                                （注：需与对应页面组件的name属性保持一致，否则缓存失效）
- * meta : {
- title: 'title'               用于在侧边栏子菜单和面包屑中显示的文本（建议设置）
- icon: 'svg-name'             用于在侧边栏中显示的图标名称（需与项目中icons/svg目录下的svg文件名对应）
- }
- **/
 export const constantRoutes = [
-    {path: '/login', component: () => import('@/views/login/index.vue'), hidden: true },
-    {path: '/404', component: () => import('@/views/404.vue'), hidden: true },
+    {path: '/login', component: () => import('@/views/login/index.vue')},
+    {path: '/404', component: () => import('@/views/404.vue')},
+    {path: '/403', component: () => import('@/views/403.vue')},
 
     // 首页
     {
         path: '/',
         component: Layout,
-        redirect: '/dashboard',
-        name: 'Dashboard',
-        children: [{
-            path: 'dashboard',
-            component: () => import('@/views/dashboard/index.vue'),
-            meta: { title: '计划经济分配机', icon: 'dashboard' }
-        }]
+        redirect: '/Home',
+        children: [
+            {
+                path: '/Home',
+                component: () => import('@/views/home/index.vue'),
+                meta: {
+                    title: '首页',
+                    icon: 'el-icon-s-home',
+                    requiresAuth: false
+                }
+            },
+            {
+                path: '/components/user/update:id',
+                component: () => import('@/views/components/user/form.vue'),
+                meta: {
+                    title: '更新用户',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: true,
+                    // 权限判断函数：返回是否有权限访问
+                    hasPermission: (user:any, route:any) => {
+                        // 1. 有 user.update 权限直接通过
+                        if (user.permissions?.includes('user.update')) return true
+                        // 2. 无权限时判断用户ID是否与路由参数ID一致
+                        return user.id === route.params.id
+                    }
+                }
+            },
+            {
+                path:'/components/user/list',
+                component: () => import('@/views/components/user/list.vue'),
+                meta: {
+                    title: '用户列表',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: true,
+                    hasPermission: (user:any, route:any) => {
+                        // 1. 有 user.list 权限直接通过
+                        return user.permissions?.includes('user.list');
+                    }
+                }
+            },
+            {
+                path:'/components/user/add',
+                component: () => import('@/views/components/user/form.vue'),
+                mata:{
+                    title: '添加用户',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: true,
+                    hasPermission: (user:any, route:any) => {
+                        return user.permissions?.includes('user.add');
+                    }
+                }
+            },
+            {
+                path:'/components/permissions/list',
+                component: () => import('@/views/components/permissions/list.vue'),
+                meta: {
+                    title: '权限列表',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: false
+                }
+            }
+        ]
     }
     ]
 
 const router = createRouter({
     history: createWebHistory(), // History 模式（替代 Vue 3 的 mode: 'history'）
-    scrollBehavior: () => ({ y: 0 }), // 路由切换时滚动到顶部
+    // scrollBehavior: () => ({ y: 0 }), // 路由切换时滚动到顶部
     routes: constantRoutes // 注入常量路由
+})
+
+// 路由守卫：每次路由跳转前验证权限
+router.beforeEach(async (to, from, next) => {
+    const userStore = useUserStore()
+
+    const token:string = userStore.token
+    const isLogin:boolean = (token!=null&&token!='')
+
+    // 1. 未登录且需要权限的页面，跳转登录
+    if (to.meta.requiresAuth && !isLogin) {
+        return next('/login')
+    }
+
+    // 2. 已登录但未加载用户信息（如刷新页面），先加载个人信息
+    if (to.meta.requiresAuth && isLogin && userStore.currentUser.id===-1) {
+        await userStore.getCurrentUser() // 从接口加载用户信息（含权限）
+    }
+
+    // 3. 权限判断：如果路由有自定义权限函数，执行判断
+    if (to.meta.requiresAuth && to.meta.hasPermission) {
+        // const hasAccess = to.meta.hasPermission(userStore.currentUser, to)
+        const hasAccess = (to.meta.hasPermission as (user: any, route: any) => boolean)(userStore.currentUser, to)
+        if (!hasAccess) {
+            return next('/403') // 无权限跳转403页面
+        }
+    }
+
+    next()
 })
 
 export default router

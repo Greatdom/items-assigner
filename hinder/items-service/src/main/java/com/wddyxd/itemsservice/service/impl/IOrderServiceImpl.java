@@ -11,6 +11,7 @@ import com.wddyxd.itemsservice.pojo.Order;
 import com.wddyxd.itemsservice.pojo.dto.OrderDTO;
 import com.wddyxd.itemsservice.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 

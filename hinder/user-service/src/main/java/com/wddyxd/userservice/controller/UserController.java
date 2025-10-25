@@ -47,7 +47,8 @@ public class UserController {
 //        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //        User userInfo = userService.getUserInfo(username);
 //        return Result.success(userInfo);
-        return null;
+
+        return userService.me();
     }
     @PostMapping("/logout")
     public Result<User> logout(){
@@ -76,6 +77,7 @@ public class UserController {
     public Result<User> add(@RequestBody User user){
         user.setPassword(MD5Encoder.encrypt(user.getPassword()));
         //TODO要自定义方法判断去重
+        //要添加分配角色业务
         userService.save(user);
         return Result.success();
     }

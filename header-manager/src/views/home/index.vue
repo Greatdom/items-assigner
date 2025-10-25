@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>404</div>
+  <div>HOME</div>
 </template>
 
 <style scoped>

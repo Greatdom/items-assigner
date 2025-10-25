@@ -26,6 +26,12 @@ public class OrderController {
 
     @GetMapping("/get/{id}")
     public Result<OrderDTO> get(@PathVariable Long id){
-        return orderService.getDTOById(id);
+
+        try {
+            return orderService.getDTOById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 }

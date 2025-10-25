@@ -1,11 +1,5 @@
 import request from '@/utils/request'
 
-export function SelectMenu(){
-    return request({
-        url: '/user/user/menu',
-        method: 'get'
-    })
-}
 
 export function doAssign(roleId: number,permissionIds: number[]){
     return request({

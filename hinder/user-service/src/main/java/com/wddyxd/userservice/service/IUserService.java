@@ -18,4 +18,5 @@ public interface IUserService extends IService<User> {
 
     public User selectByUsername(String username);
 
+    Result<User> me();
 }

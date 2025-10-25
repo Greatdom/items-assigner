@@ -10,11 +10,15 @@ import com.wddyxd.userservice.pojo.UserRole;
 import com.wddyxd.userservice.service.IUserRoleService;
 import com.wddyxd.userservice.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @program: 新建文件夹
@@ -46,4 +50,34 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         return baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
     }
 
+    @Override
+    public Result<User> me() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//        List<String> permissionValueList =
+
+//        Map<String, Object> result = new HashMap<>();
+//        User user = userService.selectByUsername(username);
+//        if (null == user) {
+//            //throw new GuliException(ResultCodeEnum.FETCH_USERINFO_ERROR);
+//        }
+//
+//        //根据用户id获取角色
+//        List<Role> roleList = roleService.selectRoleByUserId(user.getId());
+//        List<String> roleNameList = roleList.stream().map(item -> item.getRoleName()).collect(Collectors.toList());
+//        if(roleNameList.size() == 0) {
+//            //前端框架必须返回一个角色，否则报错，如果没有角色，返回一个空角色
+//            roleNameList.add("");
+//        }
+//
+//        //根据用户id获取操作权限值
+//        List<String> permissionValueList = permissionService.selectPermissionValueByUserId(user.getId());
+//        redisTemplate.opsForValue().set(username, permissionValueList);
+//
+//        result.put("name", user.getUsername());
+//        result.put("avatar", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif");
+//        result.put("roles", roleNameList);
+//        result.put("permissionValueList", permissionValueList);
+//        return result;
+        return null;
+    }
 }

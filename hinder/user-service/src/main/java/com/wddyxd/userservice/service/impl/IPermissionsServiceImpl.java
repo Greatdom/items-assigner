@@ -1,11 +1,7 @@
 package com.wddyxd.userservice.service.impl;
 
 
-import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wddyxd.userservice.helper.MenuHelper;
-import com.wddyxd.userservice.helper.PermissionsHelper;
 import com.wddyxd.userservice.mapper.PermissionsMapper;
 import com.wddyxd.userservice.pojo.Permissions;
 import com.wddyxd.userservice.pojo.RolePermissions;
@@ -30,24 +26,7 @@ public class IPermissionsServiceImpl extends ServiceImpl<PermissionsMapper, Perm
     @Autowired
     private IRolePermissionsService rolePermissionsService;
 
-    @Override
-    public List<Permissions> queryAllMenus() {
-        QueryWrapper<Permissions> wrapper = new QueryWrapper<>();
-        wrapper.orderByDesc("id");
-        List<Permissions> permissionList = baseMapper.selectList(wrapper);
 
-        List<Permissions> result = PermissionsHelper.build(permissionList);
-
-        return result;
-    }
-
-    @Override
-    public List<JSONObject> SelectMenu() {
-        List<Permissions> list = baseMapper.selectList(null);
-        List<Permissions> permissionList = PermissionsHelper.build(list);
-        List<JSONObject> result = MenuHelper.build(permissionList);
-        return result;
-    }
 
     @Override
     public void assignPermissions(Long roleId, Long[] permissionIds) {

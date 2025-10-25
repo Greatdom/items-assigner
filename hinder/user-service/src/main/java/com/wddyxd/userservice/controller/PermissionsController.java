@@ -24,12 +24,6 @@ public class PermissionsController {
     @Autowired
     private IPermissionsService permissionsService;
 
-    @GetMapping("/menu")
-    public Result<List<JSONObject>> SelectMenu(){
-        //TODO获取权限菜单,要做成获取角色用户名来得到菜单
-            List<JSONObject> list = permissionsService.SelectMenu();
-            return Result.success(list);
-    }
 
     //TODO 给角色分配权限
     @PostMapping("/doAssign")
@@ -51,7 +45,7 @@ public class PermissionsController {
     //CRUD
     @GetMapping("/all")
     public Result<List<Permissions>> SelectAll(){
-            return Result.success(permissionsService.queryAllMenus());
+            return Result.success(permissionsService.list());
     }
     @GetMapping("/one")
     public Result<?> SelectOne(){
@@ -60,8 +54,14 @@ public class PermissionsController {
     }
     @PostMapping("/add")
     public Result<Permissions> add(@RequestBody Permissions permissions){
-        permissionsService.save(permissions);
-        return Result.success();
+        try {
+            permissionsService.save(permissions);
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+        }
     }
 
 

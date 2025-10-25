@@ -15,11 +15,11 @@ import java.util.List;
  **/
 
 public interface IPermissionsService extends IService<Permissions> {
-    List<Permissions> queryAllMenus();
 
-    List<JSONObject> SelectMenu();
 
     void assignPermissions(Long roleId, Long[] permissionId);
 
     List<String> selectPermissionValueByUserId(Long id);
+
+
 }

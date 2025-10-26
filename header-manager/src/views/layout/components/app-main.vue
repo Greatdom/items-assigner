@@ -3,17 +3,16 @@
 </script>
 
 <template>
-  <div class="app-main">
-    <router-view/>
-  </div>
+  <main class="app-main">
+    <router-view />
+  </main>
 </template>
 
 <style scoped>
 .app-main {
-  background-color: #f5f7fa;
-  min-height: calc(100vh - 50px);
-  margin: 0;
+  flex: 1;
   padding: 20px;
-  box-sizing: border-box;
+  background-color: #f8f9fa;
+  overflow-y: auto;
 }
 </style>

@@ -3,41 +3,51 @@
 </script>
 
 <template>
-  <div class="sidebar">
-    <el-scrollbar wrap-class="scrollbar-wrapper">
+  <aside class="sidebar">
+    <el-scrollbar>
       <el-menu
-          :show-timeout="200"
           :default-active="$route.path"
           mode="vertical"
-          background-color="#304156"
-          text-color="#bfcbd9"
-          active-text-color="#409EFF"
+          background-color="#34495e"
+          text-color="#ecf0f1"
+          active-text-color="#3498db"
+          class="sidebar-menu"
       >
+        <el-menu-item >
+          <router-link to="/home">首页</router-link>
+        </el-menu-item>
+        <el-menu-item >
+          <router-link to="/components/user/list">用户管理</router-link>
+        </el-menu-item>
+        <el-menu-item >
+          <router-link to="/components/permissions/list">权限管理</router-link>
+        </el-menu-item>
       </el-menu>
     </el-scrollbar>
-  </div>
-
+  </aside>
 </template>
 
 <style scoped>
 .sidebar {
-  background-color: #2c3e50;
-  width: 200px;
+  width: 220px;
+  background-color: #34495e;
+  color: white;
   height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
 }
 
-.el-menu {
+.sidebar-menu {
   border-right: none;
   height: 100%;
+  padding-top: 20px;
 }
 
 .el-menu-item {
-  padding-left: 25px !important;
   height: 50px;
   line-height: 50px;
+  margin-bottom: 5px;
+  border-radius: 0 25px 25px 0;
 }
 </style>

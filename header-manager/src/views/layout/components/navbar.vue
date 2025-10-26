@@ -1,73 +1,63 @@
+<template>
+  <nav class="navbar">
+
+    <!-- 下拉触发区域（用户信息） -->
+    <div class="user-info" role="button">
+      <img :src="user.salt" class="avatar">
+      <span class="username">{{ user.nickName }}</span>
+      <i class="el-icon-caret-bottom"></i>
+    </div>
+
+    <el-button @click="handlePerson">个人信息</el-button>
+    <el-button @click="handleLogout">登出</el-button>
+
+  </nav>
+</template>
+
 <script setup lang="ts">
-import {useUserStore} from "@/store/modules/user.ts";
-const userStore = useUserStore()
-const user = userStore.currentUser
-function logout() {
-  userStore.logout().then(() => {
-    location.reload()
-  })
+import { useUserStore } from "@/store/modules/user.ts";
+import {useRouter} from "vue-router";
+
+// 获取用户信息
+const userStore = useUserStore();
+const user = userStore.currentUser;
+const router = useRouter()
+
+function handlePerson(){
+  router.push('/home');
+}
+
+function handleLogout(){
+  userStore.HandleLogout()
 }
 </script>
 
-<template>
-  <el-menu class="navbar" mode="horizontal">
-    <el-dropdown class="avatar-container" trigger="click">
-
-      <div class="avatar-wrapper">
-        <img :src="user.salt" class="user-avatar">
-        <div class="user-name">{{user.nickName}}</div>
-        <i class="el-icon-caret-bottom"/>
-      </div>
-
-      <el-dropdown-menu slot="dropdown" class="user-dropdown">
-        <router-link class="inlineBlock" to="/">
-          <el-dropdown-item>
-            个人信息(暂为home)
-          </el-dropdown-item>
-        </router-link>
-        <el-dropdown-item divided>
-          <span style="display:block;" @click="logout">登出</span>
-        </el-dropdown-item>
-      </el-dropdown-menu>
-    </el-dropdown>
-  </el-menu>
-</template>
-
 <style scoped>
 .navbar {
-  background-color: #35495e;
+  height: 60px;
+  background-color: #2c3e50;
   color: white;
-  height: 50px;
-  line-height: 50px;
-  margin: 0;
-  padding: 0;
+  padding: 0 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.avatar-container {
-  float: right;
+.user-info {
   display: flex;
   align-items: center;
-  height: 100%;
+  gap: 10px;
   cursor: pointer;
-  padding: 0 10px;
-  margin: 0;
 }
 
-.avatar-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.user-avatar {
-  width: 36px;
-  height: 36px;
+.avatar {
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid rgba(255,255,255,0.2);
 }
 
-.user-name {
-  font-size: 14px;
-}
+
 </style>

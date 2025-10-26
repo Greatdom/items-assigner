@@ -5,33 +5,28 @@ import AppMain from "@/views/layout/components/app-main.vue";
 </script>
 
 <template>
-  <div class="app-wrapper">
-    <div class="drawer-bg">
-      <sidebar class="sidebar-container"></sidebar>
-      <div class="main-container">
-        <navbar/>
-        <app-main/>
-      </div>
+  <div class="app-container">
+    <!-- 侧边栏 -->
+    <Sidebar />
+
+    <!-- 主内容区 (包含导航栏和页面内容) -->
+    <div class="main-content">
+      <Navbar/>
+      <AppMain/>
     </div>
   </div>
 </template>
 
 <style scoped>
-.app-wrapper {
-  position: relative;
-  height: 100vh;
-  width: 100%;
-  overflow: hidden;
-}
-
-.drawer-bg {
+.app-container {
   display: flex;
-  height: 100%;
-  width: 100%;
+  min-height: 100vh;
+
 }
 
-.main-container {
+.main-content {
   flex: 1;
-  margin-left: 200px; /* 与侧边栏宽度保持一致 */
+  display: flex;
+  flex-direction: column;
 }
 </style>

@@ -4,8 +4,11 @@ import {defineStore} from "pinia";
 import type {CurrentUser, UserLoginForm} from "@/types/user.ts";
 import {ref} from "vue";
 import {data} from "@/data/test.ts";
+import {useRouter} from "vue-router";
 
 export const useUserStore = defineStore('user', ()=>{
+
+    const router = useRouter()
 
     let token = ref<string>(getToken() || ''); // 初始值取缓存，无则为空字符串
 
@@ -58,7 +61,7 @@ export const useUserStore = defineStore('user', ()=>{
     }
 
 
-    function logout():Promise<any>{
+    function HandleLogout():Promise<any>{
         return new Promise((resolve, reject) => {
             logout().then(response => {
                 // debugger
@@ -68,6 +71,12 @@ export const useUserStore = defineStore('user', ()=>{
                 resolve(response)
             }).catch(error => {
                 reject(error)
+            }).then(() => {
+
+                router.push('/login').then(() => {
+                    //刷新相关参数不然可能会有bug
+                    location.reload();
+                });
             })
         })
     }
@@ -78,7 +87,7 @@ export const useUserStore = defineStore('user', ()=>{
         Login,
         currentUser,
         getCurrentUser,
-        logout
+        HandleLogout
     };
 })
 

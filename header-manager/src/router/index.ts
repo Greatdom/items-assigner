@@ -33,7 +33,7 @@ export const constantRoutes = [
                     // 权限判断函数：返回是否有权限访问
                     hasPermission: (user:any, route:any) => {
                         // 1. 有 user.update 权限直接通过
-                        if (user.permissionValueList?.includes('user.updateth')) return true
+                        if (user.permissionValueList?.includes('user.update')) return true
                         // 2. 无权限时判断用户ID是否与路由参数ID一致
                         return user.id === route.params.id
                     }

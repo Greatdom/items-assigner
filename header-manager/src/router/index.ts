@@ -24,7 +24,7 @@ export const constantRoutes = [
                 }
             },
             {
-                path: '/components/user/update:id',
+                path: '/components/user/update/:id',
                 component: () => import('@/views/components/user/form.vue'),
                 meta: {
                     title: '更新用户',
@@ -33,7 +33,7 @@ export const constantRoutes = [
                     // 权限判断函数：返回是否有权限访问
                     hasPermission: (user:any, route:any) => {
                         // 1. 有 user.update 权限直接通过
-                        if (user.permissions?.includes('user.update')) return true
+                        if (user.permissionValueList?.includes('user.updateth')) return true
                         // 2. 无权限时判断用户ID是否与路由参数ID一致
                         return user.id === route.params.id
                     }
@@ -48,20 +48,19 @@ export const constantRoutes = [
                     requiresAuth: true,
                     hasPermission: (user:any, route:any) => {
                         // 1. 有 user.list 权限直接通过
-                        console.log(user.permissions)
-                        return user.permissions?.includes('user.list');
+                        return user.permissionValueList?.includes('user.list');
                     }
                 }
             },
             {
                 path:'/components/user/add',
                 component: () => import('@/views/components/user/form.vue'),
-                mata:{
+                meta:{
                     title: '添加用户',
                     icon: 'el-icon-s-custom',
                     requiresAuth: true,
                     hasPermission: (user:any, route:any) => {
-                        return user.permissions?.includes('user.add');
+                        return user.permissionValueList?.includes('user.add');
                     }
                 }
             },
@@ -98,7 +97,13 @@ router.beforeEach(async (to, from, next) => {
 
     // 2. 已登录但未加载用户信息（如刷新页面），先加载个人信息
     if (to.meta.requiresAuth && isLogin && userStore.currentUser.id<=0) {
-        await userStore.getCurrentUser() // 从接口加载用户信息（含权限）
+        try {
+            await userStore.getCurrentUser(); // 从接口加载用户信息（含权限）
+        } catch (error) {
+            // 如果加载用户信息失败，可能是token失效，需要重新登录
+            await userStore.logout();
+            return next('/login');
+        }
     }
 
     // 3. 权限判断：如果路由有自定义权限函数，执行判断

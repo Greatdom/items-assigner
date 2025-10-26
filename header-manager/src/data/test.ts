@@ -1,6 +1,6 @@
 import type {CurrentUser} from "@/types/user.ts";
 
-const data:CurrentUser = {
+export const data:CurrentUser = {
     "id": 1,
     "username": "wddyxd",
     "nickName": "wddyxd",
@@ -23,3 +23,4 @@ const data:CurrentUser = {
         "permissions.remove"
     ]
 }
+

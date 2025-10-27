@@ -16,8 +16,6 @@ import java.util.List;
  **/
 
 public interface IUserService extends IService<User> {
-    Result<User> login(User user);
-
 
     public User selectByUsername(String username);
 

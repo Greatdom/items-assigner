@@ -30,25 +30,13 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
-
-
     @PostMapping("/login")
-    public Result<User> login(@RequestBody User user){
-        return userService.login(user);
-    }
-
+    public Result<User> login(@RequestBody User user){return null;}
     @GetMapping("/me")
-    public Result<CurrentUserDTO> me(){
-        //TODO 获取当前登录用户
-
-
-        return userService.me();
-    }
+    public Result<CurrentUserDTO> me(){return userService.me();}
     @PostMapping("/logout")
     public Result<User> logout(){
-        return Result.success();
+        return null;
     }
 
 
@@ -57,6 +45,7 @@ public class UserController {
 
     //CRUD 操作
     @GetMapping("/get/{id}")
+
     public Result<User> get(@PathVariable Long id){
         return Result.success(userService.getById(id));
     }
@@ -75,6 +64,7 @@ public class UserController {
 
     //添加用户
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('user.add')")
     public Result<User> add(@RequestBody User user){
         user.setPassword(MD5Encoder.encrypt(user.getPassword()));
         //TODO要自定义方法判断去重
@@ -85,11 +75,13 @@ public class UserController {
 
     //更改用户信息
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('user.update')")
     public Result<User> update(@RequestBody User user){
         userService.updateById(user);
         return Result.success();
     }
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('user.delete')")
     public Result<User> delete(@PathVariable Long id){
         //TODO 删除用户
         return Result.error(ResultCodeEnum.FUNCTION_ERROR);

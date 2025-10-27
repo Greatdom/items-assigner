@@ -36,18 +36,6 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     @Autowired
     private IPermissionsService permissionsService;
 
-    @Override
-    public Result<User> login(User user) {
-//        User dbUser = this.getOne(new QueryWrapper<User>().eq("name", user.getName()));
-        User dbUser = query().eq("username", user.getUsername()).one();
-        if(dbUser==null)
-            throw new RuntimeException("用户不存在！");
-        if(!user.getPassword().equals(dbUser.getPassword()))
-            throw new RuntimeException("密码错误！");
-        return Result.success(dbUser);
-    }
-
-
 
     @Override
     public User selectByUsername(String username) {

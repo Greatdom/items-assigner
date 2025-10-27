@@ -56,7 +56,7 @@
 import { ref,  } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {isValidPassword, isValidUsername} from '@/utils/validate.ts'
-import type {UserInfo} from "@/types/user.ts";
+import type {UserLoginForm} from "@/types/user.ts";
 import {useUserStore} from "@/store/modules/user.ts";
 import {ElMessage} from "element-plus";
 const userStore = useUserStore()
@@ -70,7 +70,7 @@ const showPwd = () => {
 }
 
 // 响应式数据
-const loginForm = ref<UserInfo>({
+const loginForm = ref<UserLoginForm>({
   username: '',
   password: ''
 })
@@ -130,7 +130,7 @@ const handleLogin = () => {
           })
         })
 
-        await router.push({path: '/'})
+        await router.replace({path: '/'})
       } catch (error) {
         console.error('登录失败:', error)
       } finally {

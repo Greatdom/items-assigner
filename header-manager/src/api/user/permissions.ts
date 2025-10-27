@@ -16,10 +16,11 @@ export function SelectAll(){
     })
 }
 
-export function SelectOne(){
+export function SelectById(id: number){
     return request({
         url: '/user/user/one',
-        method: 'get'
+        method: 'get',
+        params: { id }
     })
 }
 

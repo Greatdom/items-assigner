@@ -32,25 +32,14 @@ public class PermissionsController {
             return Result.success();
     }
 
-    //TODO 根据角色获取菜单
-//    @GetMapping("/all")
-//    public Result<List<Permissions>> SelectAll(){
-//        return Result.success(permissionsService.queryAllMenus());
-//    }
-
-
-
-
-
     //CRUD
     @GetMapping("/all")
     public Result<List<Permissions>> SelectAll(){
             return Result.success(permissionsService.list());
     }
-    @GetMapping("/one")
-    public Result<?> SelectOne(){
-        //TODO 查询个人权限
-        return null;
+    @GetMapping("/one/{id}")
+    public Result<Permissions> SelectById(@PathVariable Long id){
+        return Result.success(permissionsService.getById(id));
     }
     @PostMapping("/add")
     public Result<Permissions> add(@RequestBody Permissions permissions){

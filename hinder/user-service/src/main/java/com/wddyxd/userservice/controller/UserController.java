@@ -12,11 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
 
 /**
  * @program: items-assigner
@@ -45,9 +42,7 @@ public class UserController {
     @GetMapping("/me")
     public Result<CurrentUserDTO> me(){
         //TODO 获取当前登录用户
-//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//        User userInfo = userService.getUserInfo(username);
-//        return Result.success(userInfo);
+
 
         return userService.me();
     }
@@ -65,13 +60,18 @@ public class UserController {
     public Result<User> get(@PathVariable Long id){
         return Result.success(userService.getById(id));
     }
+
     @GetMapping("/list")
-//    @PreAuthorize("hasAuthority('user.list')")
+    @PreAuthorize("hasAuthority('user.list')")
     @Operation(summary = "获取用户列表", description = "根据条件获取用户列表")
-    public Result<List<User>> selectAll(){
-        //TODO 要做成分页的
-        return Result.success(userService.list());
+    public Result<?> selectAll(@RequestParam(defaultValue = "1") Integer pageNum,
+                               @RequestParam(defaultValue = "10") Integer pageSize,
+                               @RequestParam(defaultValue = "") String search){
+        return userService.selectAll(pageNum, pageSize, search);
     }
+
+
+
 
     //添加用户
     @PostMapping("/add")

@@ -47,6 +47,8 @@ public class IPermissionsServiceImpl extends ServiceImpl<PermissionsMapper, Perm
         rolePermissionsService.saveBatch(rolePermissionList);
     }
 
+
+
     @Override
     public List<String> selectPermissionValueByUserId(Long id) {
         List<String> selectPermissionValueList = null;

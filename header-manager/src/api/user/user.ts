@@ -38,12 +38,16 @@ export function get(id: number){
     })
 }
 
-export function selectAll(){
+export function selectAll(pageNum: number, pageSize: number, search: string){
     return request({
         url: '/user/user/list',
-        method: 'get'
+        method: 'get',
+        params: { pageNum, pageSize, search }
     })
 }
+
+
+
 
 export function update(user: any){
     return request({
@@ -60,7 +64,7 @@ export function add(user: any){
         data: user
     })
 }
-export function remove(id: number){
+export function remove(id: number): Promise<any>{
     return request({
         url: '/user/user/remove',
         method: 'delete',

@@ -6,6 +6,8 @@ import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
 
+import java.util.List;
+
 /**
  * @program: 新建文件夹
  * @description: description
@@ -20,4 +22,6 @@ public interface IUserService extends IService<User> {
     public User selectByUsername(String username);
 
     Result<CurrentUserDTO> me();
+
+    Result<?> selectAll(Integer pageNum,Integer pageSize,String search);
 }

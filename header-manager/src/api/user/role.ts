@@ -15,7 +15,7 @@ export function add(role: any){
     })
 }
 
-export function getByUser(userId: string){
+export function getByUser(userId: number){
     return request({
         url: '/user/role/getByUser',
         method: 'get',
@@ -23,7 +23,7 @@ export function getByUser(userId: string){
     })
 }
 
-export function assignRole(userId: string,roleIds: string[]){
+export function assignRole(userId: number,roleIds: number[]){
     return request({
         url: '/user/role/assignRole',
         method: 'post',

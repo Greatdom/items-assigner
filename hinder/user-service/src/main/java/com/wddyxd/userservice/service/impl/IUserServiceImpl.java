@@ -1,7 +1,10 @@
 package com.wddyxd.userservice.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
@@ -14,13 +17,8 @@ import com.wddyxd.userservice.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @program: 新建文件夹
@@ -62,7 +60,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
 
         // 校验用户名不为空
-        if (!StringUtils.hasText(username)) {
+        if (username==null|| username.isEmpty()) {
             throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         }
 
@@ -90,4 +88,16 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
         return Result.success(dto);
     }
+
+    @Override
+    public Result<?> selectAll(Integer pageNum,Integer pageSize,String search) {
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
+        if(search!=null&&!search.isEmpty()){
+            wrapper.like(User::getNickName, search);
+        }
+        return Result.success(userMapper.selectPage(new Page<>(pageNum, pageSize),wrapper));
+    }
+
+
+
 }

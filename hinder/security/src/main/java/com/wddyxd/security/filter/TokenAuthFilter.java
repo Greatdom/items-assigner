@@ -68,7 +68,7 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
                 SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
                 authority.add(auth);
             }
-            return new UsernamePasswordAuthenticationToken(username, token, authority);
+            return new UsernamePasswordAuthenticationToken(redisUserInfo, token, authority);
         }
         return null;
     }

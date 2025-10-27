@@ -21,7 +21,7 @@ public interface IUserService extends IService<User> {
 
     CurrentUserDTO me();
 
-    CurrentUserDTO getUserInfo(String username);
+    CurrentUserDTO getUserInfo(Long id);
 
     Result<?> selectAll(Integer pageNum,Integer pageSize,String search);
 }

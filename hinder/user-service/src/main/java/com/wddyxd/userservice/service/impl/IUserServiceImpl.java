@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.security.pojo.CurrentUserInfo;
 import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.User;
@@ -46,58 +47,29 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
 
 
-//    @Override
-//    public CurrentUserDTO me() {
-////        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//
-//
-//        // 获取当前认证信息
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
-//            // 强转为自定义的 UserDetails
-//            SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-//            Long userId = securityUser.getCurrentUserInfo().getId();// 获取 ID
-//            System.out.println("当前用户 ID: " + userId);
-//            String username = securityUser.getCurrentUserInfo().getUsername();
-//            System.out.println("当前用户名: " + username);
-//            return getUserInfo(username);
-//        } else {
-//            // 未认证或类型不匹配的处理
-//            System.out.println("用户未登录或认证信息异常");
-//            return null;
-//        }
-//    }
 
     @Override
     public CurrentUserDTO me() {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            if (authentication != null ) {
-                SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
-                Long userId = securityUser.getCurrentUserInfo().getId();// 获取 ID
-                System.out.println("当前用户 ID: " + userId);
-                String username = securityUser.getCurrentUserInfo().getUsername();
-                System.out.println("当前用户名: " + username);
-                return getUserInfo(username);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("获取当前用户信息异常: " + e.getMessage());
-        }
-        return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof CurrentUserInfo currentUserInfo) {
+            Long id = currentUserInfo.getId();// 获取 ID
+            System.out.println("当前用户 ID: " + id);
+            return getUserInfo(id);
+        }else throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
     }
 
+
+
     @Override
-    public CurrentUserDTO getUserInfo(String username) {
-        // 校验用户名不为空
-        if (username==null|| username.isEmpty()) {
+    public CurrentUserDTO getUserInfo(Long id) {
+        // 校验用户ID不为空
+        if (id == null) {
             throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         }
 
         // 1. 查询用户基本信息（过滤已删除用户）
         QueryWrapper<User> userQuery = new QueryWrapper<>();
-        userQuery.eq("username", username)
+        userQuery.eq("id", id)
                 .eq("is_deleted", 0); // 逻辑删除：0-未删除
         User user = userMapper.selectOne(userQuery);
         if (user == null)  throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);

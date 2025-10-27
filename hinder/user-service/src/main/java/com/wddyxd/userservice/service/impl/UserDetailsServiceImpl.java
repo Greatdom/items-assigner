@@ -37,10 +37,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         }
 
+        Long id = user.getId();
+
         LoginUserForm loginUserForm = new LoginUserForm();
         BeanUtils.copyProperties(user,loginUserForm);
 
-        CurrentUserDTO dto = userService.getUserInfo(username);
+        CurrentUserDTO dto = userService.getUserInfo(id);
         CurrentUserInfo currentUserInfo = new CurrentUserInfo();
         BeanUtils.copyProperties(dto,currentUserInfo);
 

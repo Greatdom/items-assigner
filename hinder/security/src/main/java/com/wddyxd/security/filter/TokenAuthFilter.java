@@ -1,6 +1,8 @@
 package com.wddyxd.security.filter;
 
 
+import com.wddyxd.common.constant.RedisKeyConstants;
+import com.wddyxd.security.pojo.CurrentUserInfo;
 import com.wddyxd.security.security.TokenManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -51,16 +53,22 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         //从header获取token
         String token = request.getHeader("token");
         if(token != null) {
-            //从token获取用户名
-            String username = tokenManager.getUserInfoFromToken(token);
+            //从token获取用户信息
+            CurrentUserInfo currentUserInfo = tokenManager.getUserInfoFromToken(token);
+            Long id = currentUserInfo.getId();
+            String username = currentUserInfo.getUsername();
+
             //从redis获取对应权限列表
-            List<String> permissionValueList = (List<String>)redisTemplate.opsForValue().get(username);
+            Object redisObj = redisTemplate.opsForValue().get(RedisKeyConstants.USER_LOGIN_USERINFO + id.toString());
+            CurrentUserInfo redisUserInfo = (CurrentUserInfo) redisObj;
+            List<String> permissionValueList = redisUserInfo.getPermissionValueList();
+
             Collection<GrantedAuthority> authority = new ArrayList<>();
             for(String permissionValue : permissionValueList) {
                 SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
                 authority.add(auth);
             }
-            return new UsernamePasswordAuthenticationToken(username,token,authority);
+            return new UsernamePasswordAuthenticationToken(username, token, authority);
         }
         return null;
     }

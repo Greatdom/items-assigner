@@ -19,7 +19,9 @@ public interface IUserService extends IService<User> {
 
     public User selectByUsername(String username);
 
-    Result<CurrentUserDTO> me();
+    CurrentUserDTO me();
+
+    CurrentUserDTO getUserInfo(String username);
 
     Result<?> selectAll(Integer pageNum,Integer pageSize,String search);
 }

@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @create: 2025-10-20 20:23
  **/
 
-public class User implements Serializable {
+public class LoginUserForm implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
     private String username;

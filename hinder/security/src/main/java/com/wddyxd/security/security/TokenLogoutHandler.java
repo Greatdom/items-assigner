@@ -1,6 +1,7 @@
 package com.wddyxd.security.security;
 
 
+import com.wddyxd.common.constant.RedisKeyConstants;
 import com.wddyxd.common.utils.ResponseUtil;
 import com.wddyxd.common.utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,8 +34,8 @@ public class TokenLogoutHandler implements LogoutHandler {
             //移除
             tokenManager.removeToken(token);
             //从token获取用户名
-            String username = tokenManager.getUserInfoFromToken(token);
-            redisTemplate.delete(username);
+            Long id = tokenManager.getUserInfoFromToken(token).getId();
+            redisTemplate.delete(RedisKeyConstants.USER_LOGIN_USERINFO+ id.toString());
         }
         ResponseUtil.out(response, Result.success("登出成功"));
     }

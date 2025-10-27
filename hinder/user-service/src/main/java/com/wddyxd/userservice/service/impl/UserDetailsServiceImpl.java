@@ -2,8 +2,11 @@ package com.wddyxd.userservice.service.impl;
 
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.security.pojo.CurrentUserInfo;
+import com.wddyxd.security.pojo.LoginUserForm;
 import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
 import com.wddyxd.userservice.service.IPermissionsService;
 import com.wddyxd.userservice.service.IUserService;
 import org.springframework.beans.BeanUtils;
@@ -34,16 +37,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         }
 
+        LoginUserForm loginUserForm = new LoginUserForm();
+        BeanUtils.copyProperties(user,loginUserForm);
 
-        com.wddyxd.security.pojo.User curUser = new com.wddyxd.security.pojo.User();
-        BeanUtils.copyProperties(user,curUser);
+        CurrentUserDTO dto = userService.getUserInfo(username);
+        CurrentUserInfo currentUserInfo = new CurrentUserInfo();
+        BeanUtils.copyProperties(dto,currentUserInfo);
 
-        //根据用户查询用户权限列表
-        List<String> permissionValueList = permissionService.selectPermissionValueByUserId(user.getId());
-
-        SecurityUser securityUser = new SecurityUser();
-        securityUser.setCurrentUserInfo(curUser);
-        securityUser.setPermissionValueList(permissionValueList);
-        return securityUser;
+        return new SecurityUser(loginUserForm,currentUserInfo);
     }
 }

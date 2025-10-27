@@ -24,8 +24,8 @@ public enum ResultCodeEnum {
     UNKNOWN_ERROR(1000, "未知错误"),
     ;
 
-    public Integer code;
-    public String msg;
+    public final Integer code;
+    public final String msg;
 
     ResultCodeEnum(Integer code, String msg) {
         this.code = code;

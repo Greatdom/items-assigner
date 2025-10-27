@@ -9,12 +9,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
 import com.wddyxd.userservice.service.IPermissionsService;
 import com.wddyxd.userservice.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -42,11 +44,52 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         return baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
     }
 
+
+
+//    @Override
+//    public CurrentUserDTO me() {
+////        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+//
+//
+//        // 获取当前认证信息
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication != null && authentication.getPrincipal() instanceof SecurityUser) {
+//            // 强转为自定义的 UserDetails
+//            SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+//            Long userId = securityUser.getCurrentUserInfo().getId();// 获取 ID
+//            System.out.println("当前用户 ID: " + userId);
+//            String username = securityUser.getCurrentUserInfo().getUsername();
+//            System.out.println("当前用户名: " + username);
+//            return getUserInfo(username);
+//        } else {
+//            // 未认证或类型不匹配的处理
+//            System.out.println("用户未登录或认证信息异常");
+//            return null;
+//        }
+//    }
+
     @Override
-    public Result<CurrentUserDTO> me() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public CurrentUserDTO me() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null ) {
+                SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
+                Long userId = securityUser.getCurrentUserInfo().getId();// 获取 ID
+                System.out.println("当前用户 ID: " + userId);
+                String username = securityUser.getCurrentUserInfo().getUsername();
+                System.out.println("当前用户名: " + username);
+                return getUserInfo(username);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("获取当前用户信息异常: " + e.getMessage());
+        }
+        return null;
+    }
 
-
+    @Override
+    public CurrentUserDTO getUserInfo(String username) {
         // 校验用户名不为空
         if (username==null|| username.isEmpty()) {
             throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
@@ -74,7 +117,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         dto.setRoles(roles);
         dto.setPermissionValueList(permissionValues);
 
-        return Result.success(dto);
+        return dto;
     }
 
     @Override

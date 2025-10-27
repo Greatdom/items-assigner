@@ -20,35 +20,45 @@ import java.util.List;
 public class SecurityUser implements UserDetails {
 
     //当前登录用户
-    private transient User currentUserInfo;
+    private transient LoginUserForm loginUserForm;
+
+
+    public LoginUserForm getLoginUserForm() {
+        return loginUserForm;
+    }
+
+    public void setLoginUserForm(LoginUserForm loginUserForm) {
+        this.loginUserForm = loginUserForm;
+    }
+
+
 
     //当前权限
-    private List<String> permissionValueList;
+    private CurrentUserInfo currentUserInfo;
+    public CurrentUserInfo getCurrentUserInfo() {
+        return currentUserInfo;
+    }
+
+    public void setCurrentUserInfo(CurrentUserInfo currentUserInfo) {
+        this.currentUserInfo = currentUserInfo;
+    }
+
 
     public SecurityUser() {
     }
 
-    public SecurityUser(User user) {
-        if (user != null) {
-            this.currentUserInfo = user;
-        }
+    public SecurityUser(LoginUserForm loginUserForm, CurrentUserInfo currentUserDTO) {
+        this.loginUserForm = loginUserForm;
+        this.currentUserInfo = currentUserDTO;
     }
 
-    public User getCurrentUserInfo() {
-        return currentUserInfo;
-    }
 
-    public void setCurrentUserInfo(User currentUserInfo) {
-        this.currentUserInfo = currentUserInfo;
-    }
 
-    public List<String> getPermissionValueList() {
-        return permissionValueList;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
+        List<String> permissionValueList = currentUserInfo.getPermissionValueList();
         for(String permissionValue : permissionValueList) {
             if(StringUtils.isEmpty(permissionValue)) continue;
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(permissionValue);
@@ -58,14 +68,16 @@ public class SecurityUser implements UserDetails {
         return authorities;
     }
 
+
+
     @Override
     public String getPassword() {
-        return currentUserInfo.getPassword();
+        return loginUserForm.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return currentUserInfo.getUsername();
+        return loginUserForm.getUsername();
     }
 
     @Override
@@ -88,7 +100,4 @@ public class SecurityUser implements UserDetails {
         return true;
     }
 
-    public void setPermissionValueList(List<String> permissionValueList) {
-        this.permissionValueList = permissionValueList;
-    }
 }

@@ -19,14 +19,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     @ResponseBody
     public Result<?> error(CustomException e){
-        e.fillInStackTrace();
+        e.printStackTrace();
         return Result.error(e.getCode(),e.getMsg());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public Result<?> error(Exception e){
-        e.fillInStackTrace();
+        e.printStackTrace();
         return Result.error();
     }
 

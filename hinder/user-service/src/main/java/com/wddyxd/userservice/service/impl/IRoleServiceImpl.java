@@ -33,15 +33,12 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
 
     @Override
-    public Map<String, Object> getByUser(String userId) {
+    public List<Role> getByUser(String userId) {
         //查询所有的角色
         List<Role> allRolesList =baseMapper.selectList(null);
-
         //根据用户id，查询用户拥有的角色id
         List<UserRole> existUserRoleList = userRoleService.list(new QueryWrapper<UserRole>().eq("user_id", userId).select("role_id"));
-
         List<Long> existRoleList = existUserRoleList.stream().map(UserRole::getRoleId).toList();
-
         //对角色进行分类
         List<Role> assignRoles = new ArrayList<Role>();
         for (Role role : allRolesList) {
@@ -50,11 +47,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
                 assignRoles.add(role);
             }
         }
-
-        Map<String, Object> roleMap = new HashMap<>();
-        roleMap.put("assignRoles", assignRoles);
-        roleMap.put("allRolesList", allRolesList);
-        return roleMap;
+        return assignRoles;
     }
 
     @Override

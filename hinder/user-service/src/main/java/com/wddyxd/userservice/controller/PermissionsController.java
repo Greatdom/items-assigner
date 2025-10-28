@@ -25,7 +25,6 @@ public class PermissionsController {
     private IPermissionsService permissionsService;
 
 
-    //TODO 给角色分配权限
     @PostMapping("/doAssign")
     public Result<?> doAssign(@RequestParam Long roleId,@RequestParam Long[] permissionIds) {
             permissionsService.assignPermissions(roleId,permissionIds);

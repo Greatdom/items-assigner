@@ -20,6 +20,7 @@ public enum ResultCodeEnum {
 
     FUNCTION_ERROR(500, "功能未完成"),
     PASSWORD_ENCODE_ERROR(501, "密码编码错误"),
+    FEIGN_ERROR(502, "feign调用错误"),
 
     UNKNOWN_ERROR(1000, "未知错误"),
     ;

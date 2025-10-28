@@ -4,6 +4,7 @@ package com.wddyxd.userservice.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.userservice.pojo.Role;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,5 +18,5 @@ public interface IRoleService extends IService<Role> {
 
     void assignRole(Long userId, Long[] roleIds);
 
-    Map<String, Object> getByUser(String userId);
+    List<Role> getByUser(String userId);
 }

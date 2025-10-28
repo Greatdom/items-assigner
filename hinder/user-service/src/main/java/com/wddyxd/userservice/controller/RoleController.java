@@ -32,12 +32,12 @@ public class RoleController {
     }
 
 
-    //根据用户获取角色数据
+
     @GetMapping("/getByUser/{userId}")
-    public Result<Map<String, Object>> getByUser(@PathVariable String userId) {
-        //TODO 这个方法不完善
-        Map<String, Object> roleMap = roleService.getByUser(userId);
-        return Result.success(roleMap);
+    public Result<List<Role>> getByUser(@PathVariable String userId) {
+        List<Role> roles = roleService.getByUser(userId);
+//        Map<String, Object> roleMap = roleService.getByUser(userId);
+        return Result.success(roles);
     }
 
     //角色分配

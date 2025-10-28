@@ -108,8 +108,6 @@ router.beforeEach(async (to, from, next) => {
 
     // 3. 权限判断：如果路由有自定义权限函数，执行判断
     if (to.meta.requiresAuth && to.meta.hasPermission) {
-        // const hasAccess = to.meta.hasPermission(userStore.currentUser, to)
-        //TODO 调试发现没有调用此方法或没有识别到userStore的currentUser
         const hasAccess = (to.meta.hasPermission as (user: any, route: any) => boolean)(userStore.currentUser, to)
         if (!hasAccess) {
             return next('/403') // 无权限跳转403页面

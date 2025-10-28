@@ -41,10 +41,6 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/passwordSecurityGetter/{username}")
-    public Result<SecurityUserDTO> passwordSecurityGetter(@PathVariable String username){
-        return Result.success(userService.passwordSecurityGetter(username));
-    }
 
 
 

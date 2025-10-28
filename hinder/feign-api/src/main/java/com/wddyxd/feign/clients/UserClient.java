@@ -21,6 +21,6 @@ public interface UserClient {
     @GetMapping("/user/user/get/{id}")
     Result<User> FindById(@PathVariable("id") Long id);
 
-    @GetMapping("/user/user/passwordSecurityGetter/{username}")
+    @GetMapping("/user/auth/passwordSecurityGetter/{username}")
     Result<SecurityUserDTO> passwordSecurityGetter(@PathVariable String username);
 }

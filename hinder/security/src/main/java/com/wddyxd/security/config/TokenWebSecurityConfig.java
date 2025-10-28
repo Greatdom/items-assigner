@@ -63,7 +63,7 @@ public class TokenWebSecurityConfig {
                 )
                 // 授权配置
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(  "/user/user/passwordSecurityGetter/**","/user/user/login","/swagger-ui/**", "/v3/api-docs/**").permitAll() // 不进行认证的路径
+                        .requestMatchers(  "/user/auth/passwordSecurityGetter/**","/user/user/login","/swagger-ui/**", "/v3/api-docs/**").permitAll() // 不进行认证的路径
                         .anyRequest().authenticated() // 其他所有请求都需要认证
                 )
                 // 退出登录配置

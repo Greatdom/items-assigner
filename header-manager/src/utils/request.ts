@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-// import store from '../store'
-// import {getToken} from '@/utils/auth'
-//
+import {getToken, removeToken} from "@/utils/auth.ts";
+import {useRouter} from "vue-router";
+const router = useRouter()
+
 // 创建axios实例
 const service = axios.create({
     // baseURL: process.env.BASE_API, // api 的 base_url
@@ -17,7 +18,7 @@ service.interceptors.request.use(
         // if (store.getters.token) {
         //     config.headers['token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
         // }
-        config.headers['token'] = sessionStorage.getItem('token')
+        config.headers['token'] = getToken()
         return config
     },
     error => {
@@ -38,6 +39,11 @@ service.interceptors.response.use(
 
         // debugger
         if (res.code !== 200) {
+
+            if(res.code === 401){
+                removeToken()
+                router.push('/login')
+            }
             ElMessage({
                 message: msg,
                 type: 'error',

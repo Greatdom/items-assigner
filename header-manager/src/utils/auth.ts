@@ -1,14 +1,14 @@
 export function getToken() {
-    const token:string|null = sessionStorage.getItem('token')
+    const token:string|null = localStorage.getItem('token')
     return token || ''
 }
 
 export function setToken(token:string) {
     // return Cookies.set(TokenKey, token)
-    sessionStorage.setItem('token', token)
+    localStorage.setItem('token', token)
 }
 
 export function removeToken() {
-    sessionStorage.removeItem('token')
+    localStorage.removeItem('token')
 }
 

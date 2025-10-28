@@ -29,27 +29,17 @@ public class PasswordUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username){
-
         com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO getUser;
         Result<com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO> get = userClient.passwordSecurityGetter(username);
-        System.out.println("get-----" + get.getMsg()+"  "+get.getCode());
         getUser = get.getData();
         if(getUser == null) {
-            System.out.println("Test:PasswordUserDetailsService");
             throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         }
-        System.out.println("getUser-----" + getUser);
-
         LoginUserForm loginUserForm = new LoginUserForm();
         BeanUtils.copyProperties(getUser.getLoginUserForm(),loginUserForm);
         CurrentUserInfo currentUserInfo = new CurrentUserInfo();
         BeanUtils.copyProperties(getUser.getCurrentUserInfo(),currentUserInfo);
-        SecurityUser result = new SecurityUser(loginUserForm,currentUserInfo);
-
-        System.out.println("result-----" + result.getUsername());
-
-        return result;
-
+        return new SecurityUser(loginUserForm,currentUserInfo);
     }
 
 }

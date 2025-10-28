@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
@@ -61,11 +60,8 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public SecurityUserDTO passwordSecurityGetter(String username) {
-        System.out.println("Test:IUserServiceImpl------------");
         User user = baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
         if(user == null) {
-            System.out.println("Test:IUserServiceImpl");
-
             return null;
         }
         com.wddyxd.userservice.pojo.securityDTO.LoginUserForm loginUserForm = new com.wddyxd.userservice.pojo.securityDTO.LoginUserForm();

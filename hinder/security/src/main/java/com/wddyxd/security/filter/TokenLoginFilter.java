@@ -42,7 +42,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         this.tokenManager = tokenManager;
         this.redisTemplate = redisTemplate;
         this.setPostOnly(false);
-        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/user/login","POST"));
+        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/auth/login","POST"));
     }
 
     //1 获取表单提交用户名和密码

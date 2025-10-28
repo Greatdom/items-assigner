@@ -1,4 +1,5 @@
-import { login, logout, me } from '@/api/user/user.ts'
+import { me } from '@/api/user/user.ts'
+import {login,logout} from '@/api/user/auth.ts'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import {defineStore} from "pinia";
 import type {CurrentUser, UserLoginForm} from "@/types/user.ts";

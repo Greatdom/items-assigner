@@ -2,13 +2,11 @@ package com.wddyxd.userservice.controller;
 
 
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: items-assigner
@@ -22,6 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     @Autowired
     private IUserService userService;
+
+    @PostMapping("/login")
+    public Result<User> login(@RequestBody User user){return null;}
+
+    @PostMapping("/logout")
+    public Result<User> logout(){
+        return null;
+    }
 
     @GetMapping("/passwordSecurityGetter/{username}")
     public Result<SecurityUserDTO> passwordSecurityGetter(@PathVariable String username){

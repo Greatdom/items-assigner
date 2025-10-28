@@ -14,6 +14,55 @@ public class LoginUserForm implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
     private String username;
+    private String password;
+
+    private String phone;
+    private String phoneCode;
+
+    private String email;
+    private String emailCode;
+
+    private String loginType;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPhoneCode() {
+        return phoneCode;
+    }
+
+    public void setPhoneCode(String phoneCode) {
+        this.phoneCode = phoneCode;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEmailCode() {
+        return emailCode;
+    }
+
+    public void setEmailCode(String emailCode) {
+        this.emailCode = emailCode;
+    }
+
+    public String getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
 
     public String getPassword() {
         return password;
@@ -23,7 +72,6 @@ public class LoginUserForm implements Serializable {
         this.password = password;
     }
 
-    private String password;
 
     public Long getId() {
         return id;

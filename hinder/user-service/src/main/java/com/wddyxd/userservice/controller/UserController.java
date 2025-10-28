@@ -32,14 +32,10 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @PostMapping("/login")
-    public Result<User> login(@RequestBody User user){return null;}
+
     @GetMapping("/me")
     public Result<CurrentUserDTO> me(){return Result.success(userService.me());}
-    @PostMapping("/logout")
-    public Result<User> logout(){
-        return null;
-    }
+
 
 
 

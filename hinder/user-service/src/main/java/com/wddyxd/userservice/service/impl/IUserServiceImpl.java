@@ -9,13 +9,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.security.pojo.CurrentUserInfo;
 import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IPermissionsService;
 import com.wddyxd.userservice.service.IUserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,14 +52,29 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     @Override
     public CurrentUserDTO me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof CurrentUserInfo currentUserInfo) {
+        if (authentication != null && authentication.getPrincipal() instanceof com.wddyxd.security.pojo.CurrentUserInfo currentUserInfo) {
             Long id = currentUserInfo.getId();// 获取 ID
             System.out.println("当前用户 ID: " + id);
             return getUserInfo(id);
         }else throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
     }
 
+    @Override
+    public SecurityUserDTO passwordSecurityGetter(String username) {
+        System.out.println("Test:IUserServiceImpl------------");
+        User user = baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+        if(user == null) {
+            System.out.println("Test:IUserServiceImpl");
 
+            return null;
+        }
+        com.wddyxd.userservice.pojo.securityDTO.LoginUserForm loginUserForm = new com.wddyxd.userservice.pojo.securityDTO.LoginUserForm();
+        BeanUtils.copyProperties(user,loginUserForm);
+        CurrentUserDTO userInfo = getUserInfo(user.getId());
+        com.wddyxd.userservice.pojo.securityDTO.CurrentUserInfo currentUserInfo = new com.wddyxd.userservice.pojo.securityDTO.CurrentUserInfo();
+        BeanUtils.copyProperties(userInfo,currentUserInfo);
+        return new SecurityUserDTO(loginUserForm,currentUserInfo);
+    }
 
     @Override
     public CurrentUserDTO getUserInfo(Long id) {

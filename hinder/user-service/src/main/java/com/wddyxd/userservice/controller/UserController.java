@@ -4,8 +4,10 @@ package com.wddyxd.userservice.controller;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +39,11 @@ public class UserController {
     @PostMapping("/logout")
     public Result<User> logout(){
         return null;
+    }
+
+    @GetMapping("/passwordSecurityGetter/{username}")
+    public Result<SecurityUserDTO> passwordSecurityGetter(@PathVariable String username){
+        return Result.success(userService.passwordSecurityGetter(username));
     }
 
 

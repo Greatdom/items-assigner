@@ -3,6 +3,7 @@ package com.wddyxd.feign.clients;
 
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.pojo.User;
+import com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,4 +21,6 @@ public interface UserClient {
     @GetMapping("/user/user/get/{id}")
     Result<User> FindById(@PathVariable("id") Long id);
 
+    @GetMapping("/user/user/passwordSecurityGetter/{username}")
+    Result<SecurityUserDTO> passwordSecurityGetter(@PathVariable String username);
 }

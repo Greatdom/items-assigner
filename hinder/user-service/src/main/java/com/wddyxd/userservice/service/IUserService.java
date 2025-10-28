@@ -3,8 +3,10 @@ package com.wddyxd.userservice.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 
 import java.util.List;
 
@@ -24,4 +26,6 @@ public interface IUserService extends IService<User> {
     CurrentUserDTO getUserInfo(Long id);
 
     Result<?> selectAll(Integer pageNum,Integer pageSize,String search);
+
+    SecurityUserDTO passwordSecurityGetter(String username);
 }

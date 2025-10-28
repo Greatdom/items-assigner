@@ -27,6 +27,11 @@
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.wddyxd</groupId>
+            <artifactId>feign-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         
     </dependencies>

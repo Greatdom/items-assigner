@@ -6,6 +6,7 @@ import com.wddyxd.common.constant.RedisKeyConstants;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.security.pojo.LoginUserForm;
+import com.wddyxd.security.pojo.TokenInfo;
 import com.wddyxd.security.security.TokenManager;
 import com.wddyxd.common.utils.ResponseUtil;
 import com.wddyxd.common.utils.Result;
@@ -67,10 +68,11 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
             throws IOException, ServletException {
         //认证成功，得到认证成功之后用户信息
         SecurityUser user = (SecurityUser)authResult.getPrincipal();
-        System.out.println("用户名："+user.getCurrentUserInfo().getUsername());
         System.out.println("用户信息："+user.getCurrentUserInfo());
         //根据用户名生成token
-        String token = tokenManager.createToken(user.getCurrentUserInfo());
+        TokenInfo tokenInfo = new TokenInfo();
+        tokenInfo.setId(user.getCurrentUserInfo().getId());
+        String token = tokenManager.createToken(tokenInfo);
         System.out.println("用户token："+token);
 
 

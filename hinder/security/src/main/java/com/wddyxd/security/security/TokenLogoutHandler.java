@@ -34,7 +34,7 @@ public class TokenLogoutHandler implements LogoutHandler {
             //移除
             tokenManager.removeToken(token);
             //从token获取用户名
-            Long id = tokenManager.getUserInfoFromToken(token).getId();
+            Long id = tokenManager.getTokenInfoFromToken(token).getId();
             redisTemplate.delete(RedisKeyConstants.USER_LOGIN_USERINFO+ id.toString());
         }
         ResponseUtil.out(response, Result.success("登出成功"));

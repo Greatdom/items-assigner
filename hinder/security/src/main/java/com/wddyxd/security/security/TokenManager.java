@@ -4,6 +4,7 @@ package com.wddyxd.security.security;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wddyxd.security.pojo.CurrentUserInfo;
+import com.wddyxd.security.pojo.TokenInfo;
 import io.jsonwebtoken.CompressionCodecs;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -33,12 +34,12 @@ public class TokenManager {
 //        return token;
 //    }
     //1 使用jwt根据用户信息生成token
-    public String createToken(CurrentUserInfo currentUserInfo) {
-        // 将CurrentUserInfo对象转换为JSON字符串存储到token中
-        try {
-            String userInfoJson = new ObjectMapper().writeValueAsString(currentUserInfo);
+    public String createToken(TokenInfo tokenInfo) {
 
-            String token = Jwts.builder().setSubject(userInfoJson)
+        try {
+            String tokenInfoJson = new ObjectMapper().writeValueAsString(tokenInfo);
+
+            String token = Jwts.builder().setSubject(tokenInfoJson)
                     .setExpiration(new Date(System.currentTimeMillis() + tokenEcpiration))
                     .signWith(SignatureAlgorithm.HS512, tokenSignKey)
                     .compressWith(CompressionCodecs.GZIP)
@@ -50,22 +51,15 @@ public class TokenManager {
         }
     }
 
-
-//    //2 根据token字符串得到用户信息
-//    public String getUserInfoFromToken(String token) {
-//        String userinfo = Jwts.parser().setSigningKey(tokenSignKey).parseClaimsJws(token).getBody().getSubject();
-//        return userinfo;
-//    }
-
-    public CurrentUserInfo getUserInfoFromToken(String token) {
-        String userInfoJson = Jwts.parser()
+    public TokenInfo getTokenInfoFromToken(String token) {
+        String tokenInfoJson = Jwts.parser()
                 .setSigningKey(tokenSignKey)
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
 
         try {
-            return new ObjectMapper().readValue(userInfoJson, CurrentUserInfo.class);
+            return new ObjectMapper().readValue(tokenInfoJson, TokenInfo.class);
         } catch (Exception e) {
             e.printStackTrace();
             // 处理异常

@@ -65,4 +65,16 @@ public class CurrentUserInfo {
     public void setPermissionValueList(List<String> permissionValueList) {
         this.permissionValueList = permissionValueList;
     }
+
+    @Override
+    public String toString() {
+        return "CurrentUserInfo{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", salt='" + salt + '\'' +
+                ", roles=" + roles +
+                ", permissionValueList=" + permissionValueList +
+                '}';
+    }
 }

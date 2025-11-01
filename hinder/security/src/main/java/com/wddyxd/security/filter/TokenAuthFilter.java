@@ -3,6 +3,7 @@ package com.wddyxd.security.filter;
 
 import com.wddyxd.common.constant.RedisKeyConstants;
 import com.wddyxd.security.pojo.CurrentUserInfo;
+import com.wddyxd.security.pojo.TokenInfo;
 import com.wddyxd.security.security.TokenManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -53,11 +54,8 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         //从header获取token
         String token = request.getHeader("token");
         if(token != null) {
-            //从token获取用户信息
-            CurrentUserInfo currentUserInfo = tokenManager.getUserInfoFromToken(token);
-            Long id = currentUserInfo.getId();
-            String username = currentUserInfo.getUsername();
-
+            TokenInfo tokenInfo = tokenManager.getTokenInfoFromToken(token);
+            Long id = tokenInfo.getId();
             //从redis获取对应权限列表
             Object redisObj = redisTemplate.opsForValue().get(RedisKeyConstants.USER_LOGIN_USERINFO + id.toString());
             CurrentUserInfo redisUserInfo = (CurrentUserInfo) redisObj;

@@ -8,18 +8,24 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.UserRole;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IPermissionsService;
+import com.wddyxd.userservice.service.IUserRoleService;
 import com.wddyxd.userservice.service.IUserService;
+import jakarta.annotation.PostConstruct;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,16 +43,38 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     private UserMapper userMapper;
 
     @Autowired
+    private IUserRoleService userRoleService;
+
+    @Autowired
     private IPermissionsService permissionsService;
 
+    IUserService proxy;
 
     @Override
-    public User selectByUsername(String username) {
-        return baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+    public void add(User user) {
+        proxy = (IUserService) AopContext.currentProxy();
+
+        proxy.addUserAndAssignRole(user, 1984518164557385730L);
     }
 
+    @Override
+    public void register(User user) {
+        proxy = (IUserService) AopContext.currentProxy();
 
+        proxy.addUserAndAssignRole(user, 1984521457576759298L);
+    }
+    @Transactional
+    @Override
+    public void addUserAndAssignRole(User user, Long roleId) {
+        user.setPassword(MD5Encoder.encrypt(user.getPassword()));
+        save(user);
+        UserRole userRole = new UserRole();
+        if(user.getId() == null)System.out.println("用户ID为空");
+        userRole.setUserId(user.getId());
+        userRole.setRoleId(roleId);
+        userRoleService.save(userRole);
 
+    }
 
     @Override
     public CurrentUserDTO me() {

@@ -7,6 +7,7 @@ import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.pojo.User;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,7 +20,9 @@ import java.util.List;
 
 public interface IUserService extends IService<User> {
 
-    public User selectByUsername(String username);
+
+    @Transactional
+    void addUserAndAssignRole(User user, Long roleId);
 
     CurrentUserDTO me();
 
@@ -28,4 +31,9 @@ public interface IUserService extends IService<User> {
     Result<?> selectAll(Integer pageNum,Integer pageSize,String search);
 
     SecurityUserDTO passwordSecurityGetter(String username);
+
+    void add(User user);
+
+    void register(User user);
+
 }

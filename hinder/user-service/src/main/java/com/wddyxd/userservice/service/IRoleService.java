@@ -19,4 +19,5 @@ public interface IRoleService extends IService<Role> {
     void assignRole(Long userId, Long[] roleIds);
 
     List<Role> getByUser(String userId);
+
 }

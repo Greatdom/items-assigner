@@ -65,10 +65,7 @@ public class UserController {
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('user.add')")
     public Result<User> add(@RequestBody User user){
-        user.setPassword(MD5Encoder.encrypt(user.getPassword()));
-        //TODO要自定义方法判断去重
-        //要添加分配角色业务
-        userService.save(user);
+        userService.add(user);
         return Result.success();
     }
 

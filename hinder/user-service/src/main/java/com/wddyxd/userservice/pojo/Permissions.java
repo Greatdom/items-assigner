@@ -15,7 +15,7 @@ import java.util.List;
 
 @TableName("permissions")
 public class Permissions {
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private String name;
     private String permissionValue;

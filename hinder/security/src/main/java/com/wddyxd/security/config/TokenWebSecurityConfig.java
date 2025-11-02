@@ -3,22 +3,27 @@ package com.wddyxd.security.config;
 
 import com.wddyxd.security.filter.TokenAuthFilter;
 import com.wddyxd.security.filter.TokenLoginFilter;
+import com.wddyxd.security.provider.EmailCodeAuthenticationProvider;
+import com.wddyxd.security.provider.PasswordAuthenticationProvider;
+import com.wddyxd.security.provider.PhoneCodeAuthenticationProvider;
 import com.wddyxd.security.security.DefaultPasswordEncoder;
 import com.wddyxd.security.security.TokenLogoutHandler;
 import com.wddyxd.security.security.TokenManager;
 import com.wddyxd.security.security.UnauthEntryPoint;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Arrays;
 
 /**
  * @program: items-assigner
@@ -35,13 +40,20 @@ public class TokenWebSecurityConfig {
     private final TokenManager tokenManager;
     private final RedisTemplate<String, Object> redisTemplate;
     private final DefaultPasswordEncoder defaultPasswordEncoder;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService passwordUserDetailsService;
+    private final UserDetailsService phoneCodeUserDetailsService;
+    private final UserDetailsService emailCodeUserDetailsService;
 
-    public TokenWebSecurityConfig(UserDetailsService userDetailsService,
+    public TokenWebSecurityConfig(
+            @Qualifier("passwordUserDetailsService") UserDetailsService passwordUserDetailsService,
+            @Qualifier("phoneCodeUserDetailsService") UserDetailsService phoneCodeUserDetailsService,
+            @Qualifier("emailCodeUserDetailsService") UserDetailsService emailCodeUserDetailsService,
                                   DefaultPasswordEncoder defaultPasswordEncoder,
                                   TokenManager tokenManager,
                                   RedisTemplate<String, Object> redisTemplate) {
-        this.userDetailsService = userDetailsService;
+        this.passwordUserDetailsService = passwordUserDetailsService;
+        this.phoneCodeUserDetailsService = phoneCodeUserDetailsService;
+        this.emailCodeUserDetailsService = emailCodeUserDetailsService;
         this.defaultPasswordEncoder = defaultPasswordEncoder;
         this.tokenManager = tokenManager;
         this.redisTemplate = redisTemplate;
@@ -84,21 +96,19 @@ public class TokenWebSecurityConfig {
     }
 
 
-
     /**
      * 配置认证管理器
      */
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration,
-                                                       HttpSecurity http) throws Exception {
-        // 首先通过 AuthenticationConfiguration 获取基础的 AuthenticationManager
-        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-
-        // 然后配置 UserDetailsService 和 PasswordEncoder
-        AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
-        auth.userDetailsService(userDetailsService).passwordEncoder(defaultPasswordEncoder);
-
-        return authenticationManager;
+    public AuthenticationManager authenticationManager() {
+        PasswordAuthenticationProvider passwordAuthenticationProvider =
+                new PasswordAuthenticationProvider(passwordUserDetailsService, defaultPasswordEncoder);
+        PhoneCodeAuthenticationProvider phoneAuthenticationProvider =
+                new PhoneCodeAuthenticationProvider(phoneCodeUserDetailsService, defaultPasswordEncoder);
+        EmailCodeAuthenticationProvider emailAuthenticationProvider =
+                new EmailCodeAuthenticationProvider(emailCodeUserDetailsService, defaultPasswordEncoder);
+        return new ProviderManager(
+                Arrays.asList(passwordAuthenticationProvider, phoneAuthenticationProvider, emailAuthenticationProvider)
+        );
     }
-
 }

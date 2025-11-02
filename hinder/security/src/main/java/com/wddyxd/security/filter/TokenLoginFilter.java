@@ -7,16 +7,17 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.security.pojo.LoginUserForm;
 import com.wddyxd.security.pojo.TokenInfo;
+import com.wddyxd.security.pojo.LoginAuthenticationToken;
 import com.wddyxd.security.security.TokenManager;
 import com.wddyxd.common.utils.ResponseUtil;
 import com.wddyxd.common.utils.Result;
+import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -53,12 +54,33 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         //获取表单提交数据
         try {
             LoginUserForm user = new ObjectMapper().readValue(request.getInputStream(), LoginUserForm.class);
-            System.out.println("用户信息："+user);
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword(),
-                    new ArrayList<>()));
+             if(StringUtils.isEmpty(user.getLoginType())){
+                 user.setLoginType("password");
+             }
+             if("phone".equals(user.getLoginType())){
+                 return authenticationManager.authenticate(
+                         new LoginAuthenticationToken(user.getPhone(),user.getPhoneCode(),"phone",
+                         null));
+             }else if("email".equals(user.getLoginType())){
+                 return authenticationManager.authenticate(
+                         new LoginAuthenticationToken(user.getEmail(),user.getEmailCode(),"email",
+                         null));
+
+             }else if("password".equals(user.getLoginType())){
+                 String principal = org.springframework.util.StringUtils.hasText(user.getUsername()) ?
+                         user.getUsername() : user.getPhone();
+                 principal = org.springframework.util.StringUtils.hasText(principal) ?
+                         principal : user.getEmail();
+                 return authenticationManager.authenticate(
+                         new LoginAuthenticationToken(principal,user.getPassword(),"password",
+                         null));
+
+             }else{
+                 throw new RuntimeException("请选择正确的登录方式");
+             }
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException();
+            throw new RuntimeException("获取表单错误");
         }
     }
 

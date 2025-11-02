@@ -1,4 +1,4 @@
-package com.wddyxd.security.security;
+package com.wddyxd.security.pojo;
 
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -13,14 +13,14 @@ import java.util.Collection;
  * @create: 2025-10-29 01:07
  **/
 
-public class CustomAuthenticationToken extends AbstractAuthenticationToken {
+public class LoginAuthenticationToken extends AbstractAuthenticationToken {
 
     private final String principal; // 用户名或手机号
     private String credentials; // 密码或验证码
     private final String loginType; // 登录类型
 
     // 未认证的构造函数
-    public CustomAuthenticationToken(String principal, String credentials, String loginType) {
+    public LoginAuthenticationToken(String principal, String credentials, String loginType) {
         super(null);
         this.principal = principal;
         this.credentials = credentials;
@@ -29,8 +29,8 @@ public class CustomAuthenticationToken extends AbstractAuthenticationToken {
     }
 
     // 已认证的构造函数
-    public CustomAuthenticationToken(String  principal, String credentials, String loginType,
-                                     Collection<? extends GrantedAuthority> authorities) {
+    public LoginAuthenticationToken(String  principal, String credentials, String loginType,
+                                    Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
         this.principal = principal;
         this.credentials = credentials;

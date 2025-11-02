@@ -8,7 +8,7 @@ import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.security.pojo.LoginUserForm;
 import com.wddyxd.security.pojo.TokenInfo;
 import com.wddyxd.security.pojo.LoginAuthenticationToken;
-import com.wddyxd.security.security.TokenManager;
+import com.wddyxd.security.security.UserTokenManager;
 import com.wddyxd.common.utils.ResponseUtil;
 import com.wddyxd.common.utils.Result;
 import io.micrometer.common.util.StringUtils;
@@ -24,7 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * @program: items-assigner
@@ -35,13 +34,13 @@ import java.util.ArrayList;
 
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private TokenManager tokenManager;
+    private UserTokenManager userTokenManager;
     private RedisTemplate redisTemplate;
     private AuthenticationManager authenticationManager;
 
-    public TokenLoginFilter(AuthenticationManager authenticationManager, TokenManager tokenManager, RedisTemplate redisTemplate) {
+    public TokenLoginFilter(AuthenticationManager authenticationManager, UserTokenManager userTokenManager, RedisTemplate redisTemplate) {
         this.authenticationManager = authenticationManager;
-        this.tokenManager = tokenManager;
+        this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
         this.setPostOnly(false);
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/auth/login","POST"));
@@ -95,7 +94,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         //根据用户名生成token
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setId(user.getCurrentUserInfo().getId());
-        String token = tokenManager.createToken(tokenInfo);
+        String token = userTokenManager.createToken(tokenInfo);
         System.out.println("用户token："+token);
 
 

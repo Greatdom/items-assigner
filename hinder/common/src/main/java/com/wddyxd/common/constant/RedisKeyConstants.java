@@ -10,6 +10,7 @@ package com.wddyxd.common.constant;
 
 public enum RedisKeyConstants {
     USER_LOGIN_TOKEN("user:login:token:"),
+    USER_LOGIN_TOKEN_SET("user:login:token:set:"),
     USER_LOGIN_USERINFO("user:login:userinfo:");
 
     public final String key;

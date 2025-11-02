@@ -8,7 +8,7 @@ import com.wddyxd.security.provider.PasswordAuthenticationProvider;
 import com.wddyxd.security.provider.PhoneCodeAuthenticationProvider;
 import com.wddyxd.security.security.DefaultPasswordEncoder;
 import com.wddyxd.security.security.TokenLogoutHandler;
-import com.wddyxd.security.security.TokenManager;
+import com.wddyxd.security.security.UserTokenManager;
 import com.wddyxd.security.security.UnauthEntryPoint;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +37,7 @@ import java.util.Arrays;
 @EnableMethodSecurity(prePostEnabled = true)
 public class TokenWebSecurityConfig {
 
-    private final TokenManager tokenManager;
+    private final UserTokenManager userTokenManager;
     private final RedisTemplate<String, Object> redisTemplate;
     private final DefaultPasswordEncoder defaultPasswordEncoder;
     private final UserDetailsService passwordUserDetailsService;
@@ -49,13 +49,13 @@ public class TokenWebSecurityConfig {
             @Qualifier("phoneCodeUserDetailsService") UserDetailsService phoneCodeUserDetailsService,
             @Qualifier("emailCodeUserDetailsService") UserDetailsService emailCodeUserDetailsService,
                                   DefaultPasswordEncoder defaultPasswordEncoder,
-                                  TokenManager tokenManager,
+                                  UserTokenManager userTokenManager,
                                   RedisTemplate<String, Object> redisTemplate) {
         this.passwordUserDetailsService = passwordUserDetailsService;
         this.phoneCodeUserDetailsService = phoneCodeUserDetailsService;
         this.emailCodeUserDetailsService = emailCodeUserDetailsService;
         this.defaultPasswordEncoder = defaultPasswordEncoder;
-        this.tokenManager = tokenManager;
+        this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
     }
 
@@ -81,7 +81,7 @@ public class TokenWebSecurityConfig {
                 // 退出登录配置
                 .logout(logout -> logout
                         .logoutUrl("/user/auth/logout")
-                        .addLogoutHandler(new TokenLogoutHandler(tokenManager, redisTemplate))
+                        .addLogoutHandler(new TokenLogoutHandler(userTokenManager, redisTemplate))
                 )
                 // 会话管理 - 无状态
                 .sessionManagement(session ->
@@ -89,8 +89,8 @@ public class TokenWebSecurityConfig {
                 );
 
         // 添加自定义过滤器
-        http.addFilter(new TokenLoginFilter(authenticationManager, tokenManager, redisTemplate));
-        http.addFilter(new TokenAuthFilter(authenticationManager, tokenManager, redisTemplate));
+        http.addFilter(new TokenLoginFilter(authenticationManager, userTokenManager, redisTemplate));
+        http.addFilter(new TokenAuthFilter(authenticationManager, userTokenManager, redisTemplate));
 
         return http.build();
     }

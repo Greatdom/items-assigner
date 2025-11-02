@@ -4,7 +4,7 @@ package com.wddyxd.security.filter;
 import com.wddyxd.common.constant.RedisKeyConstants;
 import com.wddyxd.security.pojo.CurrentUserInfo;
 import com.wddyxd.security.pojo.TokenInfo;
-import com.wddyxd.security.security.TokenManager;
+import com.wddyxd.security.security.UserTokenManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,11 +31,11 @@ import java.util.List;
 
 public class TokenAuthFilter extends BasicAuthenticationFilter {
 
-    private TokenManager tokenManager;
+    private UserTokenManager userTokenManager;
     private RedisTemplate redisTemplate;
-    public TokenAuthFilter(AuthenticationManager authenticationManager, TokenManager tokenManager, RedisTemplate redisTemplate) {
+    public TokenAuthFilter(AuthenticationManager authenticationManager, UserTokenManager userTokenManager, RedisTemplate redisTemplate) {
         super(authenticationManager);
-        this.tokenManager = tokenManager;
+        this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
     }
 
@@ -54,7 +54,7 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         //从header获取token
         String token = request.getHeader("token");
         if(token != null) {
-            TokenInfo tokenInfo = tokenManager.getTokenInfoFromToken(token);
+            TokenInfo tokenInfo = userTokenManager.getTokenInfoFromToken(token);
             Long id = tokenInfo.getId();
             //从redis获取对应权限列表
             Object redisObj = redisTemplate.opsForValue().get(RedisKeyConstants.USER_LOGIN_USERINFO + id.toString());

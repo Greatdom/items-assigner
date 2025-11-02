@@ -6,10 +6,7 @@ import com.wddyxd.security.filter.TokenLoginFilter;
 import com.wddyxd.security.provider.EmailCodeAuthenticationProvider;
 import com.wddyxd.security.provider.PasswordAuthenticationProvider;
 import com.wddyxd.security.provider.PhoneCodeAuthenticationProvider;
-import com.wddyxd.security.security.DefaultPasswordEncoder;
-import com.wddyxd.security.security.TokenLogoutHandler;
-import com.wddyxd.security.security.UserTokenManager;
-import com.wddyxd.security.security.UnauthEntryPoint;
+import com.wddyxd.security.security.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +34,7 @@ import java.util.Arrays;
 @EnableMethodSecurity(prePostEnabled = true)
 public class TokenWebSecurityConfig {
 
+    private final UserInfoManager userInfoManager;
     private final UserTokenManager userTokenManager;
     private final RedisTemplate<String, Object> redisTemplate;
     private final DefaultPasswordEncoder defaultPasswordEncoder;
@@ -50,13 +48,15 @@ public class TokenWebSecurityConfig {
             @Qualifier("emailCodeUserDetailsService") UserDetailsService emailCodeUserDetailsService,
                                   DefaultPasswordEncoder defaultPasswordEncoder,
                                   UserTokenManager userTokenManager,
-                                  RedisTemplate<String, Object> redisTemplate) {
+                                  RedisTemplate<String, Object> redisTemplate,
+                                    UserInfoManager userInfoManager) {
         this.passwordUserDetailsService = passwordUserDetailsService;
         this.phoneCodeUserDetailsService = phoneCodeUserDetailsService;
         this.emailCodeUserDetailsService = emailCodeUserDetailsService;
         this.defaultPasswordEncoder = defaultPasswordEncoder;
         this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
+        this.userInfoManager = userInfoManager;
     }
 
     /**
@@ -89,8 +89,8 @@ public class TokenWebSecurityConfig {
                 );
 
         // 添加自定义过滤器
-        http.addFilter(new TokenLoginFilter(authenticationManager, userTokenManager, redisTemplate));
-        http.addFilter(new TokenAuthFilter(authenticationManager, userTokenManager, redisTemplate));
+        http.addFilter(new TokenLoginFilter(authenticationManager, userTokenManager, redisTemplate, userInfoManager));
+        http.addFilter(new TokenAuthFilter(authenticationManager, userTokenManager, redisTemplate, userInfoManager));
 
         return http.build();
     }

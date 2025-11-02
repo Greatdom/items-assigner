@@ -79,9 +79,12 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
                 }
             } catch (Exception e) {
                 // 处理可能的异常
+                System.out.println("getAuthentication:解析token异常");
                 e.printStackTrace();
+                return null;
             }
         }
         return null;
     }
+
 }

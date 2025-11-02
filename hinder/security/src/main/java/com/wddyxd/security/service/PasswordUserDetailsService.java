@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,7 +34,8 @@ public class PasswordUserDetailsService implements UserDetailsService {
         Result<com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO> get = userClient.passwordSecurityGetter(username);
         getUser = get.getData();
         if(getUser == null) {
-            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+            System.out.println("用户不存在");
+            throw new UsernameNotFoundException(ResultCodeEnum.USER_NOT_EXIST_ERROR.msg);
         }
         LoginUserForm loginUserForm = new LoginUserForm();
         BeanUtils.copyProperties(getUser.getLoginUserForm(),loginUserForm);

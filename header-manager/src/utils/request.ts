@@ -2,7 +2,6 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import {getToken, removeToken} from "@/utils/auth.ts";
 import {useRouter} from "vue-router";
-const router = useRouter()
 
 // 创建axios实例
 const service = axios.create({
@@ -31,9 +30,7 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
     response => {
-        /**
-         * code为非20000是抛错 可结合自己业务进行修改
-         */
+
         const res:any = response.data
         const msg:string = res.msg
 
@@ -42,7 +39,10 @@ service.interceptors.response.use(
 
             if(res.code === 403){
                 removeToken()
-                router.push('/login')
+                // 动态导入router并执行跳转
+                import('@/router').then(routerModule => {
+                    routerModule.default.push('/login')
+                })
             }
             ElMessage({
                 message: msg,

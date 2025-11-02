@@ -8,6 +8,7 @@ import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.security.pojo.LoginUserForm;
 import com.wddyxd.security.pojo.TokenInfo;
 import com.wddyxd.security.pojo.LoginAuthenticationToken;
+import com.wddyxd.security.security.UserInfoManager;
 import com.wddyxd.security.security.UserTokenManager;
 import com.wddyxd.common.utils.ResponseUtil;
 import com.wddyxd.common.utils.Result;
@@ -34,11 +35,13 @@ import java.io.IOException;
 
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
 
+    private UserInfoManager userInfoManager;
     private UserTokenManager userTokenManager;
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
     private AuthenticationManager authenticationManager;
 
-    public TokenLoginFilter(AuthenticationManager authenticationManager, UserTokenManager userTokenManager, RedisTemplate redisTemplate) {
+    public TokenLoginFilter(AuthenticationManager authenticationManager, UserInfoManager userInfoManager , UserTokenManager userTokenManager, RedisTemplate redisTemplate) {
+        this.userInfoManager = userInfoManager;
         this.authenticationManager = authenticationManager;
         this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
@@ -94,13 +97,15 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         //根据用户名生成token
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setId(user.getCurrentUserInfo().getId());
+        tokenInfo.setTimestamp(System.currentTimeMillis());
         String token = userTokenManager.createToken(tokenInfo);
         System.out.println("用户token："+token);
+        userTokenManager.addTokenInRedis(token);
 
 
 
         //把用户名称和用户信息放到redis
-        redisTemplate.opsForValue().set(RedisKeyConstants.USER_LOGIN_USERINFO + user.getCurrentUserInfo().getId().toString(),user.getCurrentUserInfo());
+        userInfoManager.saveInfoInRedis(user);
         //返回token
         ResponseUtil.out(response, Result.success(token));
     }

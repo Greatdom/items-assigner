@@ -4,6 +4,7 @@ package com.wddyxd.security.filter;
 import com.wddyxd.common.constant.RedisKeyConstants;
 import com.wddyxd.security.pojo.CurrentUserInfo;
 import com.wddyxd.security.pojo.TokenInfo;
+import com.wddyxd.security.security.UserInfoManager;
 import com.wddyxd.security.security.UserTokenManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -32,11 +33,13 @@ import java.util.List;
 public class TokenAuthFilter extends BasicAuthenticationFilter {
 
     private UserTokenManager userTokenManager;
-    private RedisTemplate redisTemplate;
-    public TokenAuthFilter(AuthenticationManager authenticationManager, UserTokenManager userTokenManager, RedisTemplate redisTemplate) {
+    private RedisTemplate<String, Object> redisTemplate;
+    private UserInfoManager userInfoManager;
+    public TokenAuthFilter(AuthenticationManager authenticationManager, UserTokenManager userTokenManager, RedisTemplate redisTemplate, UserInfoManager userInfoManager) {
         super(authenticationManager);
         this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
+        this.userInfoManager = userInfoManager;
     }
 
     @Override
@@ -51,14 +54,14 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        //从header获取token
-        String token = request.getHeader("token");
-        if(token != null) {
+    //从header获取token
+    String token = request.getHeader("token");
+        if(token!=null&&userTokenManager.hasSameTokenInRedis(token)){
+            userTokenManager.refreshTokenExpire(token);
             TokenInfo tokenInfo = userTokenManager.getTokenInfoFromToken(token);
             Long id = tokenInfo.getId();
             //从redis获取对应权限列表
-            Object redisObj = redisTemplate.opsForValue().get(RedisKeyConstants.USER_LOGIN_USERINFO + id.toString());
-            CurrentUserInfo redisUserInfo = (CurrentUserInfo) redisObj;
+            CurrentUserInfo redisUserInfo = userInfoManager.getInfoFromRedis(id);
             List<String> permissionValueList = redisUserInfo.getPermissionValueList();
 
             Collection<GrantedAuthority> authority = new ArrayList<>();
@@ -67,8 +70,6 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
                 authority.add(auth);
             }
             return new UsernamePasswordAuthenticationToken(redisUserInfo, token, authority);
-        }
-        return null;
+        }else return null;
     }
-
 }

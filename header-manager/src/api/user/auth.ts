@@ -1,15 +1,14 @@
 import request from '@/utils/request'
+import type {UserLoginForm} from "@/types/user.ts";
+
 
 // 登录
-export function login(username: string, password: string) {
+export function login(UserLoginForm: UserLoginForm) {
     // debugger
     return request({
         url: '/user/auth/login',
         method: 'post',
-        data: {
-            username,//账号/手机/邮箱
-            password //密码/验证码
-        }
+        data: UserLoginForm
     })
 }
 

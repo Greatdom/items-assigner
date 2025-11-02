@@ -35,7 +35,7 @@ export const useUserStore = defineStore('user', ()=>{
         const username = userLoginForm.username.trim()
 
         return new Promise((resolve, reject) => {
-            login(username, userLoginForm.password).then(response => {
+            login(userLoginForm).then(response => {
                 // debugger
                 const data = response.data
                 console.log("STORE:"+data)

@@ -88,4 +88,18 @@ public class LoginUserForm implements Serializable {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    @Override
+    public String toString() {
+        return "LoginUserForm{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", phone='" + phone + '\'' +
+                ", phoneCode='" + phoneCode + '\'' +
+                ", email='" + email + '\'' +
+                ", emailCode='" + emailCode + '\'' +
+                ", loginType='" + loginType + '\'' +
+                '}';
+    }
 }

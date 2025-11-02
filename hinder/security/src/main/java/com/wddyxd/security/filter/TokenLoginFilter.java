@@ -53,6 +53,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         //获取表单提交数据
         try {
             LoginUserForm user = new ObjectMapper().readValue(request.getInputStream(), LoginUserForm.class);
+            System.out.println("用户信息："+user);
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword(),
                     new ArrayList<>()));
         } catch (IOException e) {

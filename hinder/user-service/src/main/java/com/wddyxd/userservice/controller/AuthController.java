@@ -3,6 +3,7 @@ package com.wddyxd.userservice.controller;
 
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.securityDTO.LoginUserForm;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class AuthController {
     private IUserService userService;
 
     @PostMapping("/login")
-    public Result<User> login(@RequestBody User user){return null;}
+    public Result<LoginUserForm> login(@RequestBody LoginUserForm loginUserForm){return null;}
 
     @PostMapping("/logout")
     public Result<User> logout(){

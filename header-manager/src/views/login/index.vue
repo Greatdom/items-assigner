@@ -71,8 +71,14 @@ const showPwd = () => {
 
 // 响应式数据
 const loginForm = ref<UserLoginForm>({
+  id: -1,
   username: '',
-  password: ''
+  password: '',
+  phone: '',
+  phoneCode: '',
+  email: '',
+  emailCode: '',
+  loginType: 'password'
 })
 
 

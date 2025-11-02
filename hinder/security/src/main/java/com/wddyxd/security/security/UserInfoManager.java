@@ -32,12 +32,12 @@ public class UserInfoManager {
     public void saveInfoInRedis(SecurityUser securityUser) {
         CurrentUserInfo currentUserInfo = securityUser.getCurrentUserInfo();
         Long id = currentUserInfo.getId();
-        String key = RedisKeyConstants.USER_LOGIN_USERINFO + id.toString();
+        String key = RedisKeyConstants.USER_LOGIN_USERINFO.key + id.toString();
         redisTemplate.opsForValue().set(key, currentUserInfo, TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
     }
 
     public CurrentUserInfo getInfoFromRedis(Long id) {
-        String key = RedisKeyConstants.USER_LOGIN_USERINFO + id.toString();
+        String key = RedisKeyConstants.USER_LOGIN_USERINFO.key + id.toString();
         CurrentUserInfo currentUserInfo = (CurrentUserInfo) redisTemplate.opsForValue().get(key);
         redisTemplate.expire(key, TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
         return currentUserInfo;

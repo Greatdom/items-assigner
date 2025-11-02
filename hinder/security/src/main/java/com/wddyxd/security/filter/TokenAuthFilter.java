@@ -54,22 +54,34 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-    //从header获取token
-    String token = request.getHeader("token");
-        if(token!=null&&userTokenManager.hasSameTokenInRedis(token)){
-            userTokenManager.refreshTokenExpire(token);
-            TokenInfo tokenInfo = userTokenManager.getTokenInfoFromToken(token);
-            Long id = tokenInfo.getId();
-            //从redis获取对应权限列表
-            CurrentUserInfo redisUserInfo = userInfoManager.getInfoFromRedis(id);
-            List<String> permissionValueList = redisUserInfo.getPermissionValueList();
+        // 从header获取token
+        String token = request.getHeader("token");
+        if(token != null) {
+            try {
+                if(userTokenManager.hasSameTokenInRedis(token)) {
+                    userTokenManager.refreshTokenExpire(token);
+                    TokenInfo tokenInfo = userTokenManager.getTokenInfoFromToken(token);
+                    if (tokenInfo != null) {
+                        Long id = tokenInfo.getId();
+                        // 从redis获取对应权限列表
+                        CurrentUserInfo redisUserInfo = userInfoManager.getInfoFromRedis(id);
+                        if (redisUserInfo != null) {
+                            List<String> permissionValueList = redisUserInfo.getPermissionValueList();
 
-            Collection<GrantedAuthority> authority = new ArrayList<>();
-            for(String permissionValue : permissionValueList) {
-                SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
-                authority.add(auth);
+                            Collection<GrantedAuthority> authority = new ArrayList<>();
+                            for(String permissionValue : permissionValueList) {
+                                SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
+                                authority.add(auth);
+                            }
+                            return new UsernamePasswordAuthenticationToken(redisUserInfo, token, authority);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // 处理可能的异常
+                e.printStackTrace();
             }
-            return new UsernamePasswordAuthenticationToken(redisUserInfo, token, authority);
-        }else return null;
+        }
+        return null;
     }
 }

@@ -75,9 +75,9 @@ public class UserTokenManager {
 
 
         // 1. 生成用户的有序集合键
-        String userTokenSetKey = RedisKeyConstants.USER_LOGIN_TOKEN_SET  + userId.toString();
+        String userTokenSetKey = RedisKeyConstants.USER_LOGIN_TOKEN_SET.key  + userId.toString();
         // 2. 生成当前 token 的字符串键
-        String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN + timestamp.toString();
+        String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + timestamp.toString();
 
         // 3. 添加 timestamp 到用户的有序集合（score 为当前时间戳，用于排序）
         zSetOps.add(userTokenSetKey, timestamp, timestamp);
@@ -95,7 +95,7 @@ public class UserTokenManager {
                 // 删除有序集合中的旧 token
                 zSetOps.remove(userTokenSetKey, oldestTimestamp);
                 // 删除旧 token 对应的字符串键（使其立即失效）
-                redisTemplate.delete(RedisKeyConstants.USER_LOGIN_TOKEN+ oldestTimestamp.toString());
+                redisTemplate.delete(RedisKeyConstants.USER_LOGIN_TOKEN.key+ oldestTimestamp.toString());
             }
         }
     }
@@ -107,7 +107,7 @@ public class UserTokenManager {
         TokenInfo tokenInfo = getTokenInfoFromToken(token);
         Long timestamp = tokenInfo.getTimestamp();
 
-        String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN + timestamp.toString();
+        String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + timestamp.toString();
         // 检查 token 是否存在，存在则刷新过期时间
         if (redisTemplate.hasKey(tokenKey)) {
             redisTemplate.expire(tokenKey, TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
@@ -121,48 +121,61 @@ public class UserTokenManager {
 
         TokenInfo tokenInfo = getTokenInfoFromToken(token);
         Long timestamp = tokenInfo.getTimestamp();
-        String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN + timestamp.toString();
+        String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + timestamp.toString();
 
         return (String)redisTemplate.opsForValue().get(tokenKey);
     }
 
     //判断这个token在redis中是否存在
     public boolean hasSameTokenInRedis(String token) {
-        String tokenInRedis = getToken(token);
-        if(tokenInRedis != null)
-            return tokenInRedis.equals(token);
-        return false;
+        try {
+            String tokenInRedis = getToken(token);
+            if(tokenInRedis != null)
+                return tokenInRedis.equals(token);
+            return false;
+        } catch (Exception e) {
+            // 如果token解析失败(如过期)，返回false
+            return false;
+        }
     }
 
     //移除token
     public void removeToken(String token) {
 
         TokenInfo tokenInfo = getTokenInfoFromToken(token);
+        if (tokenInfo == null) {
+            System.out.println("Token info is null, cannot remove token: " + token);
+            return;
+        }
         Long userId = tokenInfo.getId();
         Long timestamp = tokenInfo.getTimestamp();
 
-        String userTokenSetKey = RedisKeyConstants.USER_LOGIN_TOKEN_SET + userId.toString();
-        String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN + timestamp.toString();
+
+
+        String userTokenSetKey = RedisKeyConstants.USER_LOGIN_TOKEN_SET.key + userId.toString();
+        String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + timestamp.toString();
         // 从有序集合中删除
-        zSetOps.remove(userTokenSetKey, token);
+        zSetOps.remove(userTokenSetKey, timestamp);
         // 删除 token 字符串键
         redisTemplate.delete(tokenKey);
     }
 
     //从token中获取tokenInfo
     public TokenInfo getTokenInfoFromToken(String token) {
-        String tokenInfoJson = Jwts.parser()
-                .setSigningKey(tokenSignKey)
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
-
         try {
-            return new ObjectMapper().readValue(tokenInfoJson, TokenInfo.class);
+            String tokenInfoJson = Jwts.parser()
+                    .setSigningKey(tokenSignKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+
+            TokenInfo tokenInfo = new ObjectMapper().readValue(tokenInfoJson, TokenInfo.class);
+            if(tokenInfo != null)return tokenInfo;
+            else throw new Exception("null token");
         } catch (Exception e) {
             e.printStackTrace();
-            // 处理异常
-            return null;
+            // 处理其他异常
+            throw new RuntimeException(e);
         }
     }
 }

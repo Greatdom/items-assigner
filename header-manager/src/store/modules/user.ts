@@ -71,12 +71,16 @@ export const useUserStore = defineStore('user', ()=>{
                 removeToken()
                 resolve(response)
             }).catch(error => {
+                SET_TOKEN('')
+                removeToken()
                 reject(error)
-            }).then(() => {
-
+            }).finally(() => {
+                // 使用finally确保无论如何都会跳转到登录页
                 router.push('/login').then(() => {
-                    //刷新相关参数不然可能会有bug
-                    location.reload();
+                    // 延迟刷新以确保路由跳转完成
+                    setTimeout(() => {
+                        location.reload();
+                    }, 100);
                 });
             })
         })

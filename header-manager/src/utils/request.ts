@@ -40,7 +40,7 @@ service.interceptors.response.use(
         // debugger
         if (res.code !== 200) {
 
-            if(res.code === 401){
+            if(res.code === 403){
                 removeToken()
                 router.push('/login')
             }

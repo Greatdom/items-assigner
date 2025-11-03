@@ -8,10 +8,13 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>user-service</artifactId>
-
     <properties>
-        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
     </properties>
+<!--    <properties>-->
+<!--        <java.version>21</java.version>-->
+<!--    </properties>-->
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -49,6 +52,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+
             </plugin>
         </plugins>
     </build>

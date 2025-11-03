@@ -13,7 +13,7 @@ export function me() {
 
 export function get(id: number){
     return request({
-        url: '/user/user/get',
+        url: `/user/user/get/${id}`,
         method: 'get',
         params: { id }
     })
@@ -47,7 +47,7 @@ export function add(user: any){
 }
 export function remove(id: number): Promise<any>{
     return request({
-        url: '/user/user/remove',
+        url: `/user/user/delete/${id}`,
         method: 'delete',
         params: { id }
     })

@@ -2,6 +2,7 @@ package com.wddyxd.userservice.controller;
 
 
 import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.security.pojo.SecurityUser;
@@ -77,9 +78,9 @@ public class UserController {
         return Result.success();
     }
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAuthority('user.delete')")
+    @PreAuthorize("hasAuthority('user.remove')")
     public Result<User> delete(@PathVariable Long id){
         //TODO 删除用户
-        return Result.error(ResultCodeEnum.FUNCTION_ERROR);
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 }

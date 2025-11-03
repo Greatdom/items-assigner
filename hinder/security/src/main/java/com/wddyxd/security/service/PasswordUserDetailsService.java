@@ -35,7 +35,7 @@ public class PasswordUserDetailsService implements UserDetailsService {
         getUser = get.getData();
         if(getUser == null) {
             System.out.println("用户不存在");
-            throw new UsernameNotFoundException(ResultCodeEnum.USER_NOT_EXIST_ERROR.msg);
+            throw new UsernameNotFoundException("用户不存在");
         }
         LoginUserForm loginUserForm = new LoginUserForm();
         BeanUtils.copyProperties(getUser.getLoginUserForm(),loginUserForm);

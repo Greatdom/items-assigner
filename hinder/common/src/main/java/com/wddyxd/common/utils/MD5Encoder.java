@@ -15,6 +15,7 @@ import java.security.NoSuchAlgorithmException;
  **/
 
 public class MD5Encoder {
+    //TODO 可以换成更好的加密方式
 
     public static String encrypt(String strSrc) {
         try {

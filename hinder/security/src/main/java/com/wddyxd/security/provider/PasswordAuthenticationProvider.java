@@ -53,6 +53,7 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
 
         // 验证密码
         if (!passwordEncoder.matches(password, securityUser.getPassword())) {
+            System.out.println("密码错误");
             throw new BadCredentialsException("密码错误");
         }
 

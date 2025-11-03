@@ -81,6 +81,10 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof com.wddyxd.security.pojo.CurrentUserInfo currentUserInfo) {
             Long id = currentUserInfo.getId();// 获取 ID
+            // 校验用户ID不为空
+            if (id == null) {
+                throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+            }
             System.out.println("当前用户 ID: " + id);
             return getUserInfo(id);
         }else throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
@@ -102,10 +106,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public CurrentUserDTO getUserInfo(Long id) {
-        // 校验用户ID不为空
-        if (id == null) {
-            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
-        }
+        //TODO 可以现从redis拉取用户信息
 
         // 1. 查询用户基本信息（过滤已删除用户）
         QueryWrapper<User> userQuery = new QueryWrapper<>();

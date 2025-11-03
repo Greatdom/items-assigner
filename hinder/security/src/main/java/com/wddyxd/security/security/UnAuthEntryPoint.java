@@ -19,7 +19,7 @@ import java.io.IOException;
  * @create: 2025-10-20 20:30
  **/
 
-public class UnauthEntryPoint implements AuthenticationEntryPoint {
+public class UnAuthEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         ResponseUtil.out(httpServletResponse, Result.error(ResultCodeEnum.TOKEN_CHECK_FAILED_ERROR));

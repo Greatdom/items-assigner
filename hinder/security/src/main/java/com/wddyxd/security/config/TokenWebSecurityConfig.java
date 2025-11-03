@@ -71,7 +71,7 @@ public class TokenWebSecurityConfig {
 
                 // 异常处理
                 .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(new UnauthEntryPoint())
+                        exception.authenticationEntryPoint(new UnAuthEntryPoint())
                 )
                 // 授权配置
                 .authorizeHttpRequests(authz -> authz

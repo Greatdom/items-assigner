@@ -25,7 +25,7 @@ const config: EnvConfig = {
     }
 };
 
-export const CONFIG:Config = config.development;
+export const CONFIG:Config = config.test;
 
 
 

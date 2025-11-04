@@ -43,8 +43,8 @@ public class UserTokenManager {
     @Value("${token.signKey}")
     private String tokenSignKey;
 
-    //在redis 中 token 过期时间（15 分钟）
-    private static final long TOKEN_EXPIRE_MINUTES = 15;
+    //在redis 中 token 过期时间（60 分钟）
+    private static final long TOKEN_EXPIRE_MINUTES = 60;
     // 每个用户最大 token 数量
     private static final int MAX_TOKEN_PER_USER = 3;
 

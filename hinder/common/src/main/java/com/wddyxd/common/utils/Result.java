@@ -1,6 +1,8 @@
 package com.wddyxd.common.utils;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+
 /**
  * @program: items-assigner
  * @description: 统一结果返回集
@@ -12,6 +14,49 @@ public class Result<T> {
     private Integer code;
     private String msg;
     private T data;
+
+
+    private Result(T data){
+        this.data = data;
+    }
+    private Result(){
+
+    }
+
+
+     public static <T> Result<T> success(T data){
+        Result<T> tResult = new Result<>(data);
+        tResult.setCode(ResultCodeEnum.SUCCESS.code);
+        tResult.setMsg(ResultCodeEnum.SUCCESS.msg);
+        return tResult;
+    }
+
+    public static <T> Result<T> success(){
+        Result<T> tResult = new Result<>();
+        tResult.setCode(ResultCodeEnum.SUCCESS.code);
+        tResult.setMsg(ResultCodeEnum.SUCCESS.msg);
+        return tResult;
+    }
+
+    public static <T> Result<T> error(){
+        Result<T> tResult = new Result<>();
+        tResult.setCode(ResultCodeEnum.UNKNOWN_ERROR.code);
+        tResult.setMsg(ResultCodeEnum.UNKNOWN_ERROR.msg);
+        return tResult;
+    }
+    public static <T> Result<T> error(Integer code, String msg){
+        Result<T> tResult = new Result<>();
+        tResult.setCode(code);
+        tResult.setMsg(msg);
+        return tResult;
+    }
+
+    public static <T> Result<T> error(ResultCodeEnum resultCodeEnum){
+        Result<T> tResult = new Result<>();
+        tResult.setCode(resultCodeEnum.code);
+        tResult.setMsg(resultCodeEnum.msg);
+        return tResult;
+    }
 
     public Integer getCode() {
         return code;
@@ -35,28 +80,5 @@ public class Result<T> {
 
     public void setData(T data) {
         this.data = data;
-    }
-
-    public static <T> Result<T> success() {
-        Result<T> result = new Result<T>();
-        result.code = 200;
-        //TODO 硬编码
-        result.msg = "success";
-        return result;
-    }
-
-    public static <T> Result<T> success(T object) {
-        Result<T> result = new Result<T>();
-        result.data = object;
-        result.code = 200;
-        result.msg = "success";
-        return result;
-    }
-
-    public static <T> Result<T> error(String msg) {
-        Result<T> result = new Result<T>();
-        result.msg = msg;
-        result.code = 400;
-        return result;
     }
 }

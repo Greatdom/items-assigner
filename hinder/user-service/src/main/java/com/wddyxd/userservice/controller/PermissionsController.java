@@ -24,46 +24,32 @@ public class PermissionsController {
     @Autowired
     private IPermissionsService permissionsService;
 
-    @GetMapping("/menu")
-    public Result<List<JSONObject>> SelectMenu(){
-        //TODO获取权限菜单
-        //获取当前登录用户用户名
-        List<JSONObject> list = permissionsService.SelectMenu();
-        return Result.success(list);
+
+    @PostMapping("/doAssign")
+    public Result<?> doAssign(@RequestParam Long roleId,@RequestParam Long[] permissionIds) {
+            permissionsService.assignPermissions(roleId,permissionIds);
+            return Result.success();
     }
-
-    //TODO 给角色分配权限
-    @PostMapping("/assign")
-    public Result<?> doAssign(Long roleId,Long[] permissionIds) {
-        permissionsService.assignPermissions(roleId,permissionIds);
-        return Result.success();
-    }
-
-//    //TODO 根据角色获取菜单
-//    @GetMapping("toAssign/{roleId}")
-//    public Result<List<JSONObject>> toAssign(@PathVariable String roleId) {
-//        List<Permissions> list = permissionService.selectAllMenu(roleId);
-//        return R.ok().data("children", list);
-//    }
-
-
-
-
 
     //CRUD
     @GetMapping("/all")
     public Result<List<Permissions>> SelectAll(){
-        return Result.success(permissionsService.queryAllMenus());
+            return Result.success(permissionsService.list());
     }
-    @GetMapping("/one")
-    public Result<?> SelectOne(){
-        //TODO 查询个人权限
-        return null;
+    @GetMapping("/one/{id}")
+    public Result<Permissions> SelectById(@PathVariable Long id){
+        return Result.success(permissionsService.getById(id));
     }
     @PostMapping("/add")
     public Result<Permissions> add(@RequestBody Permissions permissions){
-        permissionsService.save(permissions);
-        return Result.success();
+        try {
+            permissionsService.save(permissions);
+            return Result.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+        }
     }
 
 

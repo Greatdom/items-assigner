@@ -1,6 +1,8 @@
 package com.wddyxd.security.security;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.MD5Encoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -29,7 +31,6 @@ public class DefaultPasswordEncoder implements PasswordEncoder {
     @Override
     public boolean matches(CharSequence charSequence, String encodedPassword) {
         String inputEncrypted = MD5Encoder.encrypt(charSequence.toString());
-        boolean result = encodedPassword.equals(inputEncrypted);
-        return result;
+        return encodedPassword.equals(inputEncrypted);
     }
 }

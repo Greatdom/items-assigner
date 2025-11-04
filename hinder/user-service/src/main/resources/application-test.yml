@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: user-service  # 服务名固定
+  datasource:
+    url: jdbc:mysql://mysql:3306/items-assigner?useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true  # 注意：docker内部用容器名mysql访问
+    username: root
+    password: Aa1341512355
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: redis  # docker内部用容器名redis访问
+      port: 6379
+      database: 3
+mybatis-plus:
+  type-aliases-package: com.wddyxd.userservice.pojo
+  mapper-locations: classpath*:mapper/*.xml
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:10086/eureka/  # docker内部用服务名访问eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+token:
+  signKey: 123456
+  expiration: 86400000

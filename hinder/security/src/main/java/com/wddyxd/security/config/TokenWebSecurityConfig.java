@@ -3,22 +3,24 @@ package com.wddyxd.security.config;
 
 import com.wddyxd.security.filter.TokenAuthFilter;
 import com.wddyxd.security.filter.TokenLoginFilter;
-import com.wddyxd.security.security.DefaultPasswordEncoder;
-import com.wddyxd.security.security.TokenLogoutHandler;
-import com.wddyxd.security.security.TokenManager;
-import com.wddyxd.security.security.UnauthEntryPoint;
+import com.wddyxd.security.provider.EmailCodeAuthenticationProvider;
+import com.wddyxd.security.provider.PasswordAuthenticationProvider;
+import com.wddyxd.security.provider.PhoneCodeAuthenticationProvider;
+import com.wddyxd.security.security.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+
+import java.util.Arrays;
 
 /**
  * @program: items-assigner
@@ -32,19 +34,29 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(prePostEnabled = true)
 public class TokenWebSecurityConfig {
 
-    private final TokenManager tokenManager;
+    private final UserInfoManager userInfoManager;
+    private final UserTokenManager userTokenManager;
     private final RedisTemplate<String, Object> redisTemplate;
     private final DefaultPasswordEncoder defaultPasswordEncoder;
-    private final UserDetailsService userDetailsService;
+    private final UserDetailsService passwordUserDetailsService;
+    private final UserDetailsService phoneCodeUserDetailsService;
+    private final UserDetailsService emailCodeUserDetailsService;
 
-    public TokenWebSecurityConfig(UserDetailsService userDetailsService,
+    public TokenWebSecurityConfig(
+            @Qualifier("passwordUserDetailsService") UserDetailsService passwordUserDetailsService,
+            @Qualifier("phoneCodeUserDetailsService") UserDetailsService phoneCodeUserDetailsService,
+            @Qualifier("emailCodeUserDetailsService") UserDetailsService emailCodeUserDetailsService,
                                   DefaultPasswordEncoder defaultPasswordEncoder,
-                                  TokenManager tokenManager,
-                                  RedisTemplate<String, Object> redisTemplate) {
-        this.userDetailsService = userDetailsService;
+                                  UserTokenManager userTokenManager,
+                                  RedisTemplate<String, Object> redisTemplate,
+                                    UserInfoManager userInfoManager) {
+        this.passwordUserDetailsService = passwordUserDetailsService;
+        this.phoneCodeUserDetailsService = phoneCodeUserDetailsService;
+        this.emailCodeUserDetailsService = emailCodeUserDetailsService;
         this.defaultPasswordEncoder = defaultPasswordEncoder;
-        this.tokenManager = tokenManager;
+        this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
+        this.userInfoManager = userInfoManager;
     }
 
     /**
@@ -59,17 +71,17 @@ public class TokenWebSecurityConfig {
 
                 // 异常处理
                 .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(new UnauthEntryPoint())
+                        exception.authenticationEntryPoint(new UnAuthEntryPoint())
                 )
                 // 授权配置
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/user/user/login","/swagger-ui/**", "/v3/api-docs/**").permitAll() // 不进行认证的路径
+                        .requestMatchers(  "/user/auth/passwordSecurityGetter/**","/user/auth/login","/swagger-ui/**", "/v3/api-docs/**").permitAll() // 不进行认证的路径
                         .anyRequest().authenticated() // 其他所有请求都需要认证
                 )
                 // 退出登录配置
                 .logout(logout -> logout
-                        .logoutUrl("/user/user/logout")
-                        .addLogoutHandler(new TokenLogoutHandler(tokenManager, redisTemplate))
+                        .logoutUrl("/user/auth/logout")
+                        .addLogoutHandler(new TokenLogoutHandler(userTokenManager, redisTemplate))
                 )
                 // 会话管理 - 无状态
                 .sessionManagement(session ->
@@ -77,28 +89,26 @@ public class TokenWebSecurityConfig {
                 );
 
         // 添加自定义过滤器
-        http.addFilter(new TokenLoginFilter(authenticationManager, tokenManager, redisTemplate));
-        http.addFilter(new TokenAuthFilter(authenticationManager, tokenManager, redisTemplate));
+        http.addFilter(new TokenLoginFilter(authenticationManager, userTokenManager, redisTemplate, userInfoManager));
+        http.addFilter(new TokenAuthFilter(authenticationManager, userTokenManager, redisTemplate, userInfoManager));
 
         return http.build();
     }
-
 
 
     /**
      * 配置认证管理器
      */
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration,
-                                                       HttpSecurity http) throws Exception {
-        // 首先通过 AuthenticationConfiguration 获取基础的 AuthenticationManager
-        AuthenticationManager authenticationManager = authenticationConfiguration.getAuthenticationManager();
-
-        // 然后配置 UserDetailsService 和 PasswordEncoder
-        AuthenticationManagerBuilder auth = http.getSharedObject(AuthenticationManagerBuilder.class);
-        auth.userDetailsService(userDetailsService).passwordEncoder(defaultPasswordEncoder);
-
-        return authenticationManager;
+    public AuthenticationManager authenticationManager() {
+        PasswordAuthenticationProvider passwordAuthenticationProvider =
+                new PasswordAuthenticationProvider(passwordUserDetailsService, defaultPasswordEncoder);
+        PhoneCodeAuthenticationProvider phoneAuthenticationProvider =
+                new PhoneCodeAuthenticationProvider(phoneCodeUserDetailsService, defaultPasswordEncoder);
+        EmailCodeAuthenticationProvider emailAuthenticationProvider =
+                new EmailCodeAuthenticationProvider(emailCodeUserDetailsService, defaultPasswordEncoder);
+        return new ProviderManager(
+                Arrays.asList(passwordAuthenticationProvider, phoneAuthenticationProvider, emailAuthenticationProvider)
+        );
     }
-
 }

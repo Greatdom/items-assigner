@@ -1,8 +1,14 @@
 package com.wddyxd.userservice.controller;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +17,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * @program: items-assigner
@@ -28,29 +33,11 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
 
-
-    @PostMapping("/login")
-    public Result<User> login(@RequestBody User user){
-        return userService.login(user);
-    }
-    @PostMapping("/assignRole")
-    public Result<User> assignRole(@RequestParam Long userId, @RequestParam Long[] roleIds){
-        //TODO 分配角色
-        userService.assignRole(userId,roleIds);
-        return Result.success();
-    }
     @GetMapping("/me")
-    public Result<User> me(){
-        //TODO 获取当前登录用户
-        return null;
-    }
-    @PostMapping("/logout")
-    public Result<User> logout(){
-        return Result.success();
-    }
+    public Result<CurrentUserDTO> me(){return Result.success(userService.me());}
+
+
 
 
 
@@ -58,30 +45,42 @@ public class UserController {
 
     //CRUD 操作
     @GetMapping("/get/{id}")
+
     public Result<User> get(@PathVariable Long id){
         return Result.success(userService.getById(id));
     }
+
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('user.list')")
     @Operation(summary = "获取用户列表", description = "根据条件获取用户列表")
-    public Result<List<User>> selectAll(){
-        return Result.success(userService.list());
+    public Result<?> selectAll(@RequestParam(defaultValue = "1") Integer pageNum,
+                               @RequestParam(defaultValue = "10") Integer pageSize,
+                               @RequestParam(defaultValue = "") String search){
+        return userService.selectAll(pageNum, pageSize, search);
     }
 
+
+
+
+    //添加用户
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('user.add')")
     public Result<User> add(@RequestBody User user){
-        userService.save(user);
+        userService.add(user);
         return Result.success();
     }
 
+    //更改用户信息
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('user.update')")
     public Result<User> update(@RequestBody User user){
         userService.updateById(user);
         return Result.success();
     }
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('user.remove')")
     public Result<User> delete(@PathVariable Long id){
-        userService.removeById(id);
-        return Result.success();
+        //TODO 删除用户
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 }

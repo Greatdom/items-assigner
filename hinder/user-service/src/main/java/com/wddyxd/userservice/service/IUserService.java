@@ -3,7 +3,13 @@ package com.wddyxd.userservice.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @program: 新建文件夹
@@ -13,10 +19,21 @@ import com.wddyxd.userservice.pojo.User;
  **/
 
 public interface IUserService extends IService<User> {
-    Result<User> login(User user);
 
-    void assignRole(Long userId, Long[] roleId);
 
-    public User selectByUsername(String username);
+    @Transactional
+    void addUserAndAssignRole(User user, Long roleId);
+
+    CurrentUserDTO me();
+
+    CurrentUserDTO getUserInfo(Long id);
+
+    Result<?> selectAll(Integer pageNum,Integer pageSize,String search);
+
+    SecurityUserDTO passwordSecurityGetter(String username);
+
+    void add(User user);
+
+    void register(User user);
 
 }

@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(Exception.class)
-    @ResponseBody //为了返回数据
-    public Result<?> error(Exception e){
-        e.fillInStackTrace();
-        return Result.error(e.getMessage());
+
+    @ExceptionHandler(CustomException.class)
+    @ResponseBody
+    public Result<?> error(CustomException e){
+        return Result.error(e.getCode(),e.getMsg());
     }
+
+
+
 }

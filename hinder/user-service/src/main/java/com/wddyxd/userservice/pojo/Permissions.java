@@ -1,11 +1,9 @@
 package com.wddyxd.userservice.pojo;
 
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,27 +15,75 @@ import java.util.List;
 
 @TableName("permissions")
 public class Permissions {
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-    private Long pid;
     private String name;
-    private String type;
     private String permissionValue;
-    private String path;
-    private String component;
+    private Boolean isDeleted;
+    @TableField(fill = FieldFill.INSERT)
+    private Date createTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private Date updateTime;
 
-
-    //    @ApiModelProperty(value = "层级")
+    //层级
     @TableField(exist = false)
     private Integer level;
 
-    //    @ApiModelProperty(value = "下级")
+    //下级
     @TableField(exist = false)
     private List<Permissions> children;
 
-    //    @ApiModelProperty(value = "是否选中")
+    //是否选中
     @TableField(exist = false)
     private boolean isSelect;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPermissionValue() {
+        return permissionValue;
+    }
+
+    public void setPermissionValue(String permissionValue) {
+        this.permissionValue = permissionValue;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
 
     public Integer getLevel() {
         return level;
@@ -61,61 +107,5 @@ public class Permissions {
 
     public void setSelect(boolean select) {
         isSelect = select;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getPid() {
-        return pid;
-    }
-
-    public void setPid(Long pid) {
-        this.pid = pid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getPermissionValue() {
-        return permissionValue;
-    }
-
-    public void setPermissionValue(String permissionValue) {
-        this.permissionValue = permissionValue;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getComponent() {
-        return component;
-    }
-
-    public void setComponent(String component) {
-        this.component = component;
     }
 }

@@ -1,0 +1,12 @@
+server:
+  port: 10086
+spring:
+  application:
+    name: eureka-server  # 服务名固定
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.174.129:10086/eureka  # 注册中心地址
+  instance:
+    prefer-ip-address: true  # 优先使用IP地址注册
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}  # 实例ID格式：IP:服务名:端口

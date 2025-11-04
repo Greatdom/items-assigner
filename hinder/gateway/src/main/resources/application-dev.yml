@@ -1,0 +1,56 @@
+server:
+  port: 10010
+spring:
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  cloud:
+    gateway:
+      routes:
+
+        # 新增拒绝访问特定路径的路由规则
+        - id: deny-password-security-getter
+          uri: forward:/deny  # 指向一个无效的URI
+          predicates:
+            - Path=/api/user/auth/passwordSecurityGetter/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                deny: true
+
+        # 或者使用更简单的方式，直接不设置uri来拒绝请求
+        # - id: deny-password-security-getter
+        #   predicates:
+        #     - Path=/user/auth/passwordSecurityGetter/**
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/api/user/**  # 添加/api前缀
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}  # 移除转发到服务的/api前缀
+        - id: items-service
+          uri: lb://items-service
+          predicates:
+            - Path=/api/items/**  # 添加/api前缀
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}  # 移除转发到服务的/api前缀
+
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:10000"
+              - "http://localhost:10000/api"
+              - "http://127.0.0.1:10000"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
+            maxAge: 3600
+  application:
+    name: gateway
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:10086/eureka

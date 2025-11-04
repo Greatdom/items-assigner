@@ -1,7 +1,11 @@
 package com.wddyxd.security.filter;
 
 
-import com.wddyxd.security.security.TokenManager;
+import com.wddyxd.common.constant.RedisKeyConstants;
+import com.wddyxd.security.pojo.CurrentUserInfo;
+import com.wddyxd.security.pojo.TokenInfo;
+import com.wddyxd.security.security.UserInfoManager;
+import com.wddyxd.security.security.UserTokenManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,12 +32,14 @@ import java.util.List;
 
 public class TokenAuthFilter extends BasicAuthenticationFilter {
 
-    private TokenManager tokenManager;
-    private RedisTemplate redisTemplate;
-    public TokenAuthFilter(AuthenticationManager authenticationManager, TokenManager tokenManager, RedisTemplate redisTemplate) {
+    private UserTokenManager userTokenManager;
+    private RedisTemplate<String, Object> redisTemplate;
+    private UserInfoManager userInfoManager;
+    public TokenAuthFilter(AuthenticationManager authenticationManager, UserTokenManager userTokenManager, RedisTemplate redisTemplate, UserInfoManager userInfoManager) {
         super(authenticationManager);
-        this.tokenManager = tokenManager;
+        this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
+        this.userInfoManager = userInfoManager;
     }
 
     @Override
@@ -48,19 +54,35 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        //从header获取token
+        // 从header获取token
         String token = request.getHeader("token");
         if(token != null) {
-            //从token获取用户名
-            String username = tokenManager.getUserInfoFromToken(token);
-            //从redis获取对应权限列表
-            List<String> permissionValueList = (List<String>)redisTemplate.opsForValue().get(username);
-            Collection<GrantedAuthority> authority = new ArrayList<>();
-            for(String permissionValue : permissionValueList) {
-                SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
-                authority.add(auth);
+            try {
+                if(userTokenManager.hasSameTokenInRedis(token)) {
+                    userTokenManager.refreshTokenExpire(token);
+                    TokenInfo tokenInfo = userTokenManager.getTokenInfoFromToken(token);
+                    if (tokenInfo != null) {
+                        Long id = tokenInfo.getId();
+                        // 从redis获取对应权限列表
+                        CurrentUserInfo redisUserInfo = userInfoManager.getInfoFromRedis(id);
+                        if (redisUserInfo != null) {
+                            List<String> permissionValueList = redisUserInfo.getPermissionValueList();
+
+                            Collection<GrantedAuthority> authority = new ArrayList<>();
+                            for(String permissionValue : permissionValueList) {
+                                SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
+                                authority.add(auth);
+                            }
+                            return new UsernamePasswordAuthenticationToken(redisUserInfo, token, authority);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // 处理可能的异常
+                System.out.println("getAuthentication:解析token异常");
+                e.printStackTrace();
+                return null;
             }
-            return new UsernamePasswordAuthenticationToken(username,token,authority);
         }
         return null;
     }

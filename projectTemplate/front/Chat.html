@@ -142,11 +142,32 @@
 <div class="chat-header">
     <div class="back-btn">←</div>
     <div class="header-title">消息</div>
-    <div class="more-options">⋯</div>
+    <div class="more-options" id="moreOptionsBtn">⋯</div>
+
+    <!-- 更多选项下拉菜单 -->
+<!--    <div class="dropdown-menu" id="dropdownMenu" style="display: none;">-->
+<!--        <div class="menu-item">搜索聊天记录</div>-->
+<!--        <div class="menu-item">消息免打扰</div>-->
+<!--        <div class="menu-item">清理聊天记录</div>-->
+<!--        <div class="menu-item">消息设置</div>-->
+<!--    </div>-->
 </div>
 
 <!-- 消息列表 -->
 <div class="chat-list">
+    <!-- 交易通知 -->
+    <a href="./Chat/ChatDetail.html" style="text-decoration: none; color: inherit;">
+        <div class="chat-item">
+            <div class="chat-avatar">💰</div>
+            <div class="chat-info">
+                <div class="chat-name">交易通知</div>
+                <div class="chat-preview">您有一笔退款申请已处理...</div>
+                <div class="chat-meta">
+                    <div class="chat-time">昨天</div>
+                </div>
+            </div>
+        </div>
+    </a>
     <!-- 商家聊天 -->
     <div class="chat-item">
         <div class="chat-avatar">📱</div>
@@ -159,7 +180,6 @@
             </div>
         </div>
     </div>
-
     <!-- 物流助手 -->
     <div class="chat-item">
         <div class="chat-avatar">🚚</div>
@@ -172,19 +192,6 @@
             </div>
         </div>
     </div>
-
-    <!-- 交易通知 -->
-    <div class="chat-item">
-        <div class="chat-avatar">💰</div>
-        <div class="chat-info">
-            <div class="chat-name">交易通知</div>
-            <div class="chat-preview">您有一笔退款申请已处理...</div>
-            <div class="chat-meta">
-                <div class="chat-time">昨天</div>
-            </div>
-        </div>
-    </div>
-
     <!-- 客服小蜜 -->
     <div class="chat-item">
         <div class="chat-avatar">🤖</div>
@@ -196,7 +203,6 @@
             </div>
         </div>
     </div>
-
     <!-- 优惠活动 -->
     <div class="chat-item">
         <div class="chat-avatar">🎉</div>
@@ -208,7 +214,6 @@
             </div>
         </div>
     </div>
-
     <!-- 系统通知 -->
     <div class="chat-item">
         <div class="chat-avatar">📢</div>
@@ -221,7 +226,6 @@
         </div>
     </div>
 </div>
-
 <!-- 底部导航 -->
 <div class="footer-nav">
     <div class="footer-item">

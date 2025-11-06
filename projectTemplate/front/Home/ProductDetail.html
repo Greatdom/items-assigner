@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品详情</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .product-header {
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .more-options {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* 商品图片展示 */
+        .product-images {
+            width: 100%;
+            height: 300px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #999;
+        }
+
+        /* 商品信息 */
+        .product-details {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .product-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-price-section {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .current-price {
+            color: #ff5000;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 14px;
+        }
+
+        .sales-info {
+            color: #999;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        /* 商品规格选择 */
+        .product-specs {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .spec-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .spec-option {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .spec-option.active {
+            border-color: #ff5000;
+            color: #ff5000;
+        }
+
+        /* 数量选择 */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .quantity-label {
+            font-size: 14px;
+            margin-right: 15px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .quantity-input {
+            width: 40px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-left: none;
+            border-right: none;
+        }
+
+        /* 商品详情介绍 */
+        .product-description {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 60px;
+        }
+
+        .description-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        /* 底部操作栏 */
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            border-top: 1px solid #eee;
+            padding: 10px 0;
+        }
+
+        .action-item {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .cart-btn {
+            flex: 2;
+            background-color: #ff9000;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 0;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        .buy-btn {
+            flex: 2;
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 0;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        /* 商品评价 */
+        .product-reviews {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .review-summary {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .rating-score {
+            flex: 1;
+        }
+
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff5000;
+        }
+
+        .rating-stars {
+            color: #ffcc00;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .review-count {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .review-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .reviewer-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .reviewer-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .reviewer-name {
+            font-size: 12px;
+            color: #666;
+            flex: 1;
+        }
+
+        .review-rating {
+            color: #ffcc00;
+            font-size: 12px;
+        }
+
+        .review-content {
+            font-size: 14px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .review-images {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .review-image {
+            width: 60px;
+            height: 60px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #999;
+            border-radius: 4px;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .view-all-reviews {
+            text-align: center;
+            padding: 15px;
+            color: #ff5000;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="product-header">
+    <div class="back-btn" onclick="history.back()">←</div>
+    <div class="header-title">商品详情</div>
+    <div class="more-options">⋯</div>
+</div>
+
+<!-- 商品图片展示 -->
+<div class="product-images">
+    商品主图展示区域
+</div>
+
+<!-- 商品信息 -->
+<div class="product-details">
+    <div class="product-title">超值商品名称超长显示测试 超值商品名称超长显示测试</div>
+    <div class="product-price-section">
+        <div class="current-price">¥19.9</div>
+        <div class="original-price">¥99.9</div>
+    </div>
+    <div class="sales-info">销量 1000+ | 评价 99%好评</div>
+</div>
+
+<!-- 商品规格选择 -->
+<div class="product-specs">
+    <div class="section-title">选择规格</div>
+    <div class="spec-options">
+        <div class="spec-option active">标准版</div>
+        <div class="spec-option">豪华版</div>
+        <div class="spec-option">旗舰版</div>
+    </div>
+
+    <div class="quantity-selector">
+        <div class="quantity-label">数量</div>
+        <div class="quantity-controls">
+            <div class="quantity-btn">-</div>
+            <input type="text" class="quantity-input" value="1">
+            <div class="quantity-btn">+</div>
+        </div>
+    </div>
+</div>
+
+<!-- 商品详情介绍 -->
+<div class="product-description">
+    <div class="section-title">商品详情</div>
+    <div class="description-content">
+        <p>这是一款高品质的商品，具有以下特点：</p>
+        <p>1. 采用优质材料制造，质量可靠</p>
+        <p>2. 设计时尚，符合现代审美</p>
+        <p>3. 功能齐全，满足日常使用需求</p>
+        <p>4. 性价比高，是您购物的理想选择</p>
+        <p>5. 提供完善的售后服务保障</p>
+    </div>
+</div>
+
+<!-- 商品评价 -->
+<div class="product-reviews">
+    <div class="section-title">商品评价 (99%好评)</div>
+    <div class="review-summary">
+        <div class="rating-score">
+            <span class="score">4.9</span>
+            <span class="rating-stars">★★★★★</span>
+        </div>
+        <div class="review-count">共1000+条评论</div>
+    </div>
+
+    <!-- 评价列表 -->
+    <div class="reviews-list">
+        <div class="review-item">
+            <div class="reviewer-info">
+                <div class="reviewer-avatar">👤</div>
+                <div class="reviewer-name">用户****123</div>
+                <div class="review-rating">★★★★★</div>
+            </div>
+            <div class="review-content">
+                商品质量很好，性价比超高，推荐购买！
+            </div>
+            <div class="review-images">
+                <div class="review-image">图1</div>
+                <div class="review-image">图2</div>
+            </div>
+            <div class="review-date">2024-05-20</div>
+        </div>
+
+        <div class="review-item">
+            <div class="reviewer-info">
+                <div class="reviewer-avatar">👤</div>
+                <div class="reviewer-name">用户****456</div>
+                <div class="review-rating">★★★★☆</div>
+            </div>
+            <div class="review-content">
+                物流很快，包装完好，就是颜色比图片稍微深一点
+            </div>
+            <div class="review-date">2024-05-18</div>
+        </div>
+    </div>
+
+    <div class="view-all-reviews">
+        查看全部评价 >
+    </div>
+</div>
+
+<!-- 底部操作栏 -->
+<div class="action-bar">
+    <div class="action-item">
+        <div>💬</div>
+        <div>客服</div>
+    </div>
+    <div class="action-item">
+        <div>🛒</div>
+        <div>购物车</div>
+    </div>
+    <button class="cart-btn">加入购物车</button>
+    <button class="buy-btn">立即购买</button>
+</div>
+
+<script>
+    // 规格选择功能
+    document.querySelectorAll('.spec-option').forEach(option => {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.spec-option').forEach(opt => {
+                opt.classList.remove('active');
+            });
+            this.classList.add('active');
+        });
+    });
+
+    // 数量加减功能
+    const quantityBtns = document.querySelectorAll('.quantity-btn');
+    const quantityInput = document.querySelector('.quantity-input');
+
+    quantityBtns[0].addEventListener('click', function() {
+        let value = parseInt(quantityInput.value);
+        if (value > 1) {
+            quantityInput.value = value - 1;
+        }
+    });
+
+    quantityBtns[1].addEventListener('click', function() {
+        let value = parseInt(quantityInput.value);
+        quantityInput.value = value + 1;
+    });
+
+    // 加入购物车功能
+    document.querySelector('.cart-btn').addEventListener('click', function() {
+        alert('商品已成功加入购物车！');
+    });
+
+    // 立即购买功能
+    document.querySelector('.buy-btn').addEventListener('click', function() {
+        alert('正在跳转到订单确认页面...');
+        // 实际应用中可以跳转到订单确认页面
+        // window.location.href = '../Order/Confirm.html';
+    });
+    // 查看全部评价功能
+    document.querySelector('.view-all-reviews').addEventListener('click', function() {
+        alert('跳转到全部评价页面');
+        // 实际应用中可以跳转到评价详情页面
+        // window.location.href = './ProductReviews.html';
+    });
+
+    // 点击单个评价功能
+    document.querySelectorAll('.review-item').forEach(review => {
+        review.addEventListener('click', function() {
+            alert('查看评价详情');
+        });
+    });
+</script>
+</body>
+</html>

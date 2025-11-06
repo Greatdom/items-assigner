@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>私聊页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航栏 */
+        .chat-detail-header {
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .more-options {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* 聊天内容区域 */
+        .chat-messages {
+            flex: 1;
+            padding: 15px 10px;
+            overflow-y: auto;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+
+        .message.received {
+            align-self: flex-start;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .message-content {
+            padding: 10px 15px;
+            border-radius: 18px;
+            font-size: 14px;
+        }
+
+        .received .message-content {
+            background-color: #fff;
+            border-top-left-radius: 4px;
+        }
+
+        .sent .message-content {
+            background-color: #ff5000;
+            color: white;
+            border-top-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        /* 输入区域 */
+        .input-area {
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        .input-box {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .send-btn {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="chat-detail-header">
+    <div class="back-btn" onclick="history.back()">←</div>
+    <div class="header-title">数码旗舰店</div>
+    <div class="more-options">⋯</div>
+</div>
+
+<!-- 聊天内容区域 -->
+<div class="chat-messages">
+    <div class="message-time">昨天 15:30</div>
+
+    <div class="message received">
+        <div class="avatar">📱</div>
+        <div class="message-content">
+            您好，感谢您的咨询！请问有什么可以帮您的吗？
+        </div>
+    </div>
+
+    <div class="message sent">
+        <div class="avatar">👤</div>
+        <div class="message-content">
+            我想了解一下这款手机的具体参数
+        </div>
+    </div>
+
+    <div class="message received">
+        <div class="avatar">📱</div>
+        <div class="message-content">
+            这款手机采用最新的处理器，配备6.7英寸屏幕，支持快充功能...
+        </div>
+    </div>
+
+    <div class="message-time">今天 10:30</div>
+
+    <div class="message received">
+        <div class="avatar">📱</div>
+        <div class="message-content">
+            您好，您的订单已经发货了，快递单号：SF1234567890
+        </div>
+    </div>
+
+    <div class="message sent">
+        <div class="avatar">👤</div>
+        <div class="message-content">
+            好的，谢谢！
+        </div>
+    </div>
+</div>
+
+<!-- 输入区域 -->
+<div class="input-area">
+    <input type="text" class="input-box" placeholder="输入消息...">
+    <button class="send-btn">发送</button>
+</div>
+</body>
+</html>

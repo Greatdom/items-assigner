@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账号安全</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .security-header {
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* 安全设置区域 */
+        .security-section {
+            background-color: white;
+            margin: 10px;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* 安全项 */
+        .security-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .security-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-label {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .item-desc {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .item-status {
+            font-size: 12px;
+            color: #ff5000;
+        }
+
+        .item-arrow {
+            color: #ccc;
+            margin-left: 10px;
+        }
+
+        /* 安全等级显示 */
+        .security-level {
+            background-color: #fffbe6;
+            border: 1px solid #ffe58f;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .level-text {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .level-progress {
+            width: 100%;
+            height: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .level-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff5000, #ff7043);
+            width: 60%;
+        }
+
+        .level-desc {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        /* 底部导航 */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+        }
+
+        .footer-item.active {
+            color: #ff5000;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="security-header">
+    <div class="back-btn" onclick="history.back()">←</div>
+    <div class="header-title">账号安全</div>
+    <div></div>
+</div>
+
+<!-- 安全等级显示 -->
+<div class="security-level">
+    <div class="level-text">您的账号安全等级：中等</div>
+    <div class="level-progress">
+        <div class="level-bar"></div>
+    </div>
+    <div class="level-desc">建议您完善手机号和密码以提高安全性</div>
+</div>
+
+<!-- 账号安全设置 -->
+<div class="security-section">
+    <div class="section-title">账号安全设置</div>
+
+    <a href="./ChangePassword.html" style="text-decoration: none; color: inherit;">
+        <div class="security-item">
+            <div class="item-icon">🔑</div>
+            <div class="item-content">
+                <div class="item-label">登录密码</div>
+                <div class="item-desc">用于登录账号的密码</div>
+            </div>
+            <div class="item-status">已设置</div>
+            <div class="item-arrow">></div>
+        </div>
+    </a>
+
+    <a href="./BindPhone.html" style="text-decoration: none; color: inherit;">
+        <div class="security-item">
+            <div class="item-icon">📱</div>
+            <div class="item-content">
+                <div class="item-label">绑定手机</div>
+                <div class="item-desc">已绑定手机：138****8888</div>
+            </div>
+            <div class="item-status">已绑定</div>
+            <div class="item-arrow">></div>
+        </div>
+    </a>
+
+    <a href="./BindEmail.html" style="text-decoration: none; color: inherit;">
+        <div class="security-item">
+            <div class="item-icon">📧</div>
+            <div class="item-content">
+                <div class="item-label">绑定邮箱</div>
+                <div class="item-desc">可用于登录和找回密码</div>
+            </div>
+            <div class="item-status">未绑定</div>
+            <div class="item-arrow">></div>
+        </div>
+    </a>
+
+    <div class="security-item">
+        <div class="item-icon">🛡️</div>
+        <div class="item-content">
+            <div class="item-label">支付密码</div>
+            <div class="item-desc">用于支付时验证身份</div>
+        </div>
+        <div class="item-status">未设置</div>
+        <div class="item-arrow">></div>
+    </div>
+</div>
+
+<!-- 其他安全设置 -->
+<div class="security-section">
+    <div class="section-title">其他安全设置</div>
+
+    <div class="security-item">
+        <div class="item-icon">💻</div>
+        <div class="item-content">
+            <div class="item-label">登录设备管理</div>
+            <div class="item-desc">管理已登录的设备</div>
+        </div>
+        <div class="item-arrow">></div>
+    </div>
+
+    <div class="security-item">
+        <div class="item-icon">🔔</div>
+        <div class="item-content">
+            <div class="item-label">安全提醒</div>
+            <div class="item-desc">开启异常登录提醒</div>
+        </div>
+        <div class="item-status">已开启</div>
+        <div class="item-arrow">></div>
+    </div>
+
+    <div class="security-item">
+        <div class="item-icon">🚫</div>
+        <div class="item-content">
+            <div class="item-label">账号注销</div>
+            <div class="item-desc">注销账号需满足相关条件</div>
+        </div>
+        <div class="item-arrow">></div>
+    </div>
+</div>
+
+<!-- 底部导航 -->
+<div class="footer-nav">
+    <div class="footer-item">
+        <div>🏠</div>
+        <div><a href="../Home.html" style="text-decoration: none; color: inherit;">首页</a></div>
+    </div>
+    <div class="footer-item">
+        <div>💬</div>
+        <div><a href="../Chat.html" style="text-decoration: none; color: inherit;">聊天</a></div>
+    </div>
+    <div class="footer-item">
+        <div>🛒</div>
+        <div><a href="../Car.html" style="text-decoration: none; color: inherit;">购物车</a></div>
+    </div>
+    <div class="footer-item active">
+        <div>👤</div>
+        <div><a href="../Person.html" style="text-decoration: none; color: inherit;">我的</a></div>
+    </div>
+</div>
+</body>
+</html>

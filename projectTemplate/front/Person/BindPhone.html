@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绑定手机</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .bind-phone-header {
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* 绑定手机内容区域 */
+        .bind-phone-content {
+            padding: 20px 15px;
+        }
+
+        .current-phone-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .current-phone {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .phone-label {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .phone-number {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .change-btn {
+            color: #ff5000;
+            font-size: 14px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        /* 绑定新手机表单 */
+        .bind-form {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .verification-code-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .verification-code-input {
+            flex: 1;
+        }
+
+        .get-code-btn {
+            padding: 12px 15px;
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .get-code-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .submit-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* 底部导航 */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+        }
+
+        .footer-item.active {
+            color: #ff5000;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="bind-phone-header">
+    <div class="back-btn" onclick="history.back()">←</div>
+    <div class="header-title">绑定手机</div>
+    <div></div>
+</div>
+
+<!-- 绑定手机内容区域 -->
+<div class="bind-phone-content">
+    <!-- 当前手机号 -->
+    <div class="current-phone-section">
+        <div class="section-title">当前手机号</div>
+        <div class="current-phone">
+            <div class="phone-label">已绑定手机号</div>
+            <div class="phone-number">138****8888</div>
+            <button class="change-btn">更换</button>
+        </div>
+    </div>
+
+    <!-- 绑定新手机表单 -->
+    <div class="bind-form">
+        <div class="section-title">绑定新手机号</div>
+        <div class="form-group">
+            <label class="form-label">新手机号</label>
+            <input type="tel" class="form-input" placeholder="请输入新手机号">
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">验证码</label>
+            <div class="verification-code-group">
+                <input type="text" class="form-input verification-code-input" placeholder="请输入验证码">
+                <button class="get-code-btn">获取验证码</button>
+            </div>
+        </div>
+
+        <button class="submit-btn">确认绑定</button>
+    </div>
+</div>
+
+<!-- 底部导航 -->
+<div class="footer-nav">
+    <div class="footer-item">
+        <div>🏠</div>
+        <div><a href="../Home.html" style="text-decoration: none; color: inherit;">首页</a></div>
+    </div>
+    <div class="footer-item">
+        <div>💬</div>
+        <div><a href="../Chat.html" style="text-decoration: none; color: inherit;">聊天</a></div>
+    </div>
+    <div class="footer-item">
+        <div>🛒</div>
+        <div><a href="../Car.html" style="text-decoration: none; color: inherit;">购物车</a></div>
+    </div>
+    <div class="footer-item active">
+        <div>👤</div>
+        <div><a href="../Person.html" style="text-decoration: none; color: inherit;">我的</a></div>
+    </div>
+</div>
+
+<script>
+    // 验证码倒计时功能
+    const getCodeBtn = document.querySelector('.get-code-btn');
+    let countdown = 60;
+    let timer = null;
+
+    getCodeBtn.addEventListener('click', function() {
+        const phoneInput = document.querySelector('.form-input[type="tel"]');
+        const phone = phoneInput.value.trim();
+
+        if (!phone) {
+            alert('请输入手机号');
+            return;
+        }
+
+        // 验证手机号格式
+        const phoneRegex = /^1[3-9]\d{9}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('请输入正确的手机号格式');
+            return;
+        }
+
+        // 开始倒计时
+        getCodeBtn.disabled = true;
+        getCodeBtn.textContent = `重新发送(${countdown}s)`;
+
+        timer = setInterval(() => {
+            countdown--;
+            getCodeBtn.textContent = `重新发送(${countdown}s)`;
+
+            if (countdown <= 0) {
+                clearInterval(timer);
+                getCodeBtn.disabled = false;
+                getCodeBtn.textContent = '获取验证码';
+                countdown = 60;
+            }
+        }, 1000);
+
+        // 模拟发送验证码
+        alert('验证码已发送至您的手机（模拟）');
+    });
+
+    // 表单提交功能
+    const submitBtn = document.querySelector('.submit-btn');
+    submitBtn.addEventListener('click', function() {
+        const phoneInput = document.querySelector('.form-input[type="tel"]');
+        const codeInput = document.querySelector('.verification-code-input');
+        const phone = phoneInput.value.trim();
+        const code = codeInput.value.trim();
+
+        if (!phone) {
+            alert('请输入手机号');
+            return;
+        }
+
+        if (!code) {
+            alert('请输入验证码');
+            return;
+        }
+
+        // 验证手机号格式
+        const phoneRegex = /^1[3-9]\d{9}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('请输入正确的手机号格式');
+            return;
+        }
+
+        // 模拟验证成功
+        alert('手机号绑定成功！');
+        // 可以在这里添加跳转逻辑
+    });
+</script>
+</body>
+</html>

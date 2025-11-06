@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>客服热线</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .service-header {
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* 客服热线内容区域 */
+        .service-content {
+            padding: 20px 15px;
+        }
+
+        /* 客服热线卡片 */
+        .service-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            color: #ff5000;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff5000;
+            margin-bottom: 15px;
+        }
+
+        .card-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .call-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* 在线客服 */
+        .online-service {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .online-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .service-time {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .chat-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #1aad19;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        /* 常见问题 */
+        .faq-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .faq-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .faq-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .faq-arrow {
+            float: right;
+            color: #ccc;
+        }
+
+        /* 底部导航 */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+        }
+
+        .footer-item.active {
+            color: #ff5000;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="service-header">
+    <div class="back-btn" onclick="history.back()">←</div>
+    <div class="header-title">客服热线</div>
+    <div></div>
+</div>
+
+<!-- 客服热线内容区域 -->
+<div class="service-content">
+    <!-- 客服热线卡片 -->
+    <div class="service-card">
+        <div class="card-icon">📞</div>
+        <div class="card-title">客服热线</div>
+        <div class="card-number">400-888-8888</div>
+        <div class="card-desc">工作时间：每天 9:00-21:00</div>
+        <button class="call-btn">立即拨打</button>
+    </div>
+
+    <!-- 在线客服 -->
+    <div class="online-service">
+        <div class="online-title">在线客服</div>
+        <div class="service-time">服务时间：每天 9:00-24:00</div>
+        <button class="chat-btn">联系在线客服</button>
+        <button class="chat-btn" style="background-color: #1890ff;">智能客服</button>
+    </div>
+
+    <!-- 常见问题 -->
+    <div class="faq-section">
+        <div class="faq-title">常见问题</div>
+        <div class="faq-item">
+            <div class="faq-question">如何修改收货地址？</div>
+            <div class="faq-arrow">></div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">订单如何申请退款？</div>
+            <div class="faq-arrow">></div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">如何查询物流信息？</div>
+            <div class="faq-arrow">></div>
+        </div>
+        <div class="faq-item">
+            <div class="faq-question">优惠券如何使用？</div>
+            <div class="faq-arrow">></div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部导航 -->
+<div class="footer-nav">
+    <div class="footer-item">
+        <div>🏠</div>
+        <div><a href="../Home.html" style="text-decoration: none; color: inherit;">首页</a></div>
+    </div>
+    <div class="footer-item">
+        <div>💬</div>
+        <div><a href="../Chat.html" style="text-decoration: none; color: inherit;">聊天</a></div>
+    </div>
+    <div class="footer-item">
+        <div>🛒</div>
+        <div><a href="../Car.html" style="text-decoration: none; color: inherit;">购物车</a></div>
+    </div>
+    <div class="footer-item active">
+        <div>👤</div>
+        <div><a href="../Person.html" style="text-decoration: none; color: inherit;">我的</a></div>
+    </div>
+</div>
+
+<script>
+    // 拨打客服电话功能
+    document.querySelector('.call-btn').addEventListener('click', function() {
+        if (confirm('是否拨打客服热线 400-888-8888？')) {
+            // 在实际应用中，这里可以调用拨号功能
+            alert('正在为您拨打客服热线...');
+        }
+    });
+
+    // 联系在线客服功能
+    document.querySelectorAll('.chat-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            alert('正在为您连接在线客服...');
+            // 在实际应用中，这里可以跳转到聊天页面
+            window.location.href = '../Chat.html';
+        });
+    });
+
+    // 常见问题点击功能
+    document.querySelectorAll('.faq-item').forEach(function(item) {
+        item.addEventListener('click', function() {
+            const question = this.querySelector('.faq-question').textContent;
+            alert(`您点击了问题：${question}\n在实际应用中将跳转到问题详情页面。`);
+        });
+    });
+</script>
+</body>
+</html>

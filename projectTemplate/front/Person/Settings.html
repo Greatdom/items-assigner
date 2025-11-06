@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设置</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .settings-header {
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* 设置项区域 */
+        .settings-section {
+            background-color: white;
+            margin: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-label {
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .item-desc {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .item-value {
+            font-size: 14px;
+            color: #666;
+            margin-right: 5px;
+        }
+
+        .item-arrow {
+            color: #ccc;
+        }
+
+        /* 开关样式 */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #ff5000;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* 退出登录按钮 */
+        .logout-btn {
+            display: block;
+            width: 90%;
+            margin: 30px auto;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ff5000;
+            color: #ff5000;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        /* 底部导航 */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+        }
+
+        .footer-item.active {
+            color: #ff5000;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="settings-header">
+    <div class="back-btn" onclick="history.back()">←</div>
+    <div class="header-title">设置</div>
+    <div></div>
+</div>
+
+<!-- 通用设置 -->
+<div class="settings-section">
+    <div class="settings-item">
+        <div class="item-icon">📱</div>
+        <div class="item-content">
+            <div class="item-label">消息通知</div>
+            <div class="item-desc">推送消息、系统通知等</div>
+        </div>
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="settings-item">
+        <div class="item-icon">🌙</div>
+        <div class="item-content">
+            <div class="item-label">深色模式</div>
+            <div class="item-desc">开启后使用深色主题</div>
+        </div>
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="settings-item">
+        <div class="item-icon">🔊</div>
+        <div class="item-content">
+            <div class="item-label">声音提醒</div>
+            <div class="item-desc">收到消息时播放提示音</div>
+        </div>
+        <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="settings-item">
+        <div class="item-icon">📶</div>
+        <div class="item-content">
+            <div class="item-label">省流量模式</div>
+            <div class="item-desc">节省流量，图片质量降低</div>
+        </div>
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+        </label>
+    </div>
+</div>
+
+<!-- 隐私设置 -->
+<div class="settings-section">
+    <div class="settings-item">
+        <div class="item-icon">👁️</div>
+        <div class="item-content">
+            <div class="item-label">隐私设置</div>
+            <div class="item-desc">谁可以看我的信息</div>
+        </div>
+        <div class="item-arrow">></div>
+    </div>
+
+    <div class="settings-item">
+        <div class="item-icon">🛡️</div>
+        <div class="item-content">
+            <div class="item-label">权限管理</div>
+            <div class="item-desc">管理应用权限</div>
+        </div>
+        <div class="item-arrow">></div>
+    </div>
+</div>
+
+<!-- 其他设置 -->
+<div class="settings-section">
+    <div class="settings-item">
+        <div class="item-icon">🌐</div>
+        <div class="item-content">
+            <div class="item-label">语言设置</div>
+            <div class="item-desc">简体中文</div>
+        </div>
+        <div class="item-arrow">></div>
+    </div>
+
+    <div class="settings-item">
+        <div class="item-icon">📏</div>
+        <div class="item-content">
+            <div class="item-label">字体大小</div>
+            <div class="item-desc">标准</div>
+        </div>
+        <div class="item-arrow">></div>
+    </div>
+
+    <div class="settings-item">
+        <div class="item-icon">🔄</div>
+        <div class="item-content">
+            <div class="item-label">清除缓存</div>
+            <div class="item-desc">清除本地缓存数据</div>
+        </div>
+        <div class="item-value">15.6MB</div>
+        <div class="item-arrow">></div>
+    </div>
+
+    <div class="settings-item">
+        <div class="item-icon">ℹ️</div>
+        <div class="item-content">
+            <div class="item-label">关于</div>
+            <div class="item-desc">版本信息、用户协议</div>
+        </div>
+        <div class="item-value">v1.0.0</div>
+        <div class="item-arrow">></div>
+    </div>
+</div>
+
+<!-- 退出登录 -->
+<div class="logout-btn">退出登录</div>
+
+<!-- 底部导航 -->
+<div class="footer-nav">
+    <div class="footer-item">
+        <div>🏠</div>
+        <div><a href="../Home.html" style="text-decoration: none; color: inherit;">首页</a></div>
+    </div>
+    <div class="footer-item">
+        <div>💬</div>
+        <div><a href="../Chat.html" style="text-decoration: none; color: inherit;">聊天</a></div>
+    </div>
+    <div class="footer-item">
+        <div>🛒</div>
+        <div><a href="../Car.html" style="text-decoration: none; color: inherit;">购物车</a></div>
+    </div>
+    <div class="footer-item active">
+        <div>👤</div>
+        <div><a href="../Person.html" style="text-decoration: none; color: inherit;">我的</a></div>
+    </div>
+</div>
+</body>
+</html>

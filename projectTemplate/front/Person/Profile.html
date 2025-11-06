@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人资料</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .profile-header {
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .save-btn {
+            color: #ff5000;
+            font-size: 14px;
+        }
+
+        /* 个人资料区域 */
+        .profile-section {
+            background-color: white;
+            margin: 10px;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* 头像设置 */
+        .avatar-setting {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .avatar-label {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .current-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #ff5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .change-avatar {
+            color: #ff5000;
+            font-size: 14px;
+        }
+
+        /* 资料项 */
+        .profile-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-label {
+            width: 80px;
+            font-size: 14px;
+        }
+
+        .item-value {
+            flex: 1;
+            font-size: 14px;
+            color: #666;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .edit-icon {
+            color: #ccc;
+        }
+
+        /* 输入框样式 */
+        .editable-input {
+            flex: 1;
+            font-size: 14px;
+            border: none;
+            text-align: right;
+            outline: none;
+        }
+
+        /* 退出登录按钮 */
+        .logout-btn {
+            display: block;
+            width: 90%;
+            margin: 30px auto;
+            padding: 15px;
+            background-color: #fff;
+            border: 1px solid #ff5000;
+            color: #ff5000;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="profile-header">
+    <div class="back-btn" onclick="history.back()">←</div>
+    <div class="header-title">个人资料</div>
+    <div class="save-btn">保存</div>
+</div>
+
+<!-- 个人资料区域 -->
+<div class="profile-section">
+    <div class="section-title">基本信息</div>
+
+    <!-- 头像设置 -->
+    <div class="avatar-setting">
+        <div class="avatar-label">头像</div>
+        <div class="current-avatar">👤</div>
+        <div class="change-avatar">点击更换</div>
+    </div>
+
+    <!-- 用户名 -->
+    <div class="profile-item">
+        <div class="item-label">用户名</div>
+        <input type="text" class="editable-input" value="张三" readonly>
+        <div class="edit-icon">></div>
+    </div>
+
+    <!-- 昵称 -->
+    <div class="profile-item">
+        <div class="item-label">昵称</div>
+        <input type="text" class="editable-input" value="张三" readonly>
+        <div class="edit-icon">></div>
+    </div>
+
+    <!-- 用户ID -->
+    <div class="profile-item">
+        <div class="item-label">用户ID</div>
+        <div class="item-value">123456789</div>
+    </div>
+
+    <!-- 手机号 -->
+    <div class="profile-item">
+        <div class="item-label">手机号</div>
+        <div class="item-value">138****8888</div>
+        <div class="edit-icon">></div>
+    </div>
+
+    <!-- 邮箱 -->
+    <div class="profile-item">
+        <div class="item-label">邮箱</div>
+        <div class="item-value">zhang***@example.com</div>
+        <div class="edit-icon">></div>
+    </div>
+</div>
+
+<!-- 更多设置 -->
+<div class="profile-section">
+    <div class="section-title">更多设置</div>
+
+    <div class="profile-item">
+        <div class="item-label">性别</div>
+        <div class="item-value">男</div>
+        <div class="edit-icon">></div>
+    </div>
+
+    <div class="profile-item">
+        <div class="item-label">生日</div>
+        <div class="item-value">1990-01-01</div>
+        <div class="edit-icon">></div>
+    </div>
+
+    <div class="profile-item">
+        <div class="item-label">地区</div>
+        <div class="item-value">北京市 海淀区</div>
+        <div class="edit-icon">></div>
+    </div>
+</div>
+
+<!-- 退出登录 -->
+<button class="logout-btn">退出登录</button>
+</body>
+</html>

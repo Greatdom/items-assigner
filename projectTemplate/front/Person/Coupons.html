@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优惠券</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .coupons-header {
+            background-color: #fff;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            font-size: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .header-title {
+            flex: 1;
+            font-weight: bold;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        /* 优惠券分类导航 */
+        .coupons-nav {
+            display: flex;
+            background-color: #fff;
+            margin: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+        }
+
+        .nav-item.active {
+            color: #ff5000;
+            border-bottom: 2px solid #ff5000;
+        }
+
+        /* 优惠券列表 */
+        .coupons-list {
+            padding: 0 10px 60px 10px;
+        }
+
+        .coupon-item {
+            background: linear-gradient(90deg, #ff5000, #ff7043);
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            padding: 20px 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coupon-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 80px;
+            bottom: 0;
+            width: 20px;
+            background: radial-gradient(circle at 10px 10px, transparent 8px, #ff5000 8px);
+            background-size: 20px 20px;
+            background-repeat: repeat-y;
+        }
+
+        .coupon-left {
+            flex: 1;
+        }
+
+        .coupon-amount {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .coupon-amount span {
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .coupon-condition {
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .coupon-time {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .coupon-right {
+            width: 80px;
+            text-align: center;
+            border-left: 1px dashed rgba(255, 255, 255, 0.5);
+            padding-left: 15px;
+        }
+
+        .use-btn {
+            background-color: white;
+            color: #ff5000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .coupon-used {
+            background: linear-gradient(90deg, #ccc, #999);
+        }
+
+        .coupon-expired {
+            background: linear-gradient(90deg, #999, #666);
+        }
+
+        .status-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+        }
+
+        /* 底部导航 */
+        .footer-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+
+        .footer-item {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+        }
+
+        .footer-item.active {
+            color: #ff5000;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="coupons-header">
+    <div class="back-btn" onclick="history.back()">←</div>
+    <div class="header-title">优惠券</div>
+    <div></div>
+</div>
+
+<!-- 优惠券分类导航 -->
+<div class="coupons-nav">
+    <div class="nav-item active">可用(3)</div>
+    <div class="nav-item">已使用(1)</div>
+    <div class="nav-item">已过期(2)</div>
+</div>
+
+<!-- 优惠券列表 -->
+<div class="coupons-list">
+    <!-- 可用优惠券 -->
+    <div class="coupon-item">
+        <div style="display: flex; align-items: center;">
+            <div class="coupon-left">
+                <div class="coupon-amount">¥20<span>满100可用</span></div>
+                <div class="coupon-condition">适用范围: 全场通用</div>
+                <div class="coupon-time">有效期至: 2024-12-31</div>
+            </div>
+            <div class="coupon-right">
+                <button class="use-btn">立即使用</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="coupon-item">
+        <div style="display: flex; align-items: center;">
+            <div class="coupon-left">
+                <div class="coupon-amount">¥50<span>满200可用</span></div>
+                <div class="coupon-condition">适用范围: 数码类商品</div>
+                <div class="coupon-time">有效期至: 2024-11-30</div>
+            </div>
+            <div class="coupon-right">
+                <button class="use-btn">立即使用</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="coupon-item">
+        <div style="display: flex; align-items: center;">
+            <div class="coupon-left">
+                <div class="coupon-amount">8<span>折</span></div>
+                <div class="coupon-condition">适用范围: 服装类商品</div>
+                <div class="coupon-time">有效期至: 2024-10-15</div>
+            </div>
+            <div class="coupon-right">
+                <button class="use-btn">立即使用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 已使用优惠券 -->
+    <div class="coupon-item coupon-used">
+        <div class="status-tag">已使用</div>
+        <div style="display: flex; align-items: center;">
+            <div class="coupon-left">
+                <div class="coupon-amount">¥30<span>满150可用</span></div>
+                <div class="coupon-condition">适用范围: 全场通用</div>
+                <div class="coupon-time">使用时间: 2024-05-20</div>
+            </div>
+            <div class="coupon-right">
+                <button class="use-btn" disabled>已使用</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 已过期优惠券 -->
+    <div class="coupon-item coupon-expired">
+        <div class="status-tag">已过期</div>
+        <div style="display: flex; align-items: center;">
+            <div class="coupon-left">
+                <div class="coupon-amount">¥100<span>满500可用</span></div>
+                <div class="coupon-condition">适用范围: 家居类商品</div>
+                <div class="coupon-time">有效期至: 2024-01-01</div>
+            </div>
+            <div class="coupon-right">
+                <button class="use-btn" disabled>已过期</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="coupon-item coupon-expired">
+        <div class="status-tag">已过期</div>
+        <div style="display: flex; align-items: center;">
+            <div class="coupon-left">
+                <div class="coupon-amount">5<span>折</span></div>
+                <div class="coupon-condition">适用范围: 美妆类商品</div>
+                <div class="coupon-time">有效期至: 2024-03-15</div>
+            </div>
+            <div class="coupon-right">
+                <button class="use-btn" disabled>已过期</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 底部导航 -->
+<div class="footer-nav">
+    <div class="footer-item">
+        <div>🏠</div>
+        <div><a href="../Home.html" style="text-decoration: none; color: inherit;">首页</a></div>
+    </div>
+    <div class="footer-item">
+        <div>💬</div>
+        <div><a href="../Chat.html" style="text-decoration: none; color: inherit;">聊天</a></div>
+    </div>
+    <div class="footer-item">
+        <div>🛒</div>
+        <div><a href="../Car.html" style="text-decoration: none; color: inherit;">购物车</a></div>
+    </div>
+    <div class="footer-item active">
+        <div>👤</div>
+        <div><a href="../Person.html" style="text-decoration: none; color: inherit;">我的</a></div>
+    </div>
+</div>
+</body>
+</html>

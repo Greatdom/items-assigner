@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录</title>
+</head>
+<body>
+<div class="login-container">
+    <h2>用户登录</h2>
+    <form id="loginForm">
+        <div>
+            <label for="username">用户名:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">密码:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">登录</button>
+        </div>
+    </form>
+    <div>
+    </div>
+</div>
+
+<script>        document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // 简单的表单验证
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if(username && password) {
+        // 跳转到主页
+        window.location.href = 'Home.html';
+    } else {
+        alert('请输入用户名和密码');
+    }
+});
+</script>
+</body>
+</html>

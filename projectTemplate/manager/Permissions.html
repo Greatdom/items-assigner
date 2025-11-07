@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 权限管理</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff5000;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification {
+            position: relative;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff5000;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* 主体内容 */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 200px;
+            background-color: #fff;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .menu-item.active {
+            background-color: #ff5000;
+            color: white;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .add-role-btn {
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* 角色表格 */
+        .roles-table {
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .roles-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .roles-table th,
+        .roles-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .roles-table th {
+            background-color: #fafafa;
+            font-weight: bold;
+        }
+
+        .roles-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .roles-table tr:hover {
+            background-color: #fdfdfd;
+        }
+
+        .permissions-cell {
+            max-width: 300px;
+        }
+
+        .permission-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border-radius: 4px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .edit-btn {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* 权限分配卡片 */
+        .permissions-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .permission-module {
+            border: 1px solid #eee;
+            border-radius: 4px;
+            padding: 15px;
+        }
+
+        .module-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .module-title input {
+            margin-right: 8px;
+        }
+
+        .permission-item {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .permission-item input {
+            margin-right: 8px;
+        }
+
+        .save-btn {
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        .cancel-btn {
+            background-color: #f5f5f5;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 20px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <div class="logo">管理系统</div>
+    <div class="user-info">
+        <div class="notification">
+            🔔
+            <span class="badge">3</span>
+        </div>
+        <div class="avatar" onclick="location.href='Home.html'">👤</div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="menu-item" onclick="location.href='Home.html'">
+            👤 个人中心
+        </div>
+        <div class="menu-item" onclick="location.href='Statistics.html'">
+            📊 数据统计
+        </div>
+        <div class="menu-item" onclick="location.href='Settings.html'">
+            🛠️ 系统设置
+        </div>
+        <div class="menu-item" onclick="location.href='Users.html'">
+            👥 用户管理
+        </div>
+        <div class="menu-item active">
+            👥 权限管理
+        </div>
+        <div class="menu-item" onclick="location.href='Products.html'">
+            📦 商品管理
+        </div>
+        <div class="menu-item" onclick="location.href='Orders.html'">
+            💰 订单管理
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <div class="page-title">
+            <span>权限管理</span>
+            <button class="add-role-btn">添加角色</button>
+        </div>
+
+        <!-- 角色表格 -->
+        <div class="roles-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>角色名称</th>
+                    <th>描述</th>
+                    <th>权限</th>
+                    <th>用户数</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>超级管理员</td>
+                    <td>拥有系统所有权限</td>
+                    <td class="permissions-cell">
+                        <span class="permission-tag">用户管理</span>
+                        <span class="permission-tag">权限管理</span>
+                        <span class="permission-tag">商品管理</span>
+                        <span class="permission-tag">订单管理</span>
+                        <span class="permission-tag">系统设置</span>
+                    </td>
+                    <td>1</td>
+                    <td>
+                        <button class="action-btn edit-btn">编辑</button>
+                        <button class="action-btn delete-btn">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>管理员</td>
+                    <td>拥有大部分管理权限</td>
+                    <td class="permissions-cell">
+                        <span class="permission-tag">用户管理</span>
+                        <span class="permission-tag">商品管理</span>
+                        <span class="permission-tag">订单管理</span>
+                    </td>
+                    <td>3</td>
+                    <td>
+                        <button class="action-btn edit-btn">编辑</button>
+                        <button class="action-btn delete-btn">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>编辑员</td>
+                    <td>负责内容编辑工作</td>
+                    <td class="permissions-cell">
+                        <span class="permission-tag">商品管理</span>
+                    </td>
+                    <td>2</td>
+                    <td>
+                        <button class="action-btn edit-btn">编辑</button>
+                        <button class="action-btn delete-btn">删除</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>查看员</td>
+                    <td>只能查看数据</td>
+                    <td class="permissions-cell">
+                        <span class="permission-tag">数据查看</span>
+                    </td>
+                    <td>1</td>
+                    <td>
+                        <button class="action-btn edit-btn">编辑</button>
+                        <button class="action-btn delete-btn">删除</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 权限分配卡片 -->
+        <div class="permissions-card">
+            <div class="card-title">权限分配</div>
+            <div class="permissions-grid">
+                <div class="permission-module">
+                    <div class="module-title">
+                        <input type="checkbox" id="userModule">
+                        <label for="userModule">用户管理</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="userView">
+                        <label for="userView">查看用户</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="userEdit">
+                        <label for="userEdit">编辑用户</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="userDelete">
+                        <label for="userDelete">删除用户</label>
+                    </div>
+                </div>
+
+                <div class="permission-module">
+                    <div class="module-title">
+                        <input type="checkbox" id="permissionModule">
+                        <label for="permissionModule">权限管理</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="permissionView">
+                        <label for="permissionView">查看权限</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="permissionEdit">
+                        <label for="permissionEdit">编辑权限</label>
+                    </div>
+                </div>
+
+                <div class="permission-module">
+                    <div class="module-title">
+                        <input type="checkbox" id="productModule">
+                        <label for="productModule">商品管理</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="productView">
+                        <label for="productView">查看商品</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="productEdit">
+                        <label for="productEdit">编辑商品</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="productDelete">
+                        <label for="productDelete">删除商品</label>
+                    </div>
+                </div>
+
+                <div class="permission-module">
+                    <div class="module-title">
+                        <input type="checkbox" id="orderModule">
+                        <label for="orderModule">订单管理</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="orderView">
+                        <label for="orderView">查看订单</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="orderEdit">
+                        <label for="orderEdit">编辑订单</label>
+                    </div>
+                </div>
+
+                <div class="permission-module">
+                    <div class="module-title">
+                        <input type="checkbox" id="settingModule">
+                        <label for="settingModule">系统设置</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="settingView">
+                        <label for="settingView">查看设置</label>
+                    </div>
+                    <div class="permission-item">
+                        <input type="checkbox" id="settingEdit">
+                        <label for="settingEdit">编辑设置</label>
+                    </div>
+                </div>
+            </div>
+
+            <button class="save-btn">保存权限</button>
+            <button class="cancel-btn">取消</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 侧边栏菜单点击事件
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // 添加角色按钮点击事件
+    document.querySelector('.add-role-btn').addEventListener('click', function() {
+        alert('跳转到添加角色页面');
+    });
+
+    // 编辑按钮点击事件
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            alert('编辑角色权限');
+        });
+    });
+
+    // 删除按钮点击事件
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if(confirm('确定要删除这个角色吗？')) {
+                alert('角色已删除');
+            }
+        });
+    });
+
+    // 模块全选功能
+    document.querySelectorAll('.module-title input').forEach(moduleCheckbox => {
+        moduleCheckbox.addEventListener('change', function() {
+            const permissionItems = this.closest('.permission-module').querySelectorAll('.permission-item input');
+            permissionItems.forEach(item => {
+                item.checked = this.checked;
+            });
+        });
+    });
+
+    // 权限项勾选影响模块勾选状态
+    document.querySelectorAll('.permission-item input').forEach(permissionCheckbox => {
+        permissionCheckbox.addEventListener('change', function() {
+            const module = this.closest('.permission-module');
+            const allItems = module.querySelectorAll('.permission-item input');
+            const checkedItems = module.querySelectorAll('.permission-item input:checked');
+            const moduleCheckbox = module.querySelector('.module-title input');
+
+            moduleCheckbox.checked = allItems.length === checkedItems.length;
+            moduleCheckbox.indeterminate = checkedItems.length > 0 && checkedItems.length < allItems.length;
+        });
+    });
+
+    // 保存权限按钮点击事件
+    document.querySelector('.save-btn').addEventListener('click', function() {
+        alert('权限已保存');
+    });
+
+    // 取消按钮点击事件
+    document.querySelector('.cancel-btn').addEventListener('click', function() {
+        if(confirm('确定要取消当前操作吗？')) {
+            location.reload();
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 系统设置</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff5000;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification {
+            position: relative;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff5000;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* 主体内容 */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 200px;
+            background-color: #fff;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .menu-item.active {
+            background-color: #ff5000;
+            color: white;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* 设置卡片 */
+        .settings-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 设置项 */
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-label {
+            flex: 1;
+        }
+
+        .setting-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .setting-desc {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .setting-control {
+            width: 300px;
+        }
+
+        .setting-control input,
+        .setting-control select,
+        .setting-control textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .setting-control textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #ff5000;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* 操作按钮 */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .save-btn {
+            background-color: #ff5000;
+            color: white;
+        }
+
+        .cancel-btn {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* 通知设置 */
+        .notification-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .notification-item .setting-label {
+            flex: none;
+            width: 200px;
+        }
+
+        .channels {
+            display: flex;
+            gap: 15px;
+        }
+
+        .channel {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <div class="logo">管理系统</div>
+    <div class="user-info">
+        <div class="notification">
+            🔔
+            <span class="badge">3</span>
+        </div>
+        <div class="avatar" onclick="location.href='Home.html'">👤</div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="menu-item" onclick="location.href='Home.html'">
+            👤 个人中心
+        </div>
+        <div class="menu-item" onclick="location.href='Statistics.html'">
+            📊 数据统计
+        </div>
+        <div class="menu-item active">
+            🛠️ 系统设置
+        </div>
+        <div class="menu-item" onclick="location.href='Users.html'">
+            👥 用户管理
+        </div>
+        <div class="menu-item" onclick="location.href='Permissions.html'">
+            👥 权限管理
+        </div>
+        <div class="menu-item" onclick="location.href='Products.html'">
+            📦 商品管理
+        </div>
+        <div class="menu-item" onclick="location.href='Orders.html'">
+            💰 订单管理
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <h1 class="page-title">系统设置</h1>
+
+        <!-- 基础设置 -->
+        <div class="settings-card">
+            <div class="card-title">基础设置</div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-name">网站名称</div>
+                    <div class="setting-desc">网站的显示名称</div>
+                </div>
+                <div class="setting-control">
+                    <input type="text" value="管理系统">
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-name">网站Logo</div>
+                    <div class="setting-desc">建议尺寸200x60像素</div>
+                </div>
+                <div class="setting-control">
+                    <input type="file">
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-name">网站描述</div>
+                    <div class="setting-desc">网站的SEO描述信息</div>
+                </div>
+                <div class="setting-control">
+                    <textarea>专业的电商平台管理系统，提供完善的商品、订单、用户管理功能</textarea>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-name">默认语言</div>
+                    <div class="setting-desc">系统默认显示语言</div>
+                </div>
+                <div class="setting-control">
+                    <select>
+                        <option>中文简体</option>
+                        <option>中文繁体</option>
+                        <option>English</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能设置 -->
+        <div class="settings-card">
+            <div class="card-title">功能设置</div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-name">用户注册</div>
+                    <div class="setting-desc">是否允许新用户注册</div>
+                </div>
+                <div class="setting-control">
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-name">邮箱验证</div>
+                    <div class="setting-desc">用户注册时是否需要邮箱验证</div>
+                </div>
+                <div class="setting-control">
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-name">维护模式</div>
+                    <div class="setting-desc">开启后只有管理员可以访问</div>
+                </div>
+                <div class="setting-control">
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="setting-item">
+                <div class="setting-label">
+                    <div class="setting-name">自动备份</div>
+                    <div class="setting-desc">是否启用数据自动备份功能</div>
+                </div>
+                <div class="setting-control">
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 通知设置 -->
+        <div class="settings-card">
+            <div class="card-title">通知设置</div>
+            <div class="notification-item">
+                <div class="setting-label">新订单通知</div>
+                <div class="channels">
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        站内信
+                    </div>
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        邮件
+                    </div>
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                        短信
+                    </div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="setting-label">系统公告</div>
+                <div class="channels">
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        站内信
+                    </div>
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                        邮件
+                    </div>
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        短信
+                    </div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="setting-label">安全提醒</div>
+                <div class="channels">
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        站内信
+                    </div>
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        邮件
+                    </div>
+                    <div class="channel">
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                        短信
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="action-buttons">
+            <button class="action-btn save-btn">保存设置</button>
+            <button class="action-btn cancel-btn">取消</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 侧边栏菜单点击事件
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // 保存设置按钮点击事件
+    document.querySelector('.save-btn').addEventListener('click', function() {
+        alert('系统设置已保存');
+    });
+
+    // 取消按钮点击事件
+    document.querySelector('.cancel-btn').addEventListener('click', function() {
+        if(confirm('确定要取消当前操作吗？所有未保存的更改将会丢失。')) {
+            location.reload();
+        }
+    });
+
+    // 开关切换事件
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            console.log('设置项已更改:', this.closest('.setting-item') ?
+                    this.closest('.setting-item').querySelector('.setting-name').textContent :
+                    this.closest('.notification-item').querySelector('.setting-label').textContent,
+                '状态:', this.checked ? '开启' : '关闭');
+        });
+    });
+</script>
+</body>
+</html>

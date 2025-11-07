@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理后台 - 数据统计</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff5000;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification {
+            position: relative;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff5000;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* 主体内容 */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 200px;
+            background-color: #fff;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .menu-item.active {
+            background-color: #ff5000;
+            color: white;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .stat-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff5000;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 图表区域 */
+        .charts-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .chart-header {
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            color: #999;
+        }
+
+        /* 数据表格 */
+        .data-table {
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background-color: #fafafa;
+            font-weight: bold;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background-color: #fdfdfd;
+        }
+
+        /* 时间筛选 */
+        .time-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .time-filter label {
+            font-weight: bold;
+        }
+
+        .time-filter select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <div class="logo">管理系统</div>
+    <div class="user-info">
+        <div class="notification">
+            🔔
+            <span class="badge">3</span>
+        </div>
+        <div class="avatar" onclick="location.href='Home.html'">👤</div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="menu-item" onclick="location.href='Home.html'">
+            👤 个人中心
+        </div>
+        <div class="menu-item active">
+            📊 数据统计
+        </div>
+        <div class="menu-item" onclick="location.href='Settings.html'">
+            🛠️ 系统设置
+        </div>
+        <div class="menu-item" onclick="location.href='Users.html'">
+            👥 用户管理
+        </div>
+        <div class="menu-item" onclick="location.href='Permissions.html'">
+            👥 权限管理
+        </div>
+        <div class="menu-item" onclick="location.href='Products.html'">
+            📦 商品管理
+        </div>
+        <div class="menu-item" onclick="location.href='Orders.html'">
+            💰 订单管理
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <h1 class="page-title">数据统计</h1>
+
+        <!-- 时间筛选 -->
+        <div class="time-filter">
+            <label>时间范围:</label>
+            <select>
+                <option>今日</option>
+                <option selected>本周</option>
+                <option>本月</option>
+                <option>本季度</option>
+                <option>本年</option>
+            </select>
+        </div>
+
+        <!-- 统计信息 -->
+        <div class="stats-grid">
+            <a href="Person/DailyVisits.html">
+                <div class="stat-card">
+                    <div class="stat-number">128</div>
+                    <div class="stat-label">今日访问</div>
+                </div>
+            </a>
+            <a href="Person/PendingTasks.html">
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">待处理事项</div>
+                </div>
+            </a>
+            <a href="Person/SystemMessages.html">
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">系统消息</div>
+                </div>
+            </a>
+            <a href="Person/SystemStatus.html">
+                <div class="stat-card">
+                    <div class="stat-number">99%</div>
+                    <div class="stat-label">系统正常</div>
+                </div>
+            </a>
+
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">1,248</div>
+                <div class="stat-label">新增用户</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-number">¥128,450</div>
+                <div class="stat-label">总销售额</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-number">3,456</div>
+                <div class="stat-label">订单数量</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number">85.6%</div>
+                <div class="stat-label">转化率</div>
+            </div>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="charts-container">
+            <div class="chart-card">
+                <div class="chart-header">销售趋势</div>
+                <div class="chart-placeholder">
+                    [销售趋势图表]
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-header">用户分布</div>
+                <div class="chart-placeholder">
+                    [用户分布图表]
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据表格 -->
+        <div class="data-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>日期</th>
+                    <th>新增用户</th>
+                    <th>活跃用户</th>
+                    <th>订单数</th>
+                    <th>销售额</th>
+                    <th>转化率</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>2024-05-20</td>
+                    <td>120</td>
+                    <td>856</td>
+                    <td>245</td>
+                    <td>¥32,560</td>
+                    <td>12.5%</td>
+                </tr>
+                <tr>
+                    <td>2024-05-19</td>
+                    <td>98</td>
+                    <td>789</td>
+                    <td>198</td>
+                    <td>¥28,340</td>
+                    <td>11.2%</td>
+                </tr>
+                <tr>
+                    <td>2024-05-18</td>
+                    <td>112</td>
+                    <td>821</td>
+                    <td>215</td>
+                    <td>¥30,120</td>
+                    <td>13.1%</td>
+                </tr>
+                <tr>
+                    <td>2024-05-17</td>
+                    <td>85</td>
+                    <td>742</td>
+                    <td>187</td>
+                    <td>¥25,680</td>
+                    <td>10.8%</td>
+                </tr>
+                <tr>
+                    <td>2024-05-16</td>
+                    <td>105</td>
+                    <td>798</td>
+                    <td>223</td>
+                    <td>¥29,450</td>
+                    <td>12.3%</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 侧边栏菜单点击事件
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script>
+</body>
+</html>

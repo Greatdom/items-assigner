@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>财务管理 - 商户平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff5000;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .notification {
+            position: relative;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #ff5000;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ff5000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* 主体内容 */
+        .container {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 200px;
+            background-color: #fff;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .menu-item.active {
+            background-color: #ff5000;
+            color: white;
+        }
+
+        /* 主内容区 */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* 财务概览 */
+        .finance-overview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .overview-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .overview-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .overview-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff5000;
+            margin-bottom: 5px;
+        }
+
+        .overview-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* 筛选区域 */
+        .filter-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-item label {
+            font-weight: bold;
+            min-width: 60px;
+        }
+
+        .filter-item input,
+        .filter-item select {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .search-btn {
+            background-color: #ff5000;
+            color: white;
+        }
+
+        .reset-btn {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* 财务表格 */
+        .finance-table {
+            width: 100%;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .finance-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .finance-table th,
+        .finance-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .finance-table th {
+            background-color: #fafafa;
+            font-weight: bold;
+        }
+
+        .finance-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .finance-table tr:hover {
+            background-color: #fdfdfd;
+        }
+
+        .income {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .expense {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .status-success {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .status-failed {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .view-btn {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .download-btn {
+            background-color: #9e9e9e;
+            color: white;
+        }
+
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .page-btn {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            background-color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .page-btn.active {
+            background-color: #ff5000;
+            color: white;
+            border-color: #ff5000;
+        }
+
+        .page-btn:hover:not(.active) {
+            background-color: #f5f5f5;
+        }
+
+        /* 提现按钮 */
+        .withdraw-btn {
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <div class="logo">商户平台</div>
+    <div class="user-info">
+        <div class="notification">
+            🔔
+            <span class="badge">3</span>
+        </div>
+        <div class="avatar" onclick="location.href='profile.html'">👤</div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="menu-item" onclick="location.href='Profile.html'">
+            🏪 店铺信息
+        </div>
+        <div class="menu-item" onclick="location.href='Products.html'">
+            📦 商品管理
+        </div>
+        <div class="menu-item" onclick="location.href='Orders.html'">
+            💰 订单管理
+        </div>
+        <div class="menu-item" onclick="location.href='Statistics.html'">
+            📊 数据统计
+        </div>
+        <div class="menu-item active" onclick="location.href='Finance.html'">
+            💵 财务管理
+        </div>
+        <div class="menu-item" onclick="location.href='settings.html'">
+            ⚙️ 系统设置
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div class="main-content">
+        <h1 class="page-title">财务管理</h1>
+
+        <!-- 财务概览 -->
+        <div class="finance-overview">
+            <div class="overview-card">
+                <div class="overview-icon">💰</div>
+                <div class="overview-amount">¥128,450</div>
+                <div class="overview-label">账户余额</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">📈</div>
+                <div class="overview-amount">¥32,560</div>
+                <div class="overview-label">本月收入</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">📉</div>
+                <div class="overview-amount">¥8,240</div>
+                <div class="overview-label">本月支出</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-icon">💳</div>
+                <div class="overview-amount">¥95,670</div>
+                <div class="overview-label">可提现金额</div>
+            </div>
+        </div>
+
+        <!-- 提现按钮 -->
+        <button class="withdraw-btn">申请提现</button>
+
+        <!-- 筛选区域 -->
+        <div class="filter-section">
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label>时间范围:</label>
+                    <input type="date">
+                    <span>-</span>
+                    <input type="date">
+                </div>
+                <div class="filter-item">
+                    <label>交易类型:</label>
+                    <select>
+                        <option value="">全部类型</option>
+                        <option value="income">收入</option>
+                        <option value="expense">支出</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>状态:</label>
+                    <select>
+                        <option value="">全部状态</option>
+                        <option value="success">成功</option>
+                        <option value="pending">处理中</option>
+                        <option value="failed">失败</option>
+                    </select>
+                </div>
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn search-btn">搜索</button>
+                <button class="filter-btn reset-btn">重置</button>
+            </div>
+        </div>
+
+        <!-- 财务表格 -->
+        <div class="finance-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>交易时间</th>
+                    <th>交易编号</th>
+                    <th>交易类型</th>
+                    <th>交易金额</th>
+                    <th>账户余额</th>
+                    <th>交易状态</th>
+                    <th>备注</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>2024-05-20 14:30</td>
+                    <td>TX20240520001</td>
+                    <td>商品销售</td>
+                    <td class="income">+¥199.00</td>
+                    <td>¥128,450.00</td>
+                    <td class="status-success">成功</td>
+                    <td>订单#20240520001</td>
+                    <td>
+                        <button class="action-btn view-btn">查看</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2024-05-20 10:15</td>
+                    <td>TX20240520002</td>
+                    <td>平台服务费</td>
+                    <td class="expense">-¥19.90</td>
+                    <td>¥128,251.00</td>
+                    <td class="status-success">成功</td>
+                    <td>订单#20240519005服务费</td>
+                    <td>
+                        <button class="action-btn view-btn">查看</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2024-05-19 16:45</td>
+                    <td>TX20240519003</td>
+                    <td>商品销售</td>
+                    <td class="income">+¥299.00</td>
+                    <td>¥128,270.90</td>
+                    <td class="status-success">成功</td>
+                    <td>订单#20240519005</td>
+                    <td>
+                        <button class="action-btn view-btn">查看</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2024-05-19 09:30</td>
+                    <td>TX20240519004</td>
+                    <td>提现</td>
+                    <td class="expense">-¥50,000.00</td>
+                    <td>¥127,971.90</td>
+                    <td class="status-pending">处理中</td>
+                    <td>提现申请</td>
+                    <td>
+                        <button class="action-btn view-btn">查看</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2024-05-18 14:20</td>
+                    <td>TX20240518005</td>
+                    <td>商品销售</td>
+                    <td class="income">+¥89.90</td>
+                    <td>¥177,971.90</td>
+                    <td class="status-success">成功</td>
+                    <td>订单#20240518012</td>
+                    <td>
+                        <button class="action-btn view-btn">查看</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 分页 -->
+        <div class="pagination">
+            <button class="page-btn active">1</button>
+            <button class="page-btn">2</button>
+            <button class="page-btn">3</button>
+            <button class="page-btn">下一页</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 侧边栏菜单点击事件
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // 提现按钮点击事件
+    document.querySelector('.withdraw-btn').addEventListener('click', function() {
+        alert('跳转到提现申请页面');
+    });
+
+    // 查看按钮点击事件
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            alert('查看交易详情');
+        });
+    });
+
+    // 搜索按钮点击事件
+    document.querySelector('.search-btn').addEventListener('click', function() {
+        alert('执行搜索操作');
+    });
+
+    // 重置按钮点击事件
+    document.querySelector('.reset-btn').addEventListener('click', function() {
+        document.querySelectorAll('input').forEach(input => input.value = '');
+        document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+    });
+</script>
+</body>
+</html>

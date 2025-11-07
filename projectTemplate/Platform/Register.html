@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商户注册 - 商户平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部导航栏 */
+        .header {
+            background-color: #fff;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff5000;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .login-link {
+            color: #ff5000;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        /* 主体内容 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .register-title {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .register-subtitle {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus {
+            border-color: #ff5000;
+            outline: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+
+        .checkbox-group label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .checkbox-group a {
+            color: #ff5000;
+            text-decoration: none;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #ff5000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .register-btn:hover {
+            background-color: #e64a19;
+        }
+
+        .register-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .register-footer a {
+            color: #ff5000;
+            text-decoration: none;
+        }
+
+        /* 底部 */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<!-- 顶部导航栏 -->
+<div class="header">
+    <div class="logo">商户平台</div>
+    <div class="nav-links">
+        <a href="Home.html" class="nav-link">首页</a>
+        <a href="#" class="nav-link">功能</a>
+        <a href="#" class="nav-link">价格</a>
+        <a href="#" class="nav-link">帮助中心</a>
+    </div>
+    <div>
+        <a href="login.html" class="login-link">登录</a>
+    </div>
+</div>
+
+<!-- 主体内容 -->
+<div class="main-content">
+    <div class="register-container">
+        <div class="register-header">
+            <h1 class="register-title">商户注册</h1>
+            <p class="register-subtitle">欢迎加入我们的商户平台</p>
+        </div>
+        <form id="registerForm">
+            <div class="form-group">
+                <label class="form-label" for="shopName">店铺名称</label>
+                <input type="text" id="shopName" class="form-input" placeholder="请输入您的店铺名称" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="ownerName">负责人姓名</label>
+                <input type="text" id="ownerName" class="form-input" placeholder="请输入负责人姓名" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="phone">手机号码</label>
+                <input type="tel" id="phone" class="form-input" placeholder="请输入手机号码" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="email">邮箱地址</label>
+                <input type="email" id="email" class="form-input" placeholder="请输入邮箱地址" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="password">登录密码</label>
+                <input type="password" id="password" class="form-input" placeholder="请输入密码（至少6位）" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="confirmPassword">确认密码</label>
+                <input type="password" id="confirmPassword" class="form-input" placeholder="请再次输入密码" required>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="agreement" required>
+                <label for="agreement">我已阅读并同意 <a href="#">《商户服务协议》</a> 和 <a href="#">《隐私政策》</a></label>
+            </div>
+            <button type="submit" class="register-btn">立即注册</button>
+        </form>
+        <div class="register-footer">
+            已有账户？<a href="Login.html">立即登录</a>
+        </div>
+    </div>
+</div>
+
+<!-- 底部 -->
+<div class="footer">
+    © 2024 商户平台. 保留所有权利.
+</div>
+
+<script>
+    // 表单提交事件
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 获取表单数据
+        const shopName = document.getElementById('shopName').value;
+        const ownerName = document.getElementById('ownerName').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        // 简单验证
+        if (password !== confirmPassword) {
+            alert('两次输入的密码不一致，请重新输入');
+            return;
+        }
+
+        if (password.length < 6) {
+            alert('密码长度不能少于6位');
+            return;
+        }
+
+        // 模拟注册成功
+        alert('注册成功！即将跳转到登录页面。');
+        setTimeout(function() {
+            window.location.href = 'login.html';
+        }, 1500);
+    });
+</script>
+</body>
+</html>

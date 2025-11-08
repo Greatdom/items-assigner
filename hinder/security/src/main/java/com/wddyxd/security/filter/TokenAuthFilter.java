@@ -52,24 +52,22 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         try {
-            //TODO要用异常捕捉器抛出原始Auth异常的子类
-            //获取当前认证成功用户权限信息
             UsernamePasswordAuthenticationToken authRequest = getAuthentication(request);
-            //判断如果有权限信息，放到权限上下文中
             if(authRequest != null) {
                 SecurityContextHolder.getContext().setAuthentication(authRequest);
             }else throw new SecurityAuthException(ResultCodeEnum.USER_INFO_ERROR);
         } catch (SecurityAuthException e) {
             unAuthEntryPoint.commence(request, response, e);
         }
-
         chain.doFilter(request,response);
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         // 从header获取token
         String token = request.getHeader("token");
-        if(token != null) {
+        if(token == null||token.isEmpty()) {
+            throw new SecurityAuthException(ResultCodeEnum.TOKEN_EMPTY_ERROR);
+        }else{
             try {
                 if(userTokenManager.hasSameTokenInRedis(token)) {
                     userTokenManager.refreshTokenExpire(token);
@@ -90,13 +88,13 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
                         }
                     }
                 }
+                return null;
             } catch (Exception e) {
                 System.out.println("getAuthentication:解析token异常");
                 e.printStackTrace();
                 return null;
             }
         }
-        return null;
     }
 
 }

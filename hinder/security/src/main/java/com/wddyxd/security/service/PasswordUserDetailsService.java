@@ -1,13 +1,18 @@
 package com.wddyxd.security.service;
 
 
+import com.mysql.cj.protocol.MessageListener;
+import com.wddyxd.common.constant.LogPrompt;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.clients.UserClient;
+import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.CurrentUserInfo;
 import com.wddyxd.security.pojo.LoginUserForm;
 import com.wddyxd.security.pojo.SecurityUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,15 +32,21 @@ public class PasswordUserDetailsService implements UserDetailsService {
     @Autowired
     private UserClient userClient;
 
+    private static final Logger log = LoggerFactory.getLogger(PasswordUserDetailsService.class);
 
     @Override
     public UserDetails loadUserByUsername(String username){
         com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO getUser;
-        Result<com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO> get = userClient.passwordSecurityGetter(username);
+        Result<com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO> get = null;
+        try {
+            get = userClient.passwordSecurityGetter(username);
+        } catch (Exception e) {
+            log.error(LogPrompt.FEIGN_ERROR.msg);
+            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
+        }
         getUser = get.getData();
         if(getUser == null||getUser.getLoginUserForm() == null||getUser.getCurrentUserInfo() == null) {
-            System.out.println("用户不存在");
-            throw new UsernameNotFoundException("用户不存在");
+            throw new SecurityAuthException(ResultCodeEnum.USER_OR_PASSWORD_ERROR);
         }
         LoginUserForm loginUserForm = new LoginUserForm();
         BeanUtils.copyProperties(getUser.getLoginUserForm(),loginUserForm);

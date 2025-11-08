@@ -2,8 +2,9 @@ package com.wddyxd.security.filter;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wddyxd.common.constant.RedisKeyConstants;
+import com.wddyxd.common.constant.LogPrompt;
 import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.SecurityUser;
 import com.wddyxd.security.pojo.LoginUserForm;
 import com.wddyxd.security.pojo.TokenInfo;
@@ -17,7 +18,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -40,6 +42,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     private final UserTokenManager userTokenManager;
     private final AuthenticationManager authenticationManager;
     private final AuthenticationFailureHandler AuthFailureHandler;
+    private static final Logger log = LoggerFactory.getLogger(TokenLoginFilter.class);
 
     public TokenLoginFilter(AuthenticationManager authenticationManager ,
                             UserTokenManager userTokenManager,
@@ -63,38 +66,38 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
              if(StringUtils.isEmpty(user.getLoginType())){
                  user.setLoginType("password");
              }
-             if("phone".equals(user.getLoginType())){
-                 return authenticationManager.authenticate(
-                         new LoginAuthenticationToken(user.getPhone(),user.getPhoneCode(),"phone",
-                         null));
-             }else if("email".equals(user.getLoginType())){
-                 return authenticationManager.authenticate(
-                         new LoginAuthenticationToken(user.getEmail(),user.getEmailCode(),"email",
-                         null));
-
-             }else if("password".equals(user.getLoginType())){
-                 String principal = org.springframework.util.StringUtils.hasText(user.getUsername()) ?
-                         user.getUsername() : user.getPhone();
-                 principal = org.springframework.util.StringUtils.hasText(principal) ?
-                         principal : user.getEmail();
-                 return authenticationManager.authenticate(
-                         new LoginAuthenticationToken(principal,user.getPassword(),"password",
-                         null));
-
-             }else{
-                 throw new RuntimeException("请选择正确的登录方式");
-             }
+            switch (user.getLoginType()) {
+                case "phone" -> {
+                    return authenticationManager.authenticate(
+                            new LoginAuthenticationToken(user.getPhone(), user.getPhoneCode(), "phone",
+                                    null));
+                }
+                case "email" -> {
+                    return authenticationManager.authenticate(
+                            new LoginAuthenticationToken(user.getEmail(), user.getEmailCode(), "email",
+                                    null));
+                }
+                case "password" -> {
+                    String principal = org.springframework.util.StringUtils.hasText(user.getUsername()) ?
+                            user.getUsername() : user.getPhone();
+                    principal = org.springframework.util.StringUtils.hasText(principal) ?
+                            principal : user.getEmail();
+                    return authenticationManager.authenticate(
+                            new LoginAuthenticationToken(principal, user.getPassword(), "password",
+                                    null));
+                }
+                case null, default -> throw new SecurityAuthException(ResultCodeEnum.LOGIN_FORM_ERROR);
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException("获取表单错误");
+            log.error(LogPrompt.IOEXCEPTION_ERROR.msg);
+            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
         }
     }
 
     //2 认证成功调用的方法
     @Override
     protected void successfulAuthentication(HttpServletRequest request,
-                                            HttpServletResponse response, FilterChain chain, Authentication authResult)
-            throws IOException, ServletException {
+                                            HttpServletResponse response, FilterChain chain, Authentication authResult)throws IOException, ServletException {
         //认证成功，得到认证成功之后用户信息
         SecurityUser user = (SecurityUser)authResult.getPrincipal();
         System.out.println("用户信息："+user.getCurrentUserInfo());
@@ -102,14 +105,17 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setId(user.getCurrentUserInfo().getId());
         tokenInfo.setTimestamp(System.currentTimeMillis());
-        String token = userTokenManager.createToken(tokenInfo);
-        System.out.println("用户token："+token);
-        userTokenManager.addTokenInRedis(token);
+        String token = null;
 
-
-
-        //把用户名称和用户信息放到redis
-        userInfoManager.saveInfoInRedis(user);
+        try {
+            token = userTokenManager.createToken(tokenInfo);
+            System.out.println("用户token："+token);
+            userTokenManager.addTokenInRedis(token);
+            //把用户名称和用户信息放到redis
+            userInfoManager.saveInfoInRedis(user);
+        } catch (AuthenticationException e){
+            this.unsuccessfulAuthentication(request, response, e);
+        }
         //返回token
         ResponseUtil.out(response, Result.success(token));
     }

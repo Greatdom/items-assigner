@@ -16,7 +16,6 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD5Encoder {
     //TODO 可以换成更好的加密方式
-
     public static String encrypt(String strSrc) {
         try {
             char hexChars[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
@@ -35,8 +34,7 @@ public class MD5Encoder {
             }
             return new String(chars);
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            throw new CustomException(ResultCodeEnum.PASSWORD_ENCODE_ERROR);
+            return strSrc;
         }
     }
 

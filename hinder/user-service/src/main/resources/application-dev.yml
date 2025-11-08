@@ -23,3 +23,13 @@ eureka:
 token:
   signKey: 123456
   expiration: 86400000
+logging:
+  level:
+    com.wddyxd.userservice: debug
+    com.wddyxd.security: debug
+    com.wddyxd.common: debug
+  file:
+    name: Log/user-service.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%method:%line - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%method:%line - %msg%n"

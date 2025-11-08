@@ -1,11 +1,15 @@
 package com.wddyxd.security.security;
 
 
+import com.wddyxd.common.constant.LogPrompt;
 import com.wddyxd.common.constant.RedisKeyConstants;
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.CurrentUserInfo;
 import com.wddyxd.security.pojo.SecurityUser;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ZSetOperations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -23,26 +27,29 @@ public class UserInfoManager {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final Integer TOKEN_EXPIRE_DAYS = 7;
+    private static final Logger log = LoggerFactory.getLogger(UserInfoManager.class);
 
-    // 注入 RedisTemplate
     public UserInfoManager(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
     public void saveInfoInRedis(SecurityUser securityUser) {
+        if(securityUser == null
+                || securityUser.getCurrentUserInfo() == null
+                ||securityUser.getCurrentUserInfo().getId() == null){
+            log.error(LogPrompt.PARAM_EMPTY_ERROR.msg);
+            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
+        }
+        CurrentUserInfo currentUserInfo = securityUser.getCurrentUserInfo();
+        Long id = currentUserInfo.getId();
+        String key = RedisKeyConstants.USER_LOGIN_USERINFO.key + id.toString();
+
         try {
-            if(securityUser == null|| securityUser.getCurrentUserInfo() == null||securityUser.getCurrentUserInfo().getId() == null){
-                System.out.println("从Redis试图添加用户信息：用户信息为null");
-                return;
-            }
-            CurrentUserInfo currentUserInfo = securityUser.getCurrentUserInfo();
-            Long id = currentUserInfo.getId();
-            String key = RedisKeyConstants.USER_LOGIN_USERINFO.key + id.toString();
             redisTemplate.opsForValue().set(key, currentUserInfo, TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
-            System.out.println("从Redis试图添加用户信息：添加成功");
+            log.info(LogPrompt.SUCCESS_INFO.msg);
         } catch (Exception e) {
-            System.out.println("从Redis试图添加用户信息：Redis存储异常");
-            throw new RuntimeException("用户信息缓存存储失败，请稍后重试",e);
+            log.error(LogPrompt.REDIS_SERVER_ERROR.msg);
+            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
         }
     }
 
@@ -51,23 +58,17 @@ public class UserInfoManager {
         CurrentUserInfo currentUserInfo = null;
         try {
             Object value = redisTemplate.opsForValue().get(key);
-            if(value == null){
-                System.out.println("从Redis查询用户信息：Key不存在，用户ID：" + id);
-                return null;
-            }
             if (!(value instanceof CurrentUserInfo)) {
-                System.out.println("Redis中Key的类型不匹配，预期：CurrentUserInfo，实际不是");
+                log.error(LogPrompt.REDIS_GET_DATA_ERROR.msg);
                 redisTemplate.delete(key);
-                return null;
+                throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
             }
             currentUserInfo = (CurrentUserInfo) value;
             redisTemplate.expire(key, TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
-            System.out.println("从Redis查询用户信息：查询成功，用户ID：" + id);
+            log.info(LogPrompt.SUCCESS_INFO.msg);
             return currentUserInfo;
         }catch (Exception e) {
-            System.out.println("从Redis查询用户信息异常，用户ID：" + id);
-            return null;
+            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
         }
-
     }
 }

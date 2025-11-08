@@ -102,7 +102,9 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         com.wddyxd.userservice.pojo.securityDTO.LoginUserForm loginUserForm = new com.wddyxd.userservice.pojo.securityDTO.LoginUserForm();
         BeanUtils.copyProperties(user,loginUserForm);
         CurrentUserDTO userInfo = getUserInfo(user.getId());
-        if(userInfo == null)return null;
+        if(userInfo == null) {
+            return null;
+        }
         com.wddyxd.userservice.pojo.securityDTO.CurrentUserInfo currentUserInfo = new com.wddyxd.userservice.pojo.securityDTO.CurrentUserInfo();
         BeanUtils.copyProperties(userInfo,currentUserInfo);
         return new SecurityUserDTO(loginUserForm,currentUserInfo);
@@ -118,8 +120,9 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         userQuery.eq("id", id)
                 .eq("is_deleted", 0); // 逻辑删除：0-未删除
         User user = userMapper.selectOne(userQuery);
-        if (user == null) return null;
-
+        if (user == null) {
+            return null;
+        }
         // 2. 查询用户关联的角色名称列表
         List<String> roles = userMapper.selectRoleNamesByUserId(user.getId());
 

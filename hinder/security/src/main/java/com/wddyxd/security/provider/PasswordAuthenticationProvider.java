@@ -1,6 +1,8 @@
 package com.wddyxd.security.provider;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.LoginAuthenticationToken;
 import com.wddyxd.security.pojo.SecurityUser;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -42,21 +44,15 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
         if (!"password".equals(loginToken.getLoginType())) {
             return null;
         }
-
         String username = (String) loginToken.getPrincipal();
         String password = (String) loginToken.getCredentials();
-
-        System.out.println("PasswordAuthenticationProvider.password");
-
         // 加载用户信息
         SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(username);
 
         // 验证密码
         if (!passwordEncoder.matches(password, securityUser.getPassword())) {
-            System.out.println("密码错误");
-            throw new BadCredentialsException("密码错误");
+            throw new SecurityAuthException(ResultCodeEnum.USER_OR_PASSWORD_ERROR);
         }
-
         return new UsernamePasswordAuthenticationToken(securityUser, null, null);
     }
 

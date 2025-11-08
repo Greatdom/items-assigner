@@ -30,8 +30,6 @@ import java.util.Map;
 public class CustomUnAuthExceptionHandler implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        ResponseUtil.out(httpServletResponse, Result.error(ResultCodeEnum.UN_LOGIN_ERROR));
-
         if(e instanceof SecurityAuthException){
             Integer code = ((SecurityAuthException) e).getCode();
             String msg = ((SecurityAuthException) e).getMsg();

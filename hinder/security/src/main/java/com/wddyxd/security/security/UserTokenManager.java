@@ -120,19 +120,15 @@ public class UserTokenManager {
 
 
     }
-    //TODO
     //获取token
     public String getToken(String token) {
         TokenInfo tokenInfo = IsValidToken(token);
         try {
             String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
             return (String)redisTemplate.opsForValue().get(tokenKey);
-        } catch (IllegalArgumentException ex) {
-            System.out.println("获取Token失败：参数无效");
-            throw ex;
         }catch (Exception e) {
-            System.out.println("获取Token失败：Redis操作异常");
-            throw new RuntimeException("获取Token失败：Redis操作异常", e);
+            log.error(LogPrompt.REDIS_SERVER_ERROR.msg);
+            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
         }
     }
     //判断这个token在redis中是否存在
@@ -142,17 +138,12 @@ public class UserTokenManager {
             throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
         }
         String tokenInRedis = getToken(token);
-        try {
-            if(tokenInRedis != null) {
-                boolean isSame = tokenInRedis.equals(token);
-                log.info(LogPrompt.SUCCESS_INFO.msg);
-                return isSame;
-            }
-            return false;
-        } catch (Exception e) {
-            log.error(LogPrompt.REDIS_SERVER_ERROR.msg);
-            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
-        }
+        if(tokenInRedis != null) {
+            boolean isSame = tokenInRedis.equals(token);
+            log.info(LogPrompt.SUCCESS_INFO.msg);
+            if(!isSame) throw new SecurityAuthException(ResultCodeEnum.TOKEN_EXPIRED_ERROR);
+            else return true;
+        }else throw new SecurityAuthException(ResultCodeEnum.TOKEN_EXPIRED_ERROR);
     }
     //移除token
     public void removeToken(String token) {

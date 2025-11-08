@@ -38,14 +38,17 @@ public class PasswordUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username){
         com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO getUser;
         Result<com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO> get = null;
-        try {
-            get = userClient.passwordSecurityGetter(username);
-        } catch (Exception e) {
-            log.error(LogPrompt.FEIGN_ERROR.msg);
-            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
-        }
+        get = userClient.passwordSecurityGetter(username);
+        System.out.println("get = " + get);
+//        try {
+//
+//        } catch (Exception e) {
+//            log.error(LogPrompt.FEIGN_ERROR.msg);
+//            throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
+//        }
         getUser = get.getData();
         if(getUser == null||getUser.getLoginUserForm() == null||getUser.getCurrentUserInfo() == null) {
+            System.out.println("getUser = " + getUser);
             throw new SecurityAuthException(ResultCodeEnum.USER_OR_PASSWORD_ERROR);
         }
         LoginUserForm loginUserForm = new LoginUserForm();

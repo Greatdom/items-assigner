@@ -26,6 +26,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.io.IOException;
 
@@ -53,7 +55,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         this.userTokenManager = userTokenManager;
         this.AuthFailureHandler = AuthFailureHandler;
         this.setPostOnly(false);
-        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/auth/login","POST"));
+        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/auth/login", "POST"));
     }
 
     //1 获取表单提交用户名和密码

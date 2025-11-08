@@ -51,50 +51,48 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
+        String requestURI = request.getRequestURI();
+        if (requestURI.startsWith("/user/auth/passwordSecurityGetter")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         try {
             UsernamePasswordAuthenticationToken authRequest = getAuthentication(request);
-            if(authRequest != null) {
-                SecurityContextHolder.getContext().setAuthentication(authRequest);
-            }else throw new SecurityAuthException(ResultCodeEnum.USER_INFO_ERROR);
+            SecurityContextHolder.getContext().setAuthentication(authRequest);
+            chain.doFilter(request,response);
         } catch (SecurityAuthException e) {
             unAuthEntryPoint.commence(request, response, e);
         }
-        chain.doFilter(request,response);
+
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         // 从header获取token
         String token = request.getHeader("token");
+        // 判断token是否为空
         if(token == null||token.isEmpty()) {
-            throw new SecurityAuthException(ResultCodeEnum.TOKEN_EMPTY_ERROR);
-        }else{
-            try {
-                if(userTokenManager.hasSameTokenInRedis(token)) {
-                    userTokenManager.refreshTokenExpire(token);
-                    TokenInfo tokenInfo = userTokenManager.getTokenInfoFromToken(token);
-                    if (tokenInfo != null) {
-                        Long id = tokenInfo.getId();
-                        // 从redis获取对应权限列表
-                        CurrentUserInfo redisUserInfo = userInfoManager.getInfoFromRedis(id);
-                        if (redisUserInfo != null) {
-                            List<String> permissionValueList = redisUserInfo.getPermissionValueList();
-
-                            Collection<GrantedAuthority> authority = new ArrayList<>();
-                            for(String permissionValue : permissionValueList) {
-                                SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
-                                authority.add(auth);
-                            }
-                            return new UsernamePasswordAuthenticationToken(redisUserInfo, token, authority);
-                        }
-                    }
-                }
-                return null;
-            } catch (Exception e) {
-                System.out.println("getAuthentication:解析token异常");
-                e.printStackTrace();
-                return null;
-            }
+            throw new SecurityAuthException(ResultCodeEnum.UN_LOGIN_ERROR);
         }
+        // 判断token是否在redis中,也就是判断token是否过期
+        boolean isSame = userTokenManager.hasSameTokenInRedis(token);
+        if(!isSame) throw new SecurityAuthException(ResultCodeEnum.TOKEN_EXPIRED_ERROR);
+        // 刷新token的过期时间
+        userTokenManager.refreshTokenExpire(token);
+        // 从token中获取用户信息
+        TokenInfo tokenInfo = userTokenManager.getTokenInfoFromToken(token);
+        Long id = tokenInfo.getId();
+        // 从redis获取用户信息
+        CurrentUserInfo redisUserInfo = userInfoManager.getInfoFromRedis(id);
+        if (redisUserInfo != null) {
+            List<String> permissionValueList = redisUserInfo.getPermissionValueList();
+            Collection<GrantedAuthority> authority = new ArrayList<>();
+            for(String permissionValue : permissionValueList) {
+                SimpleGrantedAuthority auth = new SimpleGrantedAuthority(permissionValue);
+                authority.add(auth);
+            }
+            return new UsernamePasswordAuthenticationToken(redisUserInfo, token, authority);
+        }else throw new SecurityAuthException(ResultCodeEnum.USER_INFO_ERROR);
     }
 
 }

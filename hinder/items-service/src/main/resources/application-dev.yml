@@ -25,9 +25,9 @@ token:
   expiration: 86400000
 logging:
   level:
-    com.wddyxd.itemsservice: debug
-    com.wddyxd.security: debug
-    com.wddyxd.common: debug
+    com.wddyxd.itemsservice: WARN
+    com.wddyxd.security: WARN
+    com.wddyxd.common: WARN
   file:
     name: Log/items-service.log
   pattern:

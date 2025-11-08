@@ -28,9 +28,9 @@ token:
   expiration: 86400000
 logging:
   level:
-    com.wddyxd.userservice: debug
-    com.wddyxd.security: debug
-    com.wddyxd.common: debug
+    com.wddyxd.userservice: WARN
+    com.wddyxd.security: WARN
+    com.wddyxd.common: WARN
   file:
     path: /var/logs/userservice
   pattern:

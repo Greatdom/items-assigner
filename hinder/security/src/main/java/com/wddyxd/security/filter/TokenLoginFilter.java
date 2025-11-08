@@ -21,6 +21,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -35,16 +36,19 @@ import java.io.IOException;
 
 public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
 
-    private UserInfoManager userInfoManager;
-    private UserTokenManager userTokenManager;
-    private RedisTemplate<String, Object> redisTemplate;
-    private AuthenticationManager authenticationManager;
+    private final UserInfoManager userInfoManager;
+    private final UserTokenManager userTokenManager;
+    private final AuthenticationManager authenticationManager;
+    private final AuthenticationFailureHandler AuthFailureHandler;
 
-    public TokenLoginFilter(AuthenticationManager authenticationManager , UserTokenManager userTokenManager, RedisTemplate redisTemplate, UserInfoManager userInfoManager) {
+    public TokenLoginFilter(AuthenticationManager authenticationManager ,
+                            UserTokenManager userTokenManager,
+                            UserInfoManager userInfoManager,
+                            AuthenticationFailureHandler AuthFailureHandler) {
         this.userInfoManager = userInfoManager;
         this.authenticationManager = authenticationManager;
         this.userTokenManager = userTokenManager;
-        this.redisTemplate = redisTemplate;
+        this.AuthFailureHandler = AuthFailureHandler;
         this.setPostOnly(false);
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/auth/login","POST"));
     }
@@ -113,6 +117,6 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     //3 认证失败调用的方法
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed)
             throws IOException, ServletException {
-        ResponseUtil.out(response, Result.error(ResultCodeEnum.AUTH_FAILED_ERROR));
+        AuthFailureHandler.onAuthenticationFailure(request, response, failed);
     }
 }

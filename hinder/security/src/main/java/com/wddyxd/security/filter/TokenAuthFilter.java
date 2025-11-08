@@ -2,6 +2,8 @@ package com.wddyxd.security.filter;
 
 
 import com.wddyxd.common.constant.RedisKeyConstants;
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.CurrentUserInfo;
 import com.wddyxd.security.pojo.TokenInfo;
 import com.wddyxd.security.security.UserInfoManager;
@@ -16,6 +18,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import java.io.IOException;
@@ -32,24 +35,34 @@ import java.util.List;
 
 public class TokenAuthFilter extends BasicAuthenticationFilter {
 
-    private UserTokenManager userTokenManager;
-    private RedisTemplate<String, Object> redisTemplate;
-    private UserInfoManager userInfoManager;
-    public TokenAuthFilter(AuthenticationManager authenticationManager, UserTokenManager userTokenManager, RedisTemplate redisTemplate, UserInfoManager userInfoManager) {
+    private final UserTokenManager userTokenManager;
+    private final UserInfoManager userInfoManager;
+    private final AuthenticationEntryPoint unAuthEntryPoint;
+    public TokenAuthFilter(AuthenticationManager authenticationManager,
+                           UserTokenManager userTokenManager,
+                           UserInfoManager userInfoManager,
+                           AuthenticationEntryPoint unAuthEntryPoint) {
         super(authenticationManager);
         this.userTokenManager = userTokenManager;
-        this.redisTemplate = redisTemplate;
         this.userInfoManager = userInfoManager;
+        this.unAuthEntryPoint = unAuthEntryPoint;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        //获取当前认证成功用户权限信息
-        UsernamePasswordAuthenticationToken authRequest = getAuthentication(request);
-        //判断如果有权限信息，放到权限上下文中
-        if(authRequest != null) {
-            SecurityContextHolder.getContext().setAuthentication(authRequest);
+
+        try {
+            //TODO要用异常捕捉器抛出原始Auth异常的子类
+            //获取当前认证成功用户权限信息
+            UsernamePasswordAuthenticationToken authRequest = getAuthentication(request);
+            //判断如果有权限信息，放到权限上下文中
+            if(authRequest != null) {
+                SecurityContextHolder.getContext().setAuthentication(authRequest);
+            }else throw new SecurityAuthException(ResultCodeEnum.USER_INFO_ERROR);
+        } catch (SecurityAuthException e) {
+            unAuthEntryPoint.commence(request, response, e);
         }
+
         chain.doFilter(request,response);
     }
 
@@ -78,7 +91,6 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
                     }
                 }
             } catch (Exception e) {
-                // 处理可能的异常
                 System.out.println("getAuthentication:解析token异常");
                 e.printStackTrace();
                 return null;

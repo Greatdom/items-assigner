@@ -33,7 +33,7 @@ public class PasswordUserDetailsService implements UserDetailsService {
         com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO getUser;
         Result<com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO> get = userClient.passwordSecurityGetter(username);
         getUser = get.getData();
-        if(getUser == null) {
+        if(getUser == null||getUser.getLoginUserForm() == null||getUser.getCurrentUserInfo() == null) {
             System.out.println("用户不存在");
             throw new UsernameNotFoundException("用户不存在");
         }

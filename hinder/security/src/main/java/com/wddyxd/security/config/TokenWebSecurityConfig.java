@@ -1,6 +1,7 @@
 package com.wddyxd.security.config;
 
 
+import com.wddyxd.security.exception.CustomUnAuthExceptionHandler;
 import com.wddyxd.security.filter.TokenAuthFilter;
 import com.wddyxd.security.filter.TokenLoginFilter;
 import com.wddyxd.security.provider.EmailCodeAuthenticationProvider;
@@ -18,7 +19,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import java.util.Arrays;
 
@@ -41,6 +45,9 @@ public class TokenWebSecurityConfig {
     private final UserDetailsService passwordUserDetailsService;
     private final UserDetailsService phoneCodeUserDetailsService;
     private final UserDetailsService emailCodeUserDetailsService;
+    private final AuthenticationEntryPoint unAuthEntryPoint;
+    private final AuthenticationFailureHandler AuthFailureHandler;
+    private final AccessDeniedHandler accessDeniedHandler;
 
     public TokenWebSecurityConfig(
             @Qualifier("passwordUserDetailsService") UserDetailsService passwordUserDetailsService,
@@ -49,7 +56,10 @@ public class TokenWebSecurityConfig {
                                   DefaultPasswordEncoder defaultPasswordEncoder,
                                   UserTokenManager userTokenManager,
                                   RedisTemplate<String, Object> redisTemplate,
-                                    UserInfoManager userInfoManager) {
+                                    UserInfoManager userInfoManager,
+            AuthenticationEntryPoint unAuthEntryPoint,
+            AuthenticationFailureHandler AuthFailureHandler,
+            AccessDeniedHandler accessDeniedHandler) {
         this.passwordUserDetailsService = passwordUserDetailsService;
         this.phoneCodeUserDetailsService = phoneCodeUserDetailsService;
         this.emailCodeUserDetailsService = emailCodeUserDetailsService;
@@ -57,6 +67,9 @@ public class TokenWebSecurityConfig {
         this.userTokenManager = userTokenManager;
         this.redisTemplate = redisTemplate;
         this.userInfoManager = userInfoManager;
+        this.unAuthEntryPoint = unAuthEntryPoint;
+        this.AuthFailureHandler = AuthFailureHandler;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     /**
@@ -71,7 +84,8 @@ public class TokenWebSecurityConfig {
 
                 // 异常处理
                 .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(new UnAuthEntryPoint())
+                        exception.authenticationEntryPoint(unAuthEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
                 )
                 // 授权配置
                 .authorizeHttpRequests(authz -> authz
@@ -89,8 +103,8 @@ public class TokenWebSecurityConfig {
                 );
 
         // 添加自定义过滤器
-        http.addFilter(new TokenLoginFilter(authenticationManager, userTokenManager, redisTemplate, userInfoManager));
-        http.addFilter(new TokenAuthFilter(authenticationManager, userTokenManager, redisTemplate, userInfoManager));
+        http.addFilter(new TokenLoginFilter(authenticationManager, userTokenManager,  userInfoManager,AuthFailureHandler));
+        http.addFilter(new TokenAuthFilter(authenticationManager, userTokenManager, userInfoManager,unAuthEntryPoint));
 
         return http.build();
     }

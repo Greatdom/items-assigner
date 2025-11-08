@@ -86,7 +86,10 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
                 throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
             }
             System.out.println("当前用户 ID: " + id);
-            return getUserInfo(id);
+            CurrentUserDTO userInfo = getUserInfo(id);
+            if(userInfo == null){
+                throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+            }else return userInfo;
         }else throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
     }
 
@@ -99,10 +102,12 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         com.wddyxd.userservice.pojo.securityDTO.LoginUserForm loginUserForm = new com.wddyxd.userservice.pojo.securityDTO.LoginUserForm();
         BeanUtils.copyProperties(user,loginUserForm);
         CurrentUserDTO userInfo = getUserInfo(user.getId());
+        if(userInfo == null)return null;
         com.wddyxd.userservice.pojo.securityDTO.CurrentUserInfo currentUserInfo = new com.wddyxd.userservice.pojo.securityDTO.CurrentUserInfo();
         BeanUtils.copyProperties(userInfo,currentUserInfo);
         return new SecurityUserDTO(loginUserForm,currentUserInfo);
     }
+
 
     @Override
     public CurrentUserDTO getUserInfo(Long id) {
@@ -113,7 +118,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         userQuery.eq("id", id)
                 .eq("is_deleted", 0); // 逻辑删除：0-未删除
         User user = userMapper.selectOne(userQuery);
-        if (user == null)  throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+        if (user == null) return null;
 
         // 2. 查询用户关联的角色名称列表
         List<String> roles = userMapper.selectRoleNamesByUserId(user.getId());
@@ -137,6 +142,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     public Result<?> selectAll(Integer pageNum,Integer pageSize,String search) {
         LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
         if(search!=null&&!search.isEmpty()){
+            //TODO要给搜索的字段添加索引，而且不能只是按昵称查询
             wrapper.like(User::getNickName, search);
         }
         return Result.success(userMapper.selectPage(new Page<>(pageNum, pageSize),wrapper));

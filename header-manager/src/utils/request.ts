@@ -36,7 +36,7 @@ service.interceptors.response.use(
         // debugger
         if (res.code !== 200) {
 
-            if(res.code === 403){
+            if(res.code === 401){
                 removeToken()
                 // 动态导入router并执行跳转
                 import('@/router').then(routerModule => {

@@ -52,7 +52,9 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         String requestURI = request.getRequestURI();
-        if (requestURI.startsWith("/user/auth/passwordSecurityGetter")) {
+        if (requestURI.startsWith("/user/auth/passwordSecurityGetter")||
+             requestURI.startsWith("/swagger-ui")||
+            requestURI.startsWith("/v3/api-docs")) {
             chain.doFilter(request, response);
             return;
         }

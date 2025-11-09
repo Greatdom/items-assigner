@@ -13,11 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-<!--        <module>user-service</module>-->
-<!--        <module>order-service</module>-->
-<!--        <module>eureka</module>-->
-<!--        <module>gateway</module>-->
-<!--        <module>common</module>-->
         <module>common</module>
         <module>security</module>
         <module>feign-api</module>
@@ -41,6 +36,7 @@
         <jjwt.version>0.9.0</jjwt.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <aspectjweaver.version>1.9.19</aspectjweaver.version>
+        <druid.version>1.2.27</druid.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -52,28 +48,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!--            &lt;!&ndash; 导入 Spring Cloud Alibaba 依赖 BOM &ndash;&gt;-->
-            <!--            <dependency>-->
-            <!--                <groupId>com.alibaba.cloud</groupId>-->
-            <!--                <artifactId>spring-cloud-alibaba-dependencies</artifactId>-->
-            <!--                <version>${cloud-alibaba.version}</version>-->
-            <!--                <type>pom</type>-->
-            <!--                <scope>import</scope>-->
-            <!--            </dependency>-->
-
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
@@ -104,8 +88,11 @@
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectjweaver.version}</version>
             </dependency>
-
-
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

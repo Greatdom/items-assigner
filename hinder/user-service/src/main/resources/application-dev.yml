@@ -27,6 +27,10 @@ spring:
           max-idle: 10
           min-idle: 5
           max-wait: 2000ms
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8090
 mybatis-plus:
   type-aliases-package: com.wddyxd.userservice.pojo
   mapper-locations: classpath*:mapper/*.xml

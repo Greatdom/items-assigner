@@ -54,7 +54,9 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         String requestURI = request.getRequestURI();
         if (requestURI.startsWith("/user/auth/passwordSecurityGetter")||
              requestURI.startsWith("/swagger-ui")||
-            requestURI.startsWith("/v3/api-docs")) {
+            requestURI.startsWith("/v3/api-docs")||
+            requestURI.startsWith("/actuator")||
+            requestURI.startsWith( "/sentinel")) {
             chain.doFilter(request, response);
             return;
         }

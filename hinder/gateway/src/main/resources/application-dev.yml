@@ -7,6 +7,8 @@ spring:
       host: localhost
       port: 6379
   cloud:
+    nacos:
+      server-addr: localhost:8848
     gateway:
       routes:
         #TODO 可以利用sentinel来拒绝通过绕过gateway的方式访问所有接口
@@ -50,7 +52,7 @@ spring:
             maxAge: 3600
   application:
     name: gateway
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:10086/eureka
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:10086/eureka

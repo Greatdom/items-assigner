@@ -28,6 +28,8 @@ spring:
           min-idle: 5
           max-wait: 2000ms
   cloud:
+    nacos:
+      server-addr: localhost:8848
     sentinel:
       transport:
         dashboard: localhost:8090

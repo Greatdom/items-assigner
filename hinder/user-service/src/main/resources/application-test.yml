@@ -1,6 +1,9 @@
 server:
   port: 8080
 spring:
+  cloud:
+    nacos:
+      server-addr: localhost:8848
   application:
     name: user-service  # 服务名固定
   datasource:
@@ -30,13 +33,13 @@ spring:
 mybatis-plus:
   type-aliases-package: com.wddyxd.userservice.pojo
   mapper-locations: classpath*:mapper/*.xml
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka-server:10086/eureka/  # docker内部用服务名访问eureka
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://eureka-server:10086/eureka/  # docker内部用服务名访问eureka
+#  instance:
+#    prefer-ip-address: true
+#    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
 token:
   signKey: 123456
   expiration: 86400000

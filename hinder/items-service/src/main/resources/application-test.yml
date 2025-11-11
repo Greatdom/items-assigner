@@ -1,6 +1,9 @@
 server:
   port: 8081
 spring:
+  cloud:
+    nacos:
+      server-addr: localhost:8848
   application:
     name: items-service  # 服务名固定
   datasource:
@@ -29,13 +32,13 @@ spring:
           max-wait: 2000ms
 mybatis-plus:
   type-aliases-package: com.wddyxd.itemsservice.pojo
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka-server:10086/eureka/
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://eureka-server:10086/eureka/
+#  instance:
+#    prefer-ip-address: true
+#    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
 token:
   signKey: 123456
   expiration: 86400000

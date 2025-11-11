@@ -7,9 +7,10 @@ spring:
       host: 192.168.174.129
       port: 6379
   cloud:
+    nacos:
+      server-addr: localhost:8848
     gateway:
       routes:
-
         # 新增拒绝访问特定路径的路由规则
         - id: deny-password-security-getter
           uri: forward:/deny  # 指向一个无效的URI
@@ -52,10 +53,10 @@ spring:
             maxAge: 3600
   application:
     name: gateway
-eureka:
-  client:
-    service-url:
-      defaultZone: http://eureka-server:10086/eureka/
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://eureka-server:10086/eureka/
+#  instance:
+#    prefer-ip-address: true
+#    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}

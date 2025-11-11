@@ -1,6 +1,8 @@
 package com.wddyxd.common.exceptionhandler;
 
 
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.utils.Result;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
 
     @ExceptionHandler(CustomException.class)
     @ResponseBody

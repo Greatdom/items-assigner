@@ -9,7 +9,7 @@ spring:
   cloud:
     gateway:
       routes:
-
+        #TODO 可以利用sentinel来拒绝通过绕过gateway的方式访问所有接口
         # 新增拒绝访问特定路径的路由规则
         - id: deny-password-security-getter
           uri: forward:/deny  # 指向一个无效的URI

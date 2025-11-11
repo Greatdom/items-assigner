@@ -29,6 +29,9 @@ public enum ResultCodeEnum {
     TOKEN_EMPTY_ERROR(401, "空的TOKEN"),
     USER_INFO_ERROR(401, "得不到用户信息"),
 
+    //429:请求过频繁
+    SERVER_BUSY_ERROR(503, "服务器繁忙,请稍后重试"),
+
     //403:权限不足
     ACCESS_DENIED_ERROR(403, "权限不足"),
 
@@ -36,6 +39,9 @@ public enum ResultCodeEnum {
     SERVER_ERROR(500, "服务器错误"),
     FUNCTION_ERROR(500, "功能未完成"),
     IOEXCEPTION_ERROR(500, "IO异常"),
+    SERVER_MAINTENANCE_ERROR(500, "服务器正在维护"),
+
+
 
     //1000:未知错误
     UNKNOWN_ERROR(1000, "未知错误"),

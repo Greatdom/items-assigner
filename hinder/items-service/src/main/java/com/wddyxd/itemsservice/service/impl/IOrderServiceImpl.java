@@ -43,6 +43,7 @@ public class IOrderServiceImpl extends ServiceImpl<OrderMapper, Order> implement
     public Result<OrderDTO> getDTOById(Long id) {
         Order order = this.getById(id);
         Result<User> userResult = userClient.FindById(order.getUserId());
+
         System.out.println(userResult.getCode()+"   "+userResult.getMsg());
         User user = userResult.getData();
         if(user == null) {

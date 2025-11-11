@@ -2,6 +2,7 @@ package com.wddyxd.feign.clients;
 
 
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.feign.clients.fallback.UserClientFallbackFactory;
 import com.wddyxd.feign.pojo.User;
 import com.wddyxd.feign.pojo.securityPojo.SecurityUserDTO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @create: 2025-10-20 21:31
  **/
 
-@FeignClient("user-service")
+@FeignClient(value = "user-service",fallbackFactory = UserClientFallbackFactory.class)
 public interface UserClient {
 
     @GetMapping("/user/user/get/{id}")

@@ -43,3 +43,6 @@ token:
   expiration: 86400000
 logging:
   config: classpath:logback-dev.xml
+feign:
+  sentinel:
+    enabled: true

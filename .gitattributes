@@ -1,0 +1,2 @@
+# 标记原型目录为“第三方资源”，GitHub 会忽略该目录的语言统计
+projectTemplate/** linguist-vendored

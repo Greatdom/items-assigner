@@ -2,7 +2,7 @@ package com.wddyxd.userservice.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wddyxd.userservice.pojo.UserRole;
+import com.wddyxd.userservice.pojo.entity.UserRole;
 
 /**
  * @program: 微服务脚手架

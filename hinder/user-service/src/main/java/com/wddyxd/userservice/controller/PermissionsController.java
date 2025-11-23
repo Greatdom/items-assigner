@@ -1,9 +1,8 @@
 package com.wddyxd.userservice.controller;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.userservice.pojo.Permissions;
+import com.wddyxd.userservice.pojo.entity.Permissions;
 import com.wddyxd.userservice.service.IPermissionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

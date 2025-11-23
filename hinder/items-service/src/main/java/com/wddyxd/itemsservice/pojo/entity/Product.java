@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * @program: items-assigner
- * @description: description
+ * @description: 基础商品实体类
  * @author: wddyxd
  * @create: 2025-11-23 19:26
  **/

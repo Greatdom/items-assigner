@@ -1,4 +1,4 @@
-package com.wddyxd.userservice.pojo;
+package com.wddyxd.itemsservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -7,30 +7,32 @@ import java.util.Date;
 
 /**
  * @program: items-assigner
- * @description: role 实体类
+ * @description: 商品分类实体类
  * @author: wddyxd
- * @create: 2025-10-20 20:53
+ * @create: 2025-11-23 19:47
  **/
-
-@TableName("role")
-public class Role {
+@TableName("product_category")
+public class ProductCategory {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-    private String roleName;
-    private String roleCode;
-    private String remark;
+    private String name;//分类名称
+    private String code;//分类标识
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
-    public String getRoleCode() {
-        return roleCode;
-    }
-
-    public void setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
+    @Override
+    public String toString() {
+        return "ProductCategory{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 
     public Long getId() {
@@ -41,20 +43,20 @@ public class Role {
         this.id = id;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getCode() {
+        return code;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Boolean getDeleted() {

@@ -4,8 +4,8 @@ package com.wddyxd.userservice.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.userservice.mapper.RoleMapper;
-import com.wddyxd.userservice.pojo.Role;
-import com.wddyxd.userservice.pojo.UserRole;
+import com.wddyxd.userservice.pojo.entity.Role;
+import com.wddyxd.userservice.pojo.entity.UserRole;
 import com.wddyxd.userservice.service.IRoleService;
 import com.wddyxd.userservice.service.IUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @program: 微服务脚手架

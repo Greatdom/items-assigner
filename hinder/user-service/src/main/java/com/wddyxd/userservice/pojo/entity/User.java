@@ -1,4 +1,4 @@
-package com.wddyxd.userservice.pojo;
+package com.wddyxd.userservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;

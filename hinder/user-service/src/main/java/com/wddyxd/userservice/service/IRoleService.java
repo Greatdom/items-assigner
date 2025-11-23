@@ -2,10 +2,9 @@ package com.wddyxd.userservice.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wddyxd.userservice.pojo.Role;
+import com.wddyxd.userservice.pojo.entity.Role;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @program: 微服务脚手架

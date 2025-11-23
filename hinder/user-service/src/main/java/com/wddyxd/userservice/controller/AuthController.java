@@ -2,7 +2,7 @@ package com.wddyxd.userservice.controller;
 
 
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.securityDTO.LoginUserForm;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IUserService;

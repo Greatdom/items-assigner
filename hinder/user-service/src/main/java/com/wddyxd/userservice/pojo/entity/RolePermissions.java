@@ -1,4 +1,4 @@
-package com.wddyxd.userservice.pojo;
+package com.wddyxd.userservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -7,18 +7,17 @@ import java.util.Date;
 
 /**
  * @program: items-assigner
- * @description: user-role实体类
+ * @description: role-permissions实体类
  * @author: wddyxd
- * @create: 2025-10-20 20:55
+ * @create: 2025-10-20 20:56
  **/
 
-@TableName("user_role")
-public class UserRole {
+@TableName("role_permissions")
+public class RolePermissions {
     @TableId(type = IdType.ASSIGN_ID)
-
     private Long id;
-    private Long userId;
     private Long roleId;
+    private Long permissionsId;
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -33,20 +32,20 @@ public class UserRole {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public Long getRoleId() {
         return roleId;
     }
 
     public void setRoleId(Long roleId) {
         this.roleId = roleId;
+    }
+
+    public Long getPermissionsId() {
+        return permissionsId;
+    }
+
+    public void setPermissionsId(Long permissionsId) {
+        this.permissionsId = permissionsId;
     }
 
     public Boolean getDeleted() {

@@ -1,9 +1,8 @@
 package com.wddyxd.userservice.service;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wddyxd.userservice.pojo.Permissions;
+import com.wddyxd.userservice.pojo.entity.Permissions;
 
 import java.util.List;
 

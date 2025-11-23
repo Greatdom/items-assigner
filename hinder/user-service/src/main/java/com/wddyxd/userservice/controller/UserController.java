@@ -3,17 +3,13 @@ package com.wddyxd.userservice.controller;
 
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
-import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.security.pojo.SecurityUser;
-import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
-import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

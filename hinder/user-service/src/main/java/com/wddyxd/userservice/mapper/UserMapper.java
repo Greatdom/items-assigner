@@ -2,7 +2,7 @@ package com.wddyxd.userservice.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wddyxd.userservice.pojo.User;
+import com.wddyxd.userservice.pojo.entity.User;
 
 import java.util.List;
 

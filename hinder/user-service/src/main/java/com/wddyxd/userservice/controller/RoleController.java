@@ -1,15 +1,13 @@
 package com.wddyxd.userservice.controller;
 
 
-import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.userservice.pojo.Role;
+import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @program: items-assigner

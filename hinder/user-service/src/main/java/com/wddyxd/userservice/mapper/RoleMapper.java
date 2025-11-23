@@ -2,7 +2,7 @@ package com.wddyxd.userservice.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wddyxd.userservice.pojo.Role;
+import com.wddyxd.userservice.pojo.entity.Role;
 
 /**
  * @program: items-assigner

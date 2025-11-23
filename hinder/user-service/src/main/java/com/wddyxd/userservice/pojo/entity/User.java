@@ -25,6 +25,7 @@ public class User implements Serializable {
     private String nickName;//昵称
     private String salt;//头像
     private Boolean isDeleted;
+    private Integer status;//状态 0-正常 1-被封禁
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
@@ -40,10 +41,19 @@ public class User implements Serializable {
                 ", password='" + password + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", salt='" + salt + '\'' +
+                ", status=" + status + '\'' +
                 ", isDeleted=" + isDeleted +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Long getId() {

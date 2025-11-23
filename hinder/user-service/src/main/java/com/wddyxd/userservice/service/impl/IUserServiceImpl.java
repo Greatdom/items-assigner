@@ -133,7 +133,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setNickName(user.getNickName());
-        dto.setSalt(user.getSalt());
+        dto.setAvatar(user.getAvatar());
         dto.setRoles(roles);
         dto.setPermissionValueList(permissionValues);
 

@@ -4,7 +4,7 @@ export const data:CurrentUser = {
     "id": 1,
     "username": "wddyxd",
     "nickName": "wddyxd",
-    "salt": "",
+    "avatar": "",
     "roles": [
         "ROLE_ADMIN"
     ],

@@ -13,7 +13,7 @@ export interface CurrentUser {
     id: number;
     username: string;
     nickName: string;
-    salt: string;
+    avatar: string;
     permissionValueList: string[];
     roles: string[];
 }

@@ -23,7 +23,7 @@ public class User implements Serializable {
     private String email;//邮箱
     private String password;//密码
     private String nickName;//昵称
-    private String salt;//头像
+    private String avatar;//头像
     private Boolean isDeleted;
     private Integer status;//状态 0-正常 1-被封禁
     @TableField(fill = FieldFill.INSERT)
@@ -40,7 +40,7 @@ public class User implements Serializable {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", nickName='" + nickName + '\'' +
-                ", salt='" + salt + '\'' +
+                ", salt='" + avatar + '\'' +
                 ", status=" + status + '\'' +
                 ", isDeleted=" + isDeleted +
                 ", createTime=" + createTime +
@@ -104,12 +104,12 @@ public class User implements Serializable {
         this.nickName = nickName;
     }
 
-    public String getSalt() {
-        return salt;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public Boolean getDeleted() {

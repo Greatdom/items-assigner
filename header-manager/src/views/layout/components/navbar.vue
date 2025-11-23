@@ -3,7 +3,7 @@
 
     <!-- 下拉触发区域（用户信息） -->
     <div class="user-info" role="button">
-      <img :src="user.salt" class="avatar">
+      <img :src="user.avatar" class="avatar">
       <span class="username">{{ user.nickName }}</span>
       <i class="el-icon-caret-bottom"></i>
     </div>

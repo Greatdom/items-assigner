@@ -23,7 +23,7 @@ public class User implements Serializable {
     private String email;
     private String password;
     private String nickName;
-    private String salt;
+    private String avatar;
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -78,12 +78,12 @@ public class User implements Serializable {
         this.nickName = nickName;
     }
 
-    public String getSalt() {
-        return salt;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public Boolean getDeleted() {

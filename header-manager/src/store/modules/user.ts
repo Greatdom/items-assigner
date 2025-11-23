@@ -17,7 +17,7 @@ export const useUserStore = defineStore('user', ()=>{
         id: -1,
         username: '',
         nickName: '',
-        salt: '',
+        avatar: '',
         permissionValueList: [],
         roles: []
     });

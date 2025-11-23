@@ -14,7 +14,7 @@ public class CurrentUserInfo {
     private Long id;
     private String username;
     private String nickName;
-    private String salt;
+    private String avatar;
     private List<String> roles; //角色名称
     private List<String> permissionValueList; //权限值
 
@@ -42,12 +42,12 @@ public class CurrentUserInfo {
         this.nickName = nickName;
     }
 
-    public String getSalt() {
-        return salt;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public List<String> getRoles() {
@@ -72,7 +72,7 @@ public class CurrentUserInfo {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", nickName='" + nickName + '\'' +
-                ", salt='" + salt + '\'' +
+                ", avatar='" + avatar + '\'' +
                 ", roles=" + roles +
                 ", permissionValueList=" + permissionValueList +
                 '}';

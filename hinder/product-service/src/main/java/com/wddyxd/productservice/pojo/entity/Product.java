@@ -24,7 +24,7 @@ public class Product implements Serializable {
     private Long categoryId;//分类id
     private String description;//描述
     private Long userId;//用户id
-    private Boolean status;//状态
+    private Integer status;//状态
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -95,11 +95,11 @@ public class Product implements Serializable {
         this.userId = userId;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

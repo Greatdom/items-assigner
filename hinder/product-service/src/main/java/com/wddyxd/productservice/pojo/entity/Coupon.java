@@ -29,7 +29,7 @@ public class Coupon implements Serializable {
     private Date endTime;//失效时间
     private Integer stock;//发放总量
     private Integer remainingStock;//剩余数量
-    private Boolean status;//0-未生效 1-生效中 2-已过期
+    private Integer status;//0-未生效 1-生效中 2-已过期
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -154,11 +154,11 @@ public class Coupon implements Serializable {
         this.remainingStock = remainingStock;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

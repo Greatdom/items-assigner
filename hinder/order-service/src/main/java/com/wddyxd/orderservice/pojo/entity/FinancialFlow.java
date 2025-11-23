@@ -18,7 +18,7 @@ public class FinancialFlow implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private Long userId;
-    private Byte tradeType;//0-充值 1-提现 2-订单支付 3-退款 4-平台佣金
+    private Integer tradeType;//0-充值 1-提现 2-订单支付 3-退款 4-平台佣金
     private BigDecimal amount;//金额
     private String tradeNo;//交易单号
     private Integer status;//0-处理中 1-成功 2-失败
@@ -61,11 +61,11 @@ public class FinancialFlow implements Serializable {
         this.userId = userId;
     }
 
-    public Byte getTradeType() {
+    public Integer getTradeType() {
         return tradeType;
     }
 
-    public void setTradeType(Byte tradeType) {
+    public void setTradeType(Integer tradeType) {
         this.tradeType = tradeType;
     }
 

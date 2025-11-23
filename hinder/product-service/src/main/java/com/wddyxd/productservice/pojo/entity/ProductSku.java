@@ -1,8 +1,9 @@
-package com.wddyxd.productservice.entity;
+package com.wddyxd.productservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -13,14 +14,14 @@ import java.util.Date;
  * @create: 2025-11-23 19:53
  **/
 @TableName("product_sku")
-public class ProductSku {
+public class ProductSku  implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private Long productId;
-    private String specs;
-    private BigDecimal price;
-    private Integer stock;
-    private String skuCode;
+    private String specs;//'规格描述，如"红色-XL"',
+    private BigDecimal price;//该规格的价格
+    private Integer stock;//该规格的库存
+    private String skuCode;//商品规格编码
     private String logo;
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)

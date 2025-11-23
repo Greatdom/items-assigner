@@ -3,6 +3,7 @@ package com.wddyxd.userservice.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,12 +14,12 @@ import java.util.Date;
  **/
 
 @TableName("role")
-public class Role {
+public class Role implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-    private String roleName;
-    private String roleCode;
-    private String remark;
+    private String roleName;//角色名称
+    private String roleCode;//角色编码
+    private String remark;//描述
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

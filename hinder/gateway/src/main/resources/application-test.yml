@@ -31,12 +31,30 @@ spring:
             - Path=/api/user/**  # 添加/api前缀
           filters:
             - RewritePath=/api/(?<segment>.*), /$\{segment}  # 移除转发到服务的/api前缀
-        - id: items-service
-          uri: lb://items-service
+#        - id: items-service
+#          uri: lb://items-service
+#          predicates:
+#            - Path=/api/items/**  # 添加/api前缀
+#          filters:
+#            - RewritePath=/api/(?<segment>.*), /$\{segment}  # 移除转发到服务的/api前缀
+        - id: product-service
+          uri: lb://product-service
           predicates:
-            - Path=/api/items/**  # 添加/api前缀
+            - Path=/api/product/**
           filters:
-            - RewritePath=/api/(?<segment>.*), /$\{segment}  # 移除转发到服务的/api前缀
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            - Path=/api/chat/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
 
       globalcors:
         corsConfigurations:

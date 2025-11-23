@@ -18,12 +18,12 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-    private String username;
-    private String phone;
-    private String email;
-    private String password;
-    private String nickName;
-    private String salt;
+    private String username;//用户名
+    private String phone;// 手机
+    private String email;//邮箱
+    private String password;//密码
+    private String nickName;//昵称
+    private String salt;//头像
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

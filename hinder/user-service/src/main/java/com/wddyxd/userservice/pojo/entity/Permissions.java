@@ -3,6 +3,7 @@ package com.wddyxd.userservice.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -14,11 +15,11 @@ import java.util.List;
  **/
 
 @TableName("permissions")
-public class Permissions {
+public class Permissions implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-    private String name;
-    private String permissionValue;
+    private String name;//权限名称
+    private String permissionValue;//权限值
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

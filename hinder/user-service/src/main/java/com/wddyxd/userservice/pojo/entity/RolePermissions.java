@@ -3,6 +3,7 @@ package com.wddyxd.userservice.pojo.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
  **/
 
 @TableName("role_permissions")
-public class RolePermissions {
+public class RolePermissions implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private Long roleId;

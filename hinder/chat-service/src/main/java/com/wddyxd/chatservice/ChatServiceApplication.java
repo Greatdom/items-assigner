@@ -1,4 +1,4 @@
-package com.wddyxd.productservice;
+package com.wddyxd.chatservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-public class ProductServiceApplication {
+public class ChatServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProductServiceApplication.class, args);
+        SpringApplication.run(ChatServiceApplication.class, args);
     }
 
     @Bean
@@ -47,5 +47,6 @@ public class ProductServiceApplication {
         restTemplate.setInterceptors(interceptors);
         return restTemplate;
     }
+
 
 }

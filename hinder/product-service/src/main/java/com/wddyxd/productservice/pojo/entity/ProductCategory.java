@@ -1,8 +1,9 @@
-package com.wddyxd.productservice.entity;
+package com.wddyxd.productservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Date;
  * @create: 2025-11-23 19:47
  **/
 @TableName("product_category")
-public class ProductCategory {
+public class ProductCategory  implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private String name;//分类名称

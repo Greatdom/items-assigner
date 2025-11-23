@@ -1,4 +1,4 @@
-package com.wddyxd.productservice;
+package com.wddyxd.orderservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,10 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
-public class ProductServiceApplication {
+public class OrderServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProductServiceApplication.class, args);
+        SpringApplication.run(OrderServiceApplication.class, args);
     }
 
     @Bean

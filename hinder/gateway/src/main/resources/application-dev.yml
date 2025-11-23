@@ -44,6 +44,19 @@ spring:
             - Path=/api/product/**
           filters:
             - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/api/order/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: chat-service
+          uri: lb://chat-service
+          predicates:
+            - Path=/api/chat/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
 
       globalcors:
         corsConfigurations:

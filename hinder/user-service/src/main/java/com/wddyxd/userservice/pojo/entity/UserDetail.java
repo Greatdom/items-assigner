@@ -25,6 +25,7 @@ public class UserDetail implements Serializable {
     private String region;// 地区
     private String idCard;// 身份证号
     private Integer isIdCardVerified;// 身份证是否验证
+    private String lastLoginDevice;// 最后登录设备
     private String lastLoginIp;// 最后登录ip
     private Date lastLoginTime;// 最后登录时间
     private BigDecimal money;// 账户余额
@@ -45,6 +46,7 @@ public class UserDetail implements Serializable {
                 ", region='" + region + '\'' +
                 ", idCard='" + idCard + '\'' +
                 ", isIdCardVerified=" + isIdCardVerified +
+                ", lastLoginDevice='" + lastLoginDevice + '\'' +
                 ", lastLoginIp='" + lastLoginIp + '\'' +
                 ", lastLoginTime=" + lastLoginTime +
                 ", money=" + money +
@@ -53,7 +55,13 @@ public class UserDetail implements Serializable {
                 ", updateTime=" + updateTime +
                 '}';
     }
+    public String getLastLoginDevice() {
+        return lastLoginDevice;
+    }
 
+    public void setLastLoginDevice(String lastLoginDevice) {
+        this.lastLoginDevice = lastLoginDevice;
+    }
     public Long getUserId() {
         return userId;
     }

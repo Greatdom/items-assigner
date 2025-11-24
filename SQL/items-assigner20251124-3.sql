@@ -524,6 +524,7 @@ CREATE TABLE `user_detail`  (
   `region` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '地区',
   `id_card` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '身份证号',
   `is_id_card_verified` tinyint UNSIGNED NOT NULL COMMENT '0-未认证 1-已认证',
+  `last_login_device` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '上次登录设备',
   `last_login_ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '上次登录IP',
   `last_login_time` datetime NULL DEFAULT NULL COMMENT '上次登录时间',
   `money` decimal(10, 2) NULL DEFAULT 0.00 COMMENT '账户余额-不适用管理员',

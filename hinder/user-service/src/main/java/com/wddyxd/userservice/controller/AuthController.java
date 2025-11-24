@@ -6,6 +6,7 @@ import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.securityDTO.LoginUserForm;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IUserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user/auth")
+@Tag(name = "认证控制器", description = "用户认证相关接口")
 public class AuthController {
     @Autowired
     private IUserService userService;

@@ -30,7 +30,7 @@ public class RoleController {
     }
 
 
-
+    //TODO 被弃用
     @GetMapping("/getByUser/{userId}")
     public Result<List<Role>> getByUser(@PathVariable String userId) {
         List<Role> roles = roleService.getByUser(userId);

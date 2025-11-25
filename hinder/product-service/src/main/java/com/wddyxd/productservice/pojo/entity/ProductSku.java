@@ -20,6 +20,7 @@ public class ProductSku  implements Serializable {
     private Long productId;
     private String specs;//'规格描述，如"红色-XL"',
     private BigDecimal price;//该规格的价格
+    private Integer sales;//该规格的销量
     private Integer stock;//该规格的库存
     private String skuCode;//商品规格编码
     private String logo;
@@ -36,6 +37,7 @@ public class ProductSku  implements Serializable {
                 ", productId=" + productId +
                 ", specs='" + specs + '\'' +
                 ", price=" + price +
+                ", sales=" + sales +
                 ", stock=" + stock +
                 ", skuCode='" + skuCode + '\'' +
                 ", logo='" + logo + '\'' +
@@ -43,6 +45,14 @@ public class ProductSku  implements Serializable {
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';
+    }
+
+    public Integer getSales() {
+        return sales;
+    }
+
+    public void setSales(Integer sales) {
+        this.sales = sales;
     }
 
     public Long getId() {

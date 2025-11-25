@@ -23,7 +23,8 @@ public class MerchantSupplement implements Serializable {
     private String shopAddress;//店铺地址
     private String shopLicense;//营业执照
     private String shopLicenseImage;//营业执照图片
-    private Integer shopStar;//评分
+    private Integer positiveComment;
+    private Integer negativeComment;
     private Integer shopStatus;//店铺状态
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
@@ -37,32 +38,17 @@ public class MerchantSupplement implements Serializable {
                 "id=" + id +
                 ", userId=" + userId +
                 ", shopName='" + shopName + '\'' +
-                ", shopCategoryId=" + shopCategoryId + '\'' +
+                ", shopCategoryId=" + shopCategoryId +
                 ", shopAddress='" + shopAddress + '\'' +
                 ", shopLicense='" + shopLicense + '\'' +
                 ", shopLicenseImage='" + shopLicenseImage + '\'' +
-                ", shopStar=" + shopStar +
+                ", positiveComment=" + positiveComment +
+                ", negativeComment=" + negativeComment +
                 ", shopStatus=" + shopStatus +
                 ", isDeleted=" + isDeleted +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';
-    }
-
-    public String getShopName() {
-        return shopName;
-    }
-
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
-    }
-
-    public Long getShopCategoryId() {
-        return shopCategoryId;
-    }
-
-    public void setShopCategoryId(Long shopCategoryId) {
-        this.shopCategoryId = shopCategoryId;
     }
 
     public Long getId() {
@@ -79,6 +65,22 @@ public class MerchantSupplement implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getShopName() {
+        return shopName;
+    }
+
+    public void setShopName(String shopName) {
+        this.shopName = shopName;
+    }
+
+    public Long getShopCategoryId() {
+        return shopCategoryId;
+    }
+
+    public void setShopCategoryId(Long shopCategoryId) {
+        this.shopCategoryId = shopCategoryId;
     }
 
     public String getShopAddress() {
@@ -105,12 +107,20 @@ public class MerchantSupplement implements Serializable {
         this.shopLicenseImage = shopLicenseImage;
     }
 
-    public Integer getShopStar() {
-        return shopStar;
+    public Integer getPositiveComment() {
+        return positiveComment;
     }
 
-    public void setShopStar(Integer shopStar) {
-        this.shopStar = shopStar;
+    public void setPositiveComment(Integer positiveComment) {
+        this.positiveComment = positiveComment;
+    }
+
+    public Integer getNegativeComment() {
+        return negativeComment;
+    }
+
+    public void setNegativeComment(Integer negativeComment) {
+        this.negativeComment = negativeComment;
     }
 
     public Integer getShopStatus() {

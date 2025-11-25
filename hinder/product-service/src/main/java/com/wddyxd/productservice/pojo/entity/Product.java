@@ -20,8 +20,11 @@ public class Product implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private String name;//基础商品名
+    private Integer sales;//总销量
     private Integer stock;//总库存
     private Long categoryId;//分类id
+    private Integer positiveComment;
+    private Integer negativeComment;
     private String description;//描述
     private Long userId;//用户id
     private Integer status;//状态
@@ -36,8 +39,11 @@ public class Product implements Serializable {
         return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", sales=" + sales +
                 ", stock=" + stock +
                 ", categoryId=" + categoryId +
+                ", positiveComment=" + positiveComment +
+                ", negativeComment=" + negativeComment +
                 ", description='" + description + '\'' +
                 ", userId=" + userId +
                 ", status=" + status +
@@ -63,6 +69,14 @@ public class Product implements Serializable {
         this.name = name;
     }
 
+    public Integer getSales() {
+        return sales;
+    }
+
+    public void setSales(Integer sales) {
+        this.sales = sales;
+    }
+
     public Integer getStock() {
         return stock;
     }
@@ -77,6 +91,22 @@ public class Product implements Serializable {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public Integer getPositiveComment() {
+        return positiveComment;
+    }
+
+    public void setPositiveComment(Integer positiveComment) {
+        this.positiveComment = positiveComment;
+    }
+
+    public Integer getNegativeComment() {
+        return negativeComment;
+    }
+
+    public void setNegativeComment(Integer negativeComment) {
+        this.negativeComment = negativeComment;
     }
 
     public String getDescription() {

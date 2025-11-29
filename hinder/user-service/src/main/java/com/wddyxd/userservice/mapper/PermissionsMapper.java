@@ -2,7 +2,7 @@ package com.wddyxd.userservice.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wddyxd.userservice.pojo.entity.Permissions;
+import com.wddyxd.userservice.pojo.entity.Permission;
 
 import java.util.List;
 
@@ -13,6 +13,6 @@ import java.util.List;
  * @create: 2025-10-20 20:58
  **/
 
-public interface PermissionsMapper extends BaseMapper<Permissions> {
+public interface PermissionsMapper extends BaseMapper<Permission> {
     List<String> selectPermissionValueByUserId(Long id);
 }

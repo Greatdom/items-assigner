@@ -13,17 +13,29 @@ import java.util.Date;
  * @create: 2025-10-20 20:56
  **/
 
-@TableName("role_permissions")
-public class RolePermissions implements Serializable {
+@TableName("role_permission")
+public class RolePermission implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private Long roleId;
-    private Long permissionsId;
+    private Long permissionId;
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
+
+    @Override
+    public String toString() {
+        return "RolePermission{" +
+                "id=" + id +
+                ", roleId=" + roleId +
+                ", permissionId=" + permissionId +
+                ", isDeleted=" + isDeleted +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 
     public Long getId() {
         return id;
@@ -41,12 +53,12 @@ public class RolePermissions implements Serializable {
         this.roleId = roleId;
     }
 
-    public Long getPermissionsId() {
-        return permissionsId;
+    public Long getPermissionId() {
+        return permissionId;
     }
 
-    public void setPermissionsId(Long permissionsId) {
-        this.permissionsId = permissionsId;
+    public void setPermissionId(Long permissionId) {
+        this.permissionId = permissionId;
     }
 
     public Boolean getDeleted() {

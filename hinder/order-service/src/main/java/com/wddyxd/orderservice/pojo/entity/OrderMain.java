@@ -18,6 +18,11 @@ public class OrderMain implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private Long userId;
+    private Long productId;
+    private Long skuId;
+    private Integer quantity;//购买数量
+    private String productName;//商品名称快照
+    private String skuSpecs;//规格快照
     private BigDecimal totalPrice;//订单总金额
     private BigDecimal payPrice;//实际支付金额
     private String remark;//订单备注
@@ -34,6 +39,11 @@ public class OrderMain implements Serializable {
         return "OrderMain{" +
                 "id=" + id +
                 ", userId=" + userId +
+                ", productId=" + productId +
+                ", skuId=" + skuId +
+                ", quantity=" + quantity +
+                ", productName='" + productName + '\'' +
+                ", skuSpecs='" + skuSpecs + '\'' +
                 ", totalPrice=" + totalPrice +
                 ", payPrice=" + payPrice +
                 ", remark='" + remark + '\'' +
@@ -59,6 +69,46 @@ public class OrderMain implements Serializable {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getSkuSpecs() {
+        return skuSpecs;
+    }
+
+    public void setSkuSpecs(String skuSpecs) {
+        this.skuSpecs = skuSpecs;
     }
 
     public BigDecimal getTotalPrice() {

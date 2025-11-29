@@ -14,8 +14,8 @@ import java.util.List;
  * @create: 2025-10-20 20:54
  **/
 
-@TableName("permissions")
-public class Permissions implements Serializable {
+@TableName("permission")
+public class Permission implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private String name;//权限名称
@@ -32,7 +32,7 @@ public class Permissions implements Serializable {
 
     //下级
     @TableField(exist = false)
-    private List<Permissions> children;
+    private List<Permission> children;
 
     //是否选中
     @TableField(exist = false)
@@ -94,11 +94,11 @@ public class Permissions implements Serializable {
         this.level = level;
     }
 
-    public List<Permissions> getChildren() {
+    public List<Permission> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Permissions> children) {
+    public void setChildren(List<Permission> children) {
         this.children = children;
     }
 

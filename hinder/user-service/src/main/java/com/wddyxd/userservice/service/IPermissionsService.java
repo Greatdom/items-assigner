@@ -2,7 +2,7 @@ package com.wddyxd.userservice.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wddyxd.userservice.pojo.entity.Permissions;
+import com.wddyxd.userservice.pojo.entity.Permission;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
  * @create: 2025-10-10 09:37
  **/
 
-public interface IPermissionsService extends IService<Permissions> {
+public interface IPermissionsService extends IService<Permission> {
 
 
     void assignPermissions(Long roleId, Long[] permissionId);

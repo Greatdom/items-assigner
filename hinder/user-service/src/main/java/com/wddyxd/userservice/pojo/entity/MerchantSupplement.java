@@ -18,7 +18,7 @@ public class MerchantSupplement implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private Long userId;
-    private String shopName;
+    private String name;
     private Long shopCategoryId;
     private String shopAddress;//店铺地址
     private String shopLicense;//营业执照
@@ -37,7 +37,7 @@ public class MerchantSupplement implements Serializable {
         return "MerchantSupplement{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", shopName='" + shopName + '\'' +
+                ", shopName='" + name + '\'' +
                 ", shopCategoryId=" + shopCategoryId +
                 ", shopAddress='" + shopAddress + '\'' +
                 ", shopLicense='" + shopLicense + '\'' +
@@ -67,12 +67,12 @@ public class MerchantSupplement implements Serializable {
         this.userId = userId;
     }
 
-    public String getShopName() {
-        return shopName;
+    public String getName() {
+        return name;
     }
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+    public void setName(String shopName) {
+        this.name = name;
     }
 
     public Long getShopCategoryId() {

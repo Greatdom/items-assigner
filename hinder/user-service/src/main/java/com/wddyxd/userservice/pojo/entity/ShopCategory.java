@@ -17,7 +17,6 @@ public class ShopCategory {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private String name;//分类名称
-    private String code;//分类标识
     private Boolean isDeleted;//逻辑删除 1（true）已删除， 0（false）未删除
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -29,7 +28,6 @@ public class ShopCategory {
         return "ShopCategory{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
                 ", isDeleted=" + isDeleted +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
@@ -50,14 +48,6 @@ public class ShopCategory {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 
     public Boolean getDeleted() {

@@ -3,7 +3,7 @@ package com.wddyxd.userservice.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.userservice.mapper.RolePermissionsMapper;
-import com.wddyxd.userservice.pojo.entity.RolePermissions;
+import com.wddyxd.userservice.pojo.entity.RolePermission;
 import com.wddyxd.userservice.service.IRolePermissionsService;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  **/
 
 @Service
-public class IRolePermissionsServiceImpl extends ServiceImpl<RolePermissionsMapper, RolePermissions> implements IRolePermissionsService {
+public class IRolePermissionsServiceImpl extends ServiceImpl<RolePermissionsMapper, RolePermission> implements IRolePermissionsService {
 
 
 

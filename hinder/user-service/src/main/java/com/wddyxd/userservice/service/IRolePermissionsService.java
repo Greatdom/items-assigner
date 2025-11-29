@@ -2,7 +2,7 @@ package com.wddyxd.userservice.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wddyxd.userservice.pojo.entity.RolePermissions;
+import com.wddyxd.userservice.pojo.entity.RolePermission;
 
 /**
  * @program: 微服务脚手架
@@ -11,7 +11,7 @@ import com.wddyxd.userservice.pojo.entity.RolePermissions;
  * @create: 2025-10-10 20:27
  **/
 
-public interface IRolePermissionsService extends IService<RolePermissions> {
+public interface IRolePermissionsService extends IService<RolePermission> {
 
 
 }

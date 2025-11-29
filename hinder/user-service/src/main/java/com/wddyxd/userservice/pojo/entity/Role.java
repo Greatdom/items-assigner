@@ -17,21 +17,22 @@ import java.util.Date;
 public class Role implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
-    private String roleName;//角色名称
-    private String roleCode;//角色编码
-    private String remark;//描述
+    private String name;//角色名称
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
-    public String getRoleCode() {
-        return roleCode;
-    }
-
-    public void setRoleCode(String roleCode) {
-        this.roleCode = roleCode;
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 
     public Long getId() {
@@ -42,20 +43,12 @@ public class Role implements Serializable {
         this.id = id;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Boolean getDeleted() {

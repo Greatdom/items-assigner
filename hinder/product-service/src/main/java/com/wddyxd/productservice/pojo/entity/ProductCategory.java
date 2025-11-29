@@ -17,7 +17,6 @@ public class ProductCategory  implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private String name;//分类名称
-    private String code;//分类标识
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -29,7 +28,6 @@ public class ProductCategory  implements Serializable {
         return "ProductCategory{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
                 ", isDeleted=" + isDeleted +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
@@ -51,19 +49,6 @@ public class ProductCategory  implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
     }

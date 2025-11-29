@@ -22,7 +22,6 @@ public class ProductSku  implements Serializable {
     private BigDecimal price;//该规格的价格
     private Integer sales;//该规格的销量
     private Integer stock;//该规格的库存
-    private String skuCode;//商品规格编码
     private String logo;
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
@@ -39,7 +38,6 @@ public class ProductSku  implements Serializable {
                 ", price=" + price +
                 ", sales=" + sales +
                 ", stock=" + stock +
-                ", skuCode='" + skuCode + '\'' +
                 ", logo='" + logo + '\'' +
                 ", isDeleted=" + isDeleted +
                 ", createTime=" + createTime +
@@ -93,14 +91,6 @@ public class ProductSku  implements Serializable {
 
     public void setStock(Integer stock) {
         this.stock = stock;
-    }
-
-    public String getSkuCode() {
-        return skuCode;
-    }
-
-    public void setSkuCode(String skuCode) {
-        this.skuCode = skuCode;
     }
 
     public String getLogo() {

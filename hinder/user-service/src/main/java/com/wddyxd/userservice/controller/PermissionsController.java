@@ -2,7 +2,7 @@ package com.wddyxd.userservice.controller;
 
 
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.userservice.pojo.entity.Permissions;
+import com.wddyxd.userservice.pojo.entity.Permission;
 import com.wddyxd.userservice.service.IPermissionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,15 +32,15 @@ public class PermissionsController {
 
     //CRUD
     @GetMapping("/all")
-    public Result<List<Permissions>> SelectAll(){
+    public Result<List<Permission>> SelectAll(){
             return Result.success(permissionsService.list());
     }
     @GetMapping("/one/{id}")
-    public Result<Permissions> SelectById(@PathVariable Long id){
+    public Result<Permission> SelectById(@PathVariable Long id){
         return Result.success(permissionsService.getById(id));
     }
     @PostMapping("/add")
-    public Result<Permissions> add(@RequestBody Permissions permissions){
+    public Result<Permission> add(@RequestBody Permission permissions){
         try {
             permissionsService.save(permissions);
             return Result.success();

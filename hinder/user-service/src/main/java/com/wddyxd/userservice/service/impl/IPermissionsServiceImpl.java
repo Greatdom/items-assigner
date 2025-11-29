@@ -3,8 +3,8 @@ package com.wddyxd.userservice.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.userservice.mapper.PermissionsMapper;
-import com.wddyxd.userservice.pojo.entity.Permissions;
-import com.wddyxd.userservice.pojo.entity.RolePermissions;
+import com.wddyxd.userservice.pojo.entity.Permission;
+import com.wddyxd.userservice.pojo.entity.RolePermission;
 import com.wddyxd.userservice.service.IPermissionsService;
 import com.wddyxd.userservice.service.IRolePermissionsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.List;
  **/
 
 @Service
-public class IPermissionsServiceImpl extends ServiceImpl<PermissionsMapper, Permissions> implements IPermissionsService {
+public class IPermissionsServiceImpl extends ServiceImpl<PermissionsMapper, Permission> implements IPermissionsService {
 
     @Autowired
     private IRolePermissionsService rolePermissionsService;
@@ -33,13 +33,13 @@ public class IPermissionsServiceImpl extends ServiceImpl<PermissionsMapper, Perm
         //roleId角色id
         //permissionId菜单id 数组形式
         //1 创建list集合，用于封装添加数据
-        List<RolePermissions> rolePermissionList = new ArrayList<>();
+        List<RolePermission> rolePermissionList = new ArrayList<>();
         //遍历所有菜单数组
         for(Long perId : permissionIds) {
             //RolePermission对象
-            RolePermissions rolePermission = new RolePermissions();
+            RolePermission rolePermission = new RolePermission();
             rolePermission.setRoleId(roleId);
-            rolePermission.setPermissionsId(perId);
+            rolePermission.setPermissionId(perId);
             //封装到list集合
             rolePermissionList.add(rolePermission);
         }

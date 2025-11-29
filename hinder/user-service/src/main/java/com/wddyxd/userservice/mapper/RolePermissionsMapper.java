@@ -2,7 +2,7 @@ package com.wddyxd.userservice.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wddyxd.userservice.pojo.entity.RolePermissions;
+import com.wddyxd.userservice.pojo.entity.RolePermission;
 
 /**
  * @program: items-assigner
@@ -11,5 +11,5 @@ import com.wddyxd.userservice.pojo.entity.RolePermissions;
  * @create: 2025-10-20 20:59
  **/
 
-public interface RolePermissionsMapper extends BaseMapper<RolePermissions> {
+public interface RolePermissionsMapper extends BaseMapper<RolePermission> {
 }

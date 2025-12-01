@@ -1,11 +1,11 @@
-package com.wddyxd.userservice.pojo.dto;
+package com.wddyxd.userservice.pojo.DTO;
 
 
 import java.util.List;
 
 /**
  * @program: items-assigner
- * @description: description
+ * @description: 包装用户信息
  * @author: wddyxd
  * @create: 2025-10-25 20:33
  **/

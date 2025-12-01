@@ -24,6 +24,8 @@ public class LoginUserForm implements Serializable {
 
     private String loginType;
 
+    private String client;
+
     public String getPhone() {
         return phone;
     }
@@ -87,5 +89,13 @@ public class LoginUserForm implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 }

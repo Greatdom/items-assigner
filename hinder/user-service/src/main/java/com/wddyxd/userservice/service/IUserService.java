@@ -4,7 +4,7 @@ package com.wddyxd.userservice.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.entity.User;
-import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import org.springframework.transaction.annotation.Transactional;
 

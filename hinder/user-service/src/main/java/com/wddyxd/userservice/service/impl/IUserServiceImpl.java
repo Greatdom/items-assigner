@@ -13,7 +13,7 @@ import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserRole;
-import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import com.wddyxd.userservice.service.IPermissionsService;
 import com.wddyxd.userservice.service.IUserRoleService;

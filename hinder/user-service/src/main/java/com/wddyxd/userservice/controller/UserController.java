@@ -5,7 +5,7 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.entity.User;
-import com.wddyxd.userservice.pojo.dto.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

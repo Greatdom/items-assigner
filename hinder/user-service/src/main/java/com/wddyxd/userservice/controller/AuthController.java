@@ -44,7 +44,7 @@ public class AuthController {
 //                - 调用远程接口AuthController的相关方法,首先从redis拿,拿不到就去mysql拿. 并包装到UserDetail的实现类,
 //                - 然后在密码加工(目前用MD5加工密码)比较器判断密码/验证码是否吻合,最后回到TokenLoginFilter来生成token(用对称加密生成)
 //                - token包装用户id,timestamp,ip,device,client并设置7天有效期,一个用户支持3个token实现最多三个设备登录.
-//                - 然后将用户信息保存到redis14天有效期,最后给前端返回token.
+//                - 然后将用户信息保存到redis14天有效期,最后给前端返回token.不能给被删除或封禁的用户登录.
 
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }

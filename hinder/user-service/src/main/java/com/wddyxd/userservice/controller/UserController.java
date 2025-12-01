@@ -4,10 +4,11 @@ package com.wddyxd.userservice.controller;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.VO.UserDetailVO;
 import com.wddyxd.userservice.pojo.VO.UserProfileVO;
+import com.wddyxd.userservice.pojo.VO.UserVisitVO;
 import com.wddyxd.userservice.pojo.entity.User;
-import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,14 +54,14 @@ public class UserController {
     public Result<UserDetailVO> detail(@PathVariable Long id){
 
 //        返回UserDetailVO,其中必携带BasicUserDetailVO和CurrentUserDTO,如果是商户且在商户端额外携带MerchantDetailVO,
-//- 如果是管理员查看用户详细信息则额外携带List<userAddressVO>,MerchantDetailVO,
+//- 如果是管理员查看用户详细信息则额外调用获取用户的地址簿接口,携带List<userAddressVO>,MerchantDetailVO,
 //        开发前期默认返回完全数据,对敏感信息进行脱敏处理,
 //- 注意无论该用户是否被逻辑删除都应该被被查到,但不应该查到被删除的子信息
     throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
     @GetMapping("/profile/{id}")
-    //需要user.list权限而且(参数的id等于访问者的id或者访问者是管理员)
+    //任何用户无需登录都可访问
     @Operation(summary = "用户概要接口", description = "网站通用的表示某用户的接口,常被其他需要携带用户信息返回的接口调用")
     public Result<UserProfileVO> profile(@PathVariable Long id){
 
@@ -81,25 +82,138 @@ public class UserController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-    //添加用户
-    @PostMapping("/add")
-    @PreAuthorize("hasAuthority('user.add')")
-    public Result<User> add(@RequestBody User user){
-        userService.add(user);
-        return Result.success();
-    }
-
-    //更改用户信息
-    @PutMapping("/update")
-    @PreAuthorize("hasAuthority('user.update')")
-    public Result<User> update(@RequestBody User user){
-        userService.updateById(user);
-        return Result.success();
-    }
-    @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAuthority('user.remove')")
-    public Result<User> delete(@PathVariable Long id){
-        //TODO 删除用户
+    @GetMapping("/visit/{id}")
+    //任何用户无需登录都可访问
+    @Operation(summary = "访问某用户接口", description = "在用户端或商户端点击某用户的概要可以访问该用户")
+    public Result<UserVisitVO> visit(){
+//            查询user,user_detail,merchant_supplement表获取用户信息
+//- 访问被删除的用户则返回空用户
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
+
+    //添加用户
+    @PostMapping("/addAdmin")
+    @PreAuthorize("hasAuthority('user.add')")
+    //需要user.add权限
+    @Operation(summary = "添加管理员接口", description = "在后台的用户管理中添加用户,这里的用户指的是管理员")
+    public Result<?> addAdmin(@RequestBody CustomUserRegisterDTO customUserRegisterDTO){
+//        传入CustomUserRegisterDTO,然后判断用户的用户名,手机或邮箱是否被其他用户占用,
+//                - 如果都没被占用则直接添加用户,为这个用户赋予ROLE_NEW_ADMIN角色,然后在user_detail中添加默认的用户详细信息
+//                - 否则返回错误
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/password")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "更新用户密码接口", description = "更新用户密码")
+    public Result<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO){
+//        传入UpdatePasswordDTO,查询当前用户,
+//- 比较旧密码和新密码是否不一致,接下来比较旧密码,手机是否和查找到的用户的信息吻合,
+//- 接下来比较手机验证码是否和手机吻合,然后才更新密码
+//- 最后在在redis记录上次修改密码的时间戳,有效期5秒,有效期内禁止修改
+//- 查询不到用户或用户被逻辑删除则不应该执行更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/phone")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "换绑手机号接口", description = "换绑手机号")
+    public Result<?> updatePhone(@RequestBody UpdatePhoneDTO updatePhoneDTO){
+//        传入UpdatePhoneDTO,查询当前用户,
+//- 比较旧手机号和新手机号是否不一致,接下来比较旧手机号是否和数据库的数据吻合,
+//- 接下来比较手机验证码是否和新手机号吻合,然后才更新手机号
+//- 在mysql设置手机号唯一性约束
+//- 查询不到用户或用户被逻辑删除则不应该执行更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/email")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "换绑邮箱接口", description = "换绑邮箱")
+    public Result<?> updateEmail(@RequestBody UpdateEmailDTO updateEmailDTO){
+//        传入用户UpdateEmailDTO,查询当前用户,
+//- 比较旧邮箱和新邮箱是否不一致,接下来比较旧邮箱是否和数据库的数据吻合,
+//- 接下来比较邮箱验证码是否和新邮箱吻合,然后才更新邮箱
+//- 在mysql设置邮箱唯一性约束
+//- 查询不到用户或用户被逻辑删除则不应该执行更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/avatar")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "更新头像接口", description = "更新头像")
+    public Result<?> updateAvatar(@RequestBody UpdateAvatarDTO updateAvatarDTO){
+//        传入UpdateAvatarDTO更换头像,查询不到用户或用户被逻辑删除则不应该执行更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/nickName")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "更新昵称接口", description = "更新昵称")
+    public Result<?> updateNickName(@RequestBody UpdateNickNameDTO updateNickNameDTO){
+//        传入UpdateNickNameDTO来更新昵称,查询不到用户或用户被逻辑删除则不应该执行更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/gender")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "更新性别接口", description = "更新性别")
+    public Result<?> updateGender(@RequestBody UpdateGenderDTO updateGenderDTO){
+//        传入UpdateGenderDTO来更新昵称,查询不到用户或用户被逻辑删除则不应该执行更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/birthday")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "更新生日接口", description = "更新生日")
+    public Result<?> updateBirthday(@RequestBody UpdateBirthdayDTO updateBirthdayDTO){
+//        传入UpdateBirthdayDTO,查询不到用户或用户被逻辑删除则不应该执行更新,
+//- 更新后在redis进行记录,过期时间是1年,
+//- 访问接口时存在redis记录则拒绝更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/region")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "更新地域接口", description = "更新地域")
+    public Result<?> updateRegion(@RequestBody UpdateRegionDTO updateRegionDTO){
+//       传入UpdateRegionDTO,查询不到用户或用户被逻辑删除则不应该执行更新,
+//- 更新后在redis进行记录,过期时间是90天,
+//- 访问接口时存在redis记录则拒绝更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update/card")
+    //需要user.update权限或更新者的id等于参数id
+    @Operation(summary = "实名认证接口", description = "实名认证")
+    public Result<?> updateCard(@RequestBody UpdateCardDTO updateCardDTO){
+//       传入UpdateCardDTO ,虽然需要对接外部API,但这里简化实现:
+//- 检验IdCard格式正确后并且没有已使用的realName和IdCard则直接设置用户是已经完成实名认证的,并为用户升级角色,
+//- 查询不到用户或用户被逻辑删除则不应该执行更新,
+//- 在mysql为real_name和id_card添加唯一约束
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/status")
+    //需要user.update权限
+    @Operation(summary = "封禁/解封用户接口", description = "封禁/解封用户")
+    public Result<?> status(@RequestBody UpdateCardDTO updateCardDTO){
+//       封禁/解封用户, 查询不到用户或用户被逻辑删除则不应该执行更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/delete/{id}")
+    //需要user.delete权限
+    @Operation(summary = "删除用户接口", description = "只有管理员有权限删除用户,普通用户要注销需要将注销请求发送给管理员")
+    public Result<?> delete(@PathVariable Long id){
+//       在删除账户之前在redis查看上次删除该用户的时间戳如果存在则直接返回,
+//- 然后保证该用户没有注册商户,否则要先调用删除商户接口,
+//- 然后要须保证该该账户存在且该账户不存在自己的状态为尚未完成的订单,否则要调用强制取消和退货订单接口,
+//- 然后将用户的充值金额和领取的优惠券退还,
+//- 然后将唯一约束字段(都是varchar字段)修改成 "原先字段.DELETED.删除时间戳"的格式,然后将user,user_detail,user_address表的相关字段逻辑删除
+//- 然后将用户和用户相关角色的关联逻辑删除
+//- 然后在redis添加本次删除的时间戳
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
 }

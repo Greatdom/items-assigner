@@ -85,7 +85,7 @@ public class UserController {
     @GetMapping("/visit/{id}")
     //任何用户无需登录都可访问
     @Operation(summary = "访问某用户接口", description = "在用户端或商户端点击某用户的概要可以访问该用户")
-    public Result<UserVisitVO> visit(){
+    public Result<UserVisitVO> visit(@PathVariable Long id){
 //            查询user,user_detail,merchant_supplement表获取用户信息
 //- 访问被删除的用户则返回空用户
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

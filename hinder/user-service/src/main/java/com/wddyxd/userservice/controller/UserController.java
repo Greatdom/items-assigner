@@ -36,7 +36,7 @@ public class UserController {
     @PreAuthorize("hasAuthority('user.list')")
     //需要user.list权限
     @Operation(summary = "分页获取用户列表接口", description = "在管理员的用户管理主界面查看所有用户")
-    public Result<?> selectAll(@RequestParam(defaultValue = "1") Integer pageNum,
+    public Result<?> list(@RequestParam(defaultValue = "1") Integer pageNum,
                                @RequestParam(defaultValue = "10") Integer pageSize,
                                @RequestParam(defaultValue = "") String search){
 
@@ -91,7 +91,6 @@ public class UserController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-    //添加用户
     @PostMapping("/addAdmin")
     @PreAuthorize("hasAuthority('user.add')")
     //需要user.add权限
@@ -202,7 +201,7 @@ public class UserController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-    @PutMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     //需要user.delete权限
     @Operation(summary = "删除用户接口", description = "只有管理员有权限删除用户,普通用户要注销需要将注销请求发送给管理员")
     public Result<?> delete(@PathVariable Long id){

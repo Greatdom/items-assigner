@@ -1,0 +1,103 @@
+package com.wddyxd.productservice.controller;
+
+
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.utils.Result;
+import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
+import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * @program: items-assigner
+ * @description: description
+ * @author: wddyxd
+ * @create: 2025-12-01 20:08
+ **/
+@RestController
+@RequestMapping("/product/product")
+@Tag(name = "商品控制器", description = "商品相关接口")
+public class ProductController {
+
+    @GetMapping("/list")
+    //需要product.list权限而且(参数userId等于访问者的id或访问者是管理员)
+    @Operation(summary = "分页获取商品列表接口", description = "在后台和商户端的商品管理界面查看所有商品")
+    public Result<ProductProfileVO> list(@RequestBody ProductListDTO productListDTO){
+
+//       传入ProductListDTO,在后台和商户端的商品管理界面查看所有存在的商品或当前商户的商品,
+//- 支持根据商品名搜索,支持根据创建时间或更新时间检索,支持根据商品分类检索,
+//- 支持根据商品状态检索,支持根据价格范围排序检索
+//- 在mysql建立索引以支持关键字搜索
+//- 返回List<ProductListVO>并由PageResult包装
+//- 这里是展示类而不是实体类,因为返回的商品不是商品本身,而是商品+商品分类+默认商品样式的整合
+//- 返回的商品的名字是商品名字和默认样式的名字的拼接,库存是总库存,价格是默认样式的价格,销量是总销量
+//- 注意无论商品是否被下架或逻辑删除都应该被被查到
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @GetMapping("/feed")
+    //任何用户无需登录可访问
+    @Operation(summary = "在用户端推送商品接口", description = "在用户端首页推送商品")
+    public Result<ProductProfileVO> feed(@RequestBody ProductListDTO productListDTO){
+
+//       传入ProductFeedDTO,返回List<ProductProfileVO>
+//- 商品推送可用用机器学习实现也可用基于规则的算法实现,但这里不实现个性化推荐,采用简单推送.
+//- 每次触发都会推送的分类标识的最新商品,其中分类标识包括推荐商品和最新商品以及具体分类,
+//- 在高级搜索有筛选器,根据地区和排序进行筛选,每次触发该接口,前一次的返回结果不会丢失.
+//- 后续接入Elasticsearch
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+//    @GetMapping("/detail/{id}")
+//    //需要role.list权限
+//    @Operation(summary = "查看角色详细信息接口", description = "在管理员的角色管理主界面查看角色详情")
+//    public Result<?> detail(@PathVariable Long id){
+//
+////        查询role和permissions表中获取角色信息和角色关联的权限
+////- 注意无论角色是否被逻辑删除都应该被被查到,但权限应该是没有被逻辑删除的
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+//    }
+//
+//    @PostMapping("/assign")
+//    //需要user.update权限
+//    @Operation(summary = "手动为特定用户分配角色接口", description = "管理员可以在用户管理界面查看用户详细信息的时候为某用户分配角色")
+//    public Result<?> assign(@RequestParam Long userId, @RequestParam Long[] roleIds){
+////        一个用户可以分配最多三个角色,分别是最多一个购物者角色,一个商户角色和一个管理员角色,
+////- 如果发现roleId不满足分配角色合法性则拒绝分配,
+////- 否则根据参数查询用户和用户的角色,然后删除用户拥有的角色,然后重新增加角色
+////- 如果原先没有商户角色但添加了商户则创建商户表,并插入默认商户信息(但如果给了最高级商户角色但没有许可证呢?)
+////- 只有超级管理员才可以给用户分配管理员角色,管理员只能给用户分配除管理员外的角色
+////- 如果查询不到用户或用户被逻辑删除则拒绝分配
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+//    }
+//
+//    @PostMapping("/add")
+//    //需要role.add权限
+//    @Operation(summary = "添加角色接口", description = "管理员可以在角色管理界面添加角色")
+//    public Result<?> add(@RequestParam String name){
+////        添加角色
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+//    }
+//
+//    @PutMapping("/update")
+//    //需要role.update权限
+//    @Operation(summary = "更新角色内容接口", description = "管理员可以在角色管理界面更新角色信息")
+//    public Result<?> update(@RequestParam String name){
+////        更新角色信息,角色被逻辑删除则拒绝更新
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+//    }
+//
+//    @DeleteMapping("/delete/{id}")
+//    //需要role.delete权限
+//    @Operation(summary = "删除店铺分类接口", description = "只有超级管理员有权限删除角色,删除角色按钮在角色管理界面")
+//    public Result<?> delete(@PathVariable Long id){
+////        删除角色包括根据id将role表的主键等于id,
+////- role_permissions表role_id等于id和user_role表role_id等于id的行逻辑删除,
+////- 不能删除每个角色组的"默认角色",然后遍历用户,如果用户有该角色则将该角色变成所在组的"默认角色"
+////- 只有超级管理员才可以删除角色
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+//    }
+
+}

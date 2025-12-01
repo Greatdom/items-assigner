@@ -122,7 +122,7 @@ public class AuthController {
     @PostMapping("/customUserRegister")
     @Operation(summary = "用户端用户注册接口", description = "用户端的注册接口")
     public Result<?> customUserRegister(@RequestBody CustomUserRegisterDTO customUserRegisterDTO){
-//        得到参数后分别根据用户名,手机号和邮箱获取user表的一条数据,
+//        首先判断用户名,手机号和邮箱的合法性,得到参数后分别根据用户名,手机号和邮箱获取user表的一条数据,
 //                - 如果三份数据都是null则注册用户,分配ROLE_NEW_USER角色,创建user表,关联user_role表,创建user_detail表并填充默认数据
 //                - 其他情况返回错误
 //        - 其中,用加密算法(这里用MD5)加密密码,同时将事先存储到redis的phoneCode和emailCode提取来验证手机和邮箱的有效性
@@ -132,7 +132,7 @@ public class AuthController {
     @PostMapping("/merchantRegister")
     @Operation(summary = "商户端商户注册接口", description = "商户端的注册接口")
     public Result<?> merchantRegister(@RequestBody MerchantRegisterDTO merchantRegisterDTO){
-//        得到参数后分别根据用户名,手机号和邮箱获取user表的一条数据,
+//        首先判断用户名,手机号和邮箱的合法性,得到参数后分别根据用户名,手机号和邮箱获取user表的一条数据,
 //                - 如果三份数据都是null则调用用户端注册接口
 //                        - 如果三份数据都指向同一个用户而且没有被分配商户相关角色则将该用户分配ROLE_NEW_MERCHANT角色,
 //                - 并创建merchant_supplement表,

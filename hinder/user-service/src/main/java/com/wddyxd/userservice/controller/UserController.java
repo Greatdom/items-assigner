@@ -97,7 +97,7 @@ public class UserController {
     @Operation(summary = "添加管理员接口", description = "在后台的用户管理中添加用户,这里的用户指的是管理员")
     public Result<?> addAdmin(@RequestBody CustomUserRegisterDTO customUserRegisterDTO){
 //        传入CustomUserRegisterDTO,然后判断用户的用户名,手机或邮箱是否被其他用户占用,
-//                - 如果都没被占用则直接添加用户,为这个用户赋予ROLE_NEW_ADMIN角色,然后在user_detail中添加默认的用户详细信息
+//                - 如果都没被占用则直接添加用户,为这个用户赋予ROLE_NEW_ADMIN和ROLE_NEW_USER角色,然后在user_detail中添加默认的用户详细信息
 //                - 否则返回错误
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
@@ -197,7 +197,8 @@ public class UserController {
     //需要user.update权限
     @Operation(summary = "封禁/解封用户接口", description = "封禁/解封用户")
     public Result<?> status(@RequestBody UpdateCardDTO updateCardDTO){
-//       封禁/解封用户, 查询不到用户或用户被逻辑删除则不应该执行更新
+//       封禁/解封用户,封禁用户时让用户强制下线,废除用户的token,同时给用户发短信或邮箱,
+//- 查询不到用户或用户被逻辑删除则跳过
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 

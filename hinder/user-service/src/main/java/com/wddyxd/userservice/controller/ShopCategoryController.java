@@ -27,7 +27,7 @@ public class ShopCategoryController {
     @GetMapping("/list")
     //需要shopCategory.list权限
     @Operation(summary = "分页查询店铺分类接口", description = "在管理员的角色管理主界面查看所有存在的店铺分类")
-    public Result<ShopCategory> list(@RequestParam(defaultValue = "1") Integer pageNum,
+    public Result<?> list(@RequestParam(defaultValue = "1") Integer pageNum,
                                      @RequestParam(defaultValue = "10") Integer pageSize,
                                      @RequestParam(defaultValue = "") String search){
 

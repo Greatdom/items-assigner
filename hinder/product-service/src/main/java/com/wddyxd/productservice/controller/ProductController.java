@@ -4,7 +4,10 @@ package com.wddyxd.productservice.controller;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.productservice.pojo.DTO.ProductAddDTO;
+import com.wddyxd.productservice.pojo.DTO.ProductBasicUpdateDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
+import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,54 +53,65 @@ public class ProductController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-//    @GetMapping("/detail/{id}")
-//    //需要role.list权限
-//    @Operation(summary = "查看角色详细信息接口", description = "在管理员的角色管理主界面查看角色详情")
-//    public Result<?> detail(@PathVariable Long id){
-//
-////        查询role和permissions表中获取角色信息和角色关联的权限
-////- 注意无论角色是否被逻辑删除都应该被被查到,但权限应该是没有被逻辑删除的
-//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
-//    }
-//
-//    @PostMapping("/assign")
-//    //需要user.update权限
-//    @Operation(summary = "手动为特定用户分配角色接口", description = "管理员可以在用户管理界面查看用户详细信息的时候为某用户分配角色")
-//    public Result<?> assign(@RequestParam Long userId, @RequestParam Long[] roleIds){
-////        一个用户可以分配最多三个角色,分别是最多一个购物者角色,一个商户角色和一个管理员角色,
-////- 如果发现roleId不满足分配角色合法性则拒绝分配,
-////- 否则根据参数查询用户和用户的角色,然后删除用户拥有的角色,然后重新增加角色
-////- 如果原先没有商户角色但添加了商户则创建商户表,并插入默认商户信息(但如果给了最高级商户角色但没有许可证呢?)
-////- 只有超级管理员才可以给用户分配管理员角色,管理员只能给用户分配除管理员外的角色
-////- 如果查询不到用户或用户被逻辑删除则拒绝分配
-//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
-//    }
-//
-//    @PostMapping("/add")
-//    //需要role.add权限
-//    @Operation(summary = "添加角色接口", description = "管理员可以在角色管理界面添加角色")
-//    public Result<?> add(@RequestParam String name){
-////        添加角色
-//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
-//    }
-//
-//    @PutMapping("/update")
-//    //需要role.update权限
-//    @Operation(summary = "更新角色内容接口", description = "管理员可以在角色管理界面更新角色信息")
-//    public Result<?> update(@RequestParam String name){
-////        更新角色信息,角色被逻辑删除则拒绝更新
-//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
-//    }
-//
-//    @DeleteMapping("/delete/{id}")
-//    //需要role.delete权限
-//    @Operation(summary = "删除店铺分类接口", description = "只有超级管理员有权限删除角色,删除角色按钮在角色管理界面")
-//    public Result<?> delete(@PathVariable Long id){
-////        删除角色包括根据id将role表的主键等于id,
-////- role_permissions表role_id等于id和user_role表role_id等于id的行逻辑删除,
-////- 不能删除每个角色组的"默认角色",然后遍历用户,如果用户有该角色则将该角色变成所在组的"默认角色"
-////- 只有超级管理员才可以删除角色
-//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
-//    }
+    @GetMapping("/visit/{id}")
+    //任何用户无需登录可访问
+    @Operation(summary = "在用户端访问商品接口", description = "在用户端点击被推送的商品可以访问该商品")
+    public Result<ProductDetailVO> visit(@PathVariable Long id){
+
+//       返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
+//- 用户概要指向商户UserProfileVO,优惠券指向用户领取的生效的可用优惠券CouponVO,商品规格是该商品的所有规格ProductSkuVO,
+//- 用户端不应该访问被下架或删除的商品
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @GetMapping("/detail/{id}")
+    //需要product.list权限而且(访问者的id等于参数的userId或者访问者是管理员)
+    @Operation(summary = "查看商品详情接口", description = "查看商品的详细信息,商户端和管理端查看商品时访问该接口")
+    public Result<ProductDetailVO> detail(@PathVariable Long id){
+
+//        返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
+//- 用户概要指向商户UserProfileVO,优惠券指向商品的所有可用优惠券List<CouponVO>,商品规格是该商品的所有规格List<ProductSkuVO>,
+//- 在商户端和后台可以访问被下架或删除的商品
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PostMapping("/add")
+    //需要product.add权限而且访问者的id等于参数的userId
+    @Operation(summary = "添加商品接口", description = "商户上架一件商品")
+    public Result<?> add(@RequestBody ProductAddDTO productAddDTO){
+//        传入ProductAddDTO,先查询商品指向的商品分类是否存在,如果存在且没被逻辑删除则进入下一步,
+//- 在事务中，商品和规格需要互相引用 ID，但它们的 ID 在插入数据库前才能生成，这造成了依赖循环,
+//- 所以需要在操作数据库前手动生成ID的工作(这里采用mybatis_plus的雪花算法),
+//- 然后遍历规格,为每个规格设置productId,检查价格和规格的合法性,计算规格的总库存然后加到商品的总库存字段,
+//- 然后查看商品规格中第一个isDefault=true的规格,将这个规格的id赋给商品的productSkuId字段,
+//- 在插入前在redis插入添加商品的时间戳,过期时间5秒,下次访问接口时如果查询到该redis记录则直接返回
+//- 然后将商品和规格插入到数据库,数据库对没有处理的字段默认处理
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/update")
+    //需要product.update权限而且(访问者的id等于参数的userId或者访问者是管理员)
+    @Operation(summary = "修改商品内容接口", description = "在商品管理界面更新商品内容,但不同时更新规格的内容")
+    public Result<?> update(@RequestBody ProductBasicUpdateDTO productBasicUpdateDTO){
+//        传入ProductBasicUpdateDTO,商品被逻辑删除则拒绝更新,查询到的商品存在不合法,不匹配的情况则拒绝更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+    @PutMapping("/status/{id}")
+    //需要product.update权限而且(访问者的id等于参数的userId或者访问者是管理员)
+    @Operation(summary = "下架/上架商品接口", description = "下架/上架商品")
+    public Result<?> status(@PathVariable Long id){
+//        下架/上架商品,商品被逻辑删除则拒绝更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    //需要product.delete权限而且(访问者的id等于参数的userId或者访问者是管理员)
+    @Operation(summary = "删除商品接口", description = "只有超级管理员有权限删除角色,删除角色按钮在角色管理界面")
+    public Result<?> delete(@PathVariable Long id){
+//        查询商品,如果商品的id和userId合法吻合则进入下一步,
+//- 查找商品和规格并进行逻辑删除,先删除商品,再删除商品的规格,回收用户持有的优惠券,并回收该商品的所有优惠券
+//- 商品或规格被逻辑删除则跳过
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
 
 }

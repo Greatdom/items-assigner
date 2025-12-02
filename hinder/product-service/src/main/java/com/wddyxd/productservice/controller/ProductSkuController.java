@@ -20,11 +20,11 @@ import java.util.List;
  **/
 @RestController
 @RequestMapping("/product/productSku")
-@Tag(name = "商品分类控制器", description = "商品分类相关接口")
+@Tag(name = "商品规格控制器", description = "商品规格相关接口")
 public class ProductSkuController {
 
     @GetMapping("/list/{id}")
-    //任何人无需登录可访问
+    //任何人登录后可访问
     @Operation(summary = "分页查询商品分类列表接口", description = "查看某个商品的商品规格的详细信息,通常在调用商品详情接口中远程调用该接口")
     public Result<List<ProductSkuVO>> list(@PathVariable Long id){
 

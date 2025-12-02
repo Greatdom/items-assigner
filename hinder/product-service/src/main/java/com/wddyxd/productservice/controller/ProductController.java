@@ -54,7 +54,7 @@ public class ProductController {
     }
 
     @GetMapping("/visit/{id}")
-    //任何用户无需登录可访问
+    //任何用户登录后可访问
     @Operation(summary = "在用户端访问商品接口", description = "在用户端点击被推送的商品可以访问该商品")
     public Result<ProductDetailVO> visit(@PathVariable Long id){
 

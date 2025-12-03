@@ -85,14 +85,14 @@ public class OrderMainController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-@GetMapping("/detail/{id}")
-//需要order.list权限而且(访问者的id等于订单的userId或访问者是管理员)
-@Operation(summary = "查看订单详细信息接口", description = "查看订单的详细信息,商户端和管理端点击订单时访问该接口")
-public Result<OrderDetailVO> detail(@PathVariable Long id){
+    @GetMapping("/detail/{id}")
+    //需要order.list权限而且(访问者的id等于订单的userId或访问者是管理员)
+    @Operation(summary = "查看订单详细信息接口", description = "查看订单的详细信息,商户端和管理端点击订单时访问该接口")
+    public Result<OrderDetailVO> detail(@PathVariable Long id){
 
-//        返回OrderDetailVO,包括访问被下架或删除的订单
-    throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
-}
+    //        返回OrderDetailVO,包括访问被下架或删除的订单
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
 
     @PutMapping("/update")
     //order.update权限而且(访问者的id等于订单的userId或访问者是管理员)
@@ -101,7 +101,5 @@ public Result<OrderDetailVO> detail(@PathVariable Long id){
 //       传入OrderUpdateDTO,修改订单信息
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
-
-
 
 }

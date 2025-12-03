@@ -32,7 +32,7 @@ public class OrderStatusLogController {
     }
 
     @PostMapping("/pay/{id}")
-    //需要orderStatusLog.add权限
+    //需要orderStatusLog.add权限且访问者的id等于订单的userId
     @Operation(summary = "订单支付接口", description = "用户支付订单")
     public Result<?> pay(@PathVariable Long id){
 //       传入订单id,检查订单是否处于 "待支付" 状态,直接生成order_status_log表,
@@ -40,7 +40,7 @@ public class OrderStatusLogController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/ship/{id}")
-    //需要orderStatusLog.add权限
+    //需要orderStatusLog.add权限且访问者的id等于订单的userId且是商家
     @Operation(summary = "订单发货接口", description = "商家为订单发货")
     public Result<?> ship(@PathVariable Long id){
 //       传入订单id,检查订单是否处于 "已支付" 状态,直接生成order_status_log表,
@@ -48,7 +48,7 @@ public class OrderStatusLogController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/receive/{id}")
-    //需要orderStatusLog.add权限
+    //需要orderStatusLog.add权限且访问者的id等于订单的userId
     @Operation(summary = "订单收货接口", description = "用户为订单收货")
     public Result<?> receive(@PathVariable Long id){
 //       传入订单id,检查订单是否处于 "已发货" 状态,直接生成order_status_log表,

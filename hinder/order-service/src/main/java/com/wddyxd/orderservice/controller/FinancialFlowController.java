@@ -32,7 +32,7 @@ public class FinancialFlowController {
 
 
     @GetMapping("/list")
-    //需要order.list权限
+    //需要financialFlow.list权限
     @Operation(summary = "分页查询财务接口", description = "后台端在订单管理页面查看网站的所有财务列表")
     public Result<?> list(@RequestParam(defaultValue = "1") Integer pageNum,
                           @RequestParam(defaultValue = "10") Integer pageSize,

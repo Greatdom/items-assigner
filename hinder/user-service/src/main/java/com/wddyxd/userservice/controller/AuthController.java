@@ -137,7 +137,7 @@ public class AuthController {
 //        首先判断用户名,手机号和邮箱的合法性,得到参数后分别根据用户名,手机号和邮箱获取user表的一条数据,
 //                - 如果三份数据都是null则调用用户端注册接口
 //                        - 如果三份数据都指向同一个用户而且没有被分配商户相关角色则将该用户分配ROLE_NEW_MERCHANT角色,
-//                - 并创建merchant_supplement表,
+//                - 并创建merchant_supplement表,注意新注册的商店是关店状态
 //                - 其他情况返回错误
 //                        - 其中,用加密算法(这里用MD5)加密密码,同时将事先存储到redis的phoneCode和emailCode提取来验证手机和邮箱的有效性
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

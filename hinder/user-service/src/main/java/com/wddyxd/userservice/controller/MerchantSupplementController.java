@@ -38,7 +38,7 @@ public class MerchantSupplementController {
     }
 
     @PutMapping("/update/custom")
-    //需要user.update权限或更新者的id等于参数id
+    //访问者的id等于参数的id
     @Operation(summary = "更新基础商户信息接口", description = "更新基础商户信息")
     public Result<?> updateCustom(@RequestBody UpdateMerchantCustomDTO updateMerchantCustomDTO){
 //        传入UpdateMerchantCustomDTO,更新基础商户信息,查询不到用户或用户被逻辑删除则不应该执行更新
@@ -46,12 +46,21 @@ public class MerchantSupplementController {
     }
 
     @PutMapping("/update/license")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "许可证认证接口", description = "许可证认证")
     public Result<?> updateLicense(@RequestBody UpdateMerchantLicenseDTO updateMerchantLicenseDTO){
 //        传入UpdateMerchantLicenseDTO,提供许可证后异步通知管理员审核,应该审核后管理员手动为其升级角色,
 //- 但这里实现为直接为该用户升级角色
 //- 查询不到用户或用户被逻辑删除则不应该执行更新
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @PutMapping("/status")
+    //更新者的id等于参数id
+    @Operation(summary = "开张/关店接口", description = "开张/关店")
+    public Result<?> status(@RequestBody UpdateMerchantLicenseDTO updateMerchantLicenseDTO){
+//        开张/关店,此时用户无法在这家店发起订单并强制取消或退货还没有完成的订单
+//- 查询不到用户或用户被逻辑删除则跳过
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 

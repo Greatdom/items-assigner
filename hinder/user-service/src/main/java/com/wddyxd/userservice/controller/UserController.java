@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @GetMapping("/detail/{id}")
-    //需要user.list权限而且(参数的id等于访问者的id或者访问者是管理员)
+    //需要user.list权限或者参数的id等于访问者的id
     @Operation(summary = "分页获取用户列表接口", description = "在用户端点击头像跳转到用户设置界面,后台或商户端前往个人中心," +
             "管理员在用户管理点击用户可触发该接口,查询该用户详细信息")
     public Result<UserDetailVO> detail(@PathVariable Long id){
@@ -102,7 +102,7 @@ public class UserController {
     }
 
     @PutMapping("/update/password")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "更新用户密码接口", description = "更新用户密码")
     public Result<?> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO){
 //        传入UpdatePasswordDTO,查询当前用户,
@@ -114,7 +114,7 @@ public class UserController {
     }
 
     @PutMapping("/update/phone")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "换绑手机号接口", description = "换绑手机号")
     public Result<?> updatePhone(@RequestBody UpdatePhoneDTO updatePhoneDTO){
 //        传入UpdatePhoneDTO,查询当前用户,
@@ -126,7 +126,7 @@ public class UserController {
     }
 
     @PutMapping("/update/email")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "换绑邮箱接口", description = "换绑邮箱")
     public Result<?> updateEmail(@RequestBody UpdateEmailDTO updateEmailDTO){
 //        传入用户UpdateEmailDTO,查询当前用户,
@@ -138,7 +138,7 @@ public class UserController {
     }
 
     @PutMapping("/update/avatar")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "更新头像接口", description = "更新头像")
     public Result<?> updateAvatar(@RequestBody UpdateAvatarDTO updateAvatarDTO){
 //        传入UpdateAvatarDTO更换头像,查询不到用户或用户被逻辑删除则不应该执行更新
@@ -146,7 +146,7 @@ public class UserController {
     }
 
     @PutMapping("/update/nickName")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "更新昵称接口", description = "更新昵称")
     public Result<?> updateNickName(@RequestBody UpdateNickNameDTO updateNickNameDTO){
 //        传入UpdateNickNameDTO来更新昵称,查询不到用户或用户被逻辑删除则不应该执行更新
@@ -154,7 +154,7 @@ public class UserController {
     }
 
     @PutMapping("/update/gender")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "更新性别接口", description = "更新性别")
     public Result<?> updateGender(@RequestBody UpdateGenderDTO updateGenderDTO){
 //        传入UpdateGenderDTO来更新昵称,查询不到用户或用户被逻辑删除则不应该执行更新
@@ -162,7 +162,7 @@ public class UserController {
     }
 
     @PutMapping("/update/birthday")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "更新生日接口", description = "更新生日")
     public Result<?> updateBirthday(@RequestBody UpdateBirthdayDTO updateBirthdayDTO){
 //        传入UpdateBirthdayDTO,查询不到用户或用户被逻辑删除则不应该执行更新,
@@ -172,7 +172,7 @@ public class UserController {
     }
 
     @PutMapping("/update/region")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "更新地域接口", description = "更新地域")
     public Result<?> updateRegion(@RequestBody UpdateRegionDTO updateRegionDTO){
 //       传入UpdateRegionDTO,查询不到用户或用户被逻辑删除则不应该执行更新,
@@ -182,7 +182,7 @@ public class UserController {
     }
 
     @PutMapping("/update/card")
-    //需要user.update权限或更新者的id等于参数id
+    //更新者的id等于参数id
     @Operation(summary = "实名认证接口", description = "实名认证")
     public Result<?> updateCard(@RequestBody UpdateCardDTO updateCardDTO){
 //       传入UpdateCardDTO ,虽然需要对接外部API,但这里简化实现:

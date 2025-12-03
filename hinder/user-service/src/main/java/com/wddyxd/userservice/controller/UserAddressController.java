@@ -26,7 +26,7 @@ import java.util.List;
 public class UserAddressController {
 
     @GetMapping("/list/{id}")
-    //登录而且访问者的id等于参数的id
+    //访问者的id等于参数的id
     @Operation(summary = "获取个人用户地址簿", description = "获取个人用户地址簿")
     public Result<UserAddressDTO> list(@PathVariable Long id){
 //        在用户端个人中心或后台的用户管理可查询用户端地址簿,返回List<UserAddressDTO>
@@ -35,7 +35,7 @@ public class UserAddressController {
     }
 
     @PostMapping("/add")
-    //登录而且访问者的id等于参数的id
+    //访问者的id等于参数的id
     @Operation(summary = "新增地址簿接口", description = "新增地址簿,仅允许用户添加地址")
     public Result<?> add(@RequestBody UserAddressDTO userAddressDTO){
 //        传入UserAddressDTO,一个用户最多添加5个正常状态的地址簿,
@@ -45,7 +45,7 @@ public class UserAddressController {
     }
 
     @PutMapping("/update")
-    //登录而且访问者的id等于参数的id
+    //访问者的id等于参数的id
     @Operation(summary = "修改地址簿接口", description = "修改地址簿")
     public Result<?> update(@RequestBody List<UserAddressDTO> updatePasswordDTOS){
 //        传入List<UserAddressDTO>,注意只将第一个默认地址设为默认地址
@@ -53,7 +53,7 @@ public class UserAddressController {
     }
 
     @DeleteMapping("/delete/{id}")
-    //登录而且访问者的id等于参数的id
+    //访问者的id等于参数的id
     @Operation(summary = "删除地址簿接口", description = "删除地址簿")
     public Result<?> delete(@PathVariable Long id){
 //       逻辑删除地址簿

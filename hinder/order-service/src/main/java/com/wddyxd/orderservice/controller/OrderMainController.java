@@ -28,6 +28,7 @@ public class OrderMainController {
     @Operation(summary = "新增订单接口", description = "用户进行下单操作")
     public Result<?> add(@RequestBody OrderAddDTO orderAddDTO){
 //        传入OrderAddDTO,将token信息和userId比对并检查用户是否可以正常使用,
+       // - 然后查看商家是否在开张,
 //- 然后查看指向的商品和规格是否存在,没被删除,在上架和在正常使用,
 //- 然后查看用户领取的优惠券指向的优惠券是否存在,未删除且在生效而且满足使用条件,
 //- 然后查询商品和商品规格,在生成的订单添加商品快照,然后减少商品和规格的库存,
@@ -56,7 +57,7 @@ public class OrderMainController {
     }
 
     @GetMapping("/list/merchant")
-    //需要order.list权限而且访问者的id等于参数的userId
+    //需要order.list权限而且访问者的id等于参数的userId而且是商户
     @Operation(summary = "商户端分页查询订单列表接口", description = "商户端在订单管理页面查看商家的所有商品的订单列表")
     public Result<?> listMerchant(@RequestParam(defaultValue = "1") Integer pageNum,
                               @RequestParam(defaultValue = "10") Integer pageSize,
@@ -71,7 +72,7 @@ public class OrderMainController {
     }
 
     @GetMapping("/list/admin")
-    //需要order.list权限而且访问者的id等于参数的userId
+    //需要order.list权限而且是管理员
     @Operation(summary = "后台端分页查询订单列表接口", description = "后台端在订单管理页面查看网站的所有订单列表")
     public Result<?> listAdmin(@RequestParam(defaultValue = "1") Integer pageNum,
                                   @RequestParam(defaultValue = "10") Integer pageSize,
@@ -95,8 +96,8 @@ public class OrderMainController {
     }
 
     @PutMapping("/update")
-    //order.update权限而且(访问者的id等于订单的userId或访问者是管理员)
-    @Operation(summary = "修改订单信息接口", description = "用户在订单状态改变后触发该接口")
+    //需要orderStatusLog.add权限
+    @Operation(summary = "修改订单信息接口", description = "在订单状态改变后被订单日志接口调用")
     public Result<?> update(@RequestBody OrderUpdateDTO orderUpdateDTO){
 //       传入OrderUpdateDTO,修改订单信息
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

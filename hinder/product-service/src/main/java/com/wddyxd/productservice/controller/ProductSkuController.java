@@ -33,7 +33,7 @@ public class ProductSkuController {
     }
 
     @PostMapping("/add")
-    //需要product.list权限而且(访问者的id等于参数的userId或者访问者是管理员)
+    //需要product.add权限而且访问者的id等于参数的userId
     @Operation(summary = "添加商品规格接口", description = "在创建商品后编辑商品时可用")
     public Result<?> add(@RequestBody ProductSkuDTO productSkuDTO){
 //        传入ProductSkuDTO,添加商品规格后,要刷新商品的库存,注意商品规格要指向合法的商品
@@ -41,7 +41,7 @@ public class ProductSkuController {
     }
 
     @PutMapping("/update")
-    //需要product.update权限而且(访问者的id等于参数的userId或者访问者是管理员)
+    //需要product.update权限而且访问者的id等于参数的userId
     @Operation(summary = "修改商品规格接口", description = "在创建商品后编辑商品时可用")
     public Result<?> update(@RequestBody ProductSkuDTO productSkuDTO){
 //        传入ProductSkuDTO,更新商品规格后,要刷新商品的库存,注意商品规格要指向合法的商品

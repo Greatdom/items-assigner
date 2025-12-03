@@ -13,10 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @create: 2025-12-03 16:46
  **/
 @SpringBootTest
-public class AuthControllerTests {
-
-    @Autowired
-    private AuthController authController;
+public class AuthServiceTests {
 
     @Autowired
     private IAuthService authService;

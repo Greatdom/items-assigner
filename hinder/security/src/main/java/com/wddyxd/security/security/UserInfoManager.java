@@ -5,7 +5,7 @@ import com.wddyxd.common.constant.LogPrompt;
 import com.wddyxd.common.constant.RedisKeyConstants;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.security.exception.SecurityAuthException;
-import com.wddyxd.security.pojo.CurrentUserInfo;
+import com.wddyxd.security.pojo.CurrentUserDTO;
 import com.wddyxd.security.pojo.SecurityUser;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.slf4j.Logger;
@@ -40,7 +40,7 @@ public class UserInfoManager {
             log.error(LogPrompt.PARAM_EMPTY_ERROR.msg);
             throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
         }
-        CurrentUserInfo currentUserInfo = securityUser.getCurrentUserInfo();
+        CurrentUserDTO currentUserInfo = securityUser.getCurrentUserInfo();
         Long id = currentUserInfo.getId();
         String key = RedisKeyConstants.USER_LOGIN_USERINFO.key + id.toString();
 
@@ -53,17 +53,17 @@ public class UserInfoManager {
         }
     }
 
-    public CurrentUserInfo getInfoFromRedis(Long id) {
+    public CurrentUserDTO getInfoFromRedis(Long id) {
         String key = RedisKeyConstants.USER_LOGIN_USERINFO.key + id.toString();
-        CurrentUserInfo currentUserInfo = null;
+        CurrentUserDTO currentUserInfo = null;
         try {
             Object value = redisTemplate.opsForValue().get(key);
-            if (!(value instanceof CurrentUserInfo)) {
+            if (!(value instanceof CurrentUserDTO)) {
                 log.error(LogPrompt.REDIS_GET_DATA_ERROR.msg);
                 redisTemplate.delete(key);
                 throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
             }
-            currentUserInfo = (CurrentUserInfo) value;
+            currentUserInfo = (CurrentUserDTO) value;
             redisTemplate.expire(key, TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
             log.info(LogPrompt.SUCCESS_INFO.msg);
             return currentUserInfo;

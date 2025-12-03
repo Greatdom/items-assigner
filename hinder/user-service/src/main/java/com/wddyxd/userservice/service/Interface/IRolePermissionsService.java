@@ -1,4 +1,4 @@
-package com.wddyxd.userservice.service;
+package com.wddyxd.userservice.service.Interface;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;

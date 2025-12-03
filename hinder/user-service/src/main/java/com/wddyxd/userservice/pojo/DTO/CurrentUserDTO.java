@@ -18,6 +18,19 @@ public class CurrentUserDTO {
     private List<String> roles; //角色名称
     private List<String> permissionValueList; //权限值
 
+
+    @Override
+    public String toString() {
+        return "CurrentUserDTO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", roles=" + roles +
+                ", permissionValueList=" + permissionValueList +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

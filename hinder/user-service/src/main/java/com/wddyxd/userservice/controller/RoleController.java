@@ -5,16 +5,9 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
-import com.wddyxd.userservice.pojo.VO.UserDetailVO;
-import com.wddyxd.userservice.pojo.entity.Role;
-import com.wddyxd.userservice.pojo.entity.ShopCategory;
-import com.wddyxd.userservice.service.IRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @program: items-assigner

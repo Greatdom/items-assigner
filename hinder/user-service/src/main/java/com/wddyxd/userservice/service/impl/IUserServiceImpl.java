@@ -11,13 +11,14 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.mapper.UserMapper;
+import com.wddyxd.userservice.pojo.DTO.LoginUserForm;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserRole;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
-import com.wddyxd.userservice.service.IPermissionsService;
-import com.wddyxd.userservice.service.IUserRoleService;
-import com.wddyxd.userservice.service.IUserService;
+import com.wddyxd.userservice.service.Interface.IPermissionsService;
+import com.wddyxd.userservice.service.Interface.IUserRoleService;
+import com.wddyxd.userservice.service.Interface.IUserService;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     @Override
     public CurrentUserDTO me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof com.wddyxd.security.pojo.CurrentUserInfo currentUserInfo) {
+        if (authentication != null && authentication.getPrincipal() instanceof com.wddyxd.security.pojo.CurrentUserDTO currentUserInfo) {
             Long id = currentUserInfo.getId();// 获取 ID
             // 校验用户ID不为空
             if (id == null) {
@@ -98,7 +99,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         if(user == null) {
             return null;
         }
-        com.wddyxd.userservice.pojo.securityDTO.LoginUserForm loginUserForm = new com.wddyxd.userservice.pojo.securityDTO.LoginUserForm();
+        LoginUserForm loginUserForm = new LoginUserForm();
         BeanUtils.copyProperties(user,loginUserForm);
         CurrentUserDTO userInfo = getUserInfo(user.getId());
         if(userInfo == null) {

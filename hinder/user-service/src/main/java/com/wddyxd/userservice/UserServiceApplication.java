@@ -1,18 +1,17 @@
 package com.wddyxd.userservice;
 
-import com.wddyxd.feign.clients.UserClient;
+import com.wddyxd.feign.clients.userservice.AuthClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 @SpringBootApplication
 @ComponentScan("com.wddyxd")
 @MapperScan("com.wddyxd.userservice.mapper")
-@EnableFeignClients(clients={UserClient.class})
+@EnableFeignClients(clients={AuthClient.class})
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class UserServiceApplication {
 

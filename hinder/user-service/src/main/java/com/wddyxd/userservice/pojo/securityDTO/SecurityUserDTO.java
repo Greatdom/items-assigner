@@ -1,6 +1,8 @@
 package com.wddyxd.userservice.pojo.securityDTO;
 
 
+import com.wddyxd.userservice.pojo.DTO.LoginUserForm;
+
 /**
  * @program: items-assigner
  * @description: description

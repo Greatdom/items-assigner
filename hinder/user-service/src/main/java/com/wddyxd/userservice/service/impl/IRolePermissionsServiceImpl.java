@@ -4,7 +4,7 @@ package com.wddyxd.userservice.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.userservice.mapper.RolePermissionsMapper;
 import com.wddyxd.userservice.pojo.entity.RolePermission;
-import com.wddyxd.userservice.service.IRolePermissionsService;
+import com.wddyxd.userservice.service.Interface.IRolePermissionsService;
 import org.springframework.stereotype.Service;
 
 /**

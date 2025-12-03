@@ -34,12 +34,12 @@ public class SecurityUser implements UserDetails {
 
 
     //当前权限
-    private CurrentUserInfo currentUserInfo;
-    public CurrentUserInfo getCurrentUserInfo() {
+    private CurrentUserDTO currentUserInfo;
+    public CurrentUserDTO getCurrentUserInfo() {
         return currentUserInfo;
     }
 
-    public void setCurrentUserInfo(CurrentUserInfo currentUserInfo) {
+    public void setCurrentUserInfo(CurrentUserDTO currentUserInfo) {
         this.currentUserInfo = currentUserInfo;
     }
 
@@ -47,7 +47,7 @@ public class SecurityUser implements UserDetails {
     public SecurityUser() {
     }
 
-    public SecurityUser(LoginUserForm loginUserForm, CurrentUserInfo currentUserDTO) {
+    public SecurityUser(LoginUserForm loginUserForm, CurrentUserDTO currentUserDTO) {
         this.loginUserForm = loginUserForm;
         this.currentUserInfo = currentUserDTO;
     }

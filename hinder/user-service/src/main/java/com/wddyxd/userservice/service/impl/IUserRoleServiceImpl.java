@@ -4,7 +4,7 @@ package com.wddyxd.userservice.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.entity.UserRole;
-import com.wddyxd.userservice.service.IUserRoleService;
+import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import org.springframework.stereotype.Service;
 
 /**

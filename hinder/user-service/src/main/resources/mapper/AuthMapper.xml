@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wddyxd.userservice.mapper.AuthMapper"> <!-- 替换为你的实际包路径 -->
+
+    <!-- 结果集映射：适配 CurrentUserDTO，指定 TypeHandler 自动转换 List<String> -->
+    <resultMap id="CurrentUserDTOMap" type="com.wddyxd.userservice.pojo.DTO.CurrentUserDTO">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="nickName" property="nickName"/>
+        <result column="avatar" property="avatar"/>
+        <!-- 角色名称：调用自定义 TypeHandler 转换字符串为 List<String> -->
+        <result column="roles" property="roles" typeHandler="com.wddyxd.common.mybatishandler.StringToListTypeHandler"/>
+        <!-- 权限值：调用自定义 TypeHandler 转换字符串为 List<String> -->
+        <result column="permissionValueList" property="permissionValueList" typeHandler="com.wddyxd.common.mybatishandler.StringToListTypeHandler"/>
+    </resultMap>
+
+    <!-- 查询当前用户信息（含角色、权限） -->
+    <select id="getCurrentUserById" parameterType="java.lang.Long" resultMap="CurrentUserDTOMap">
+        SELECT
+            u.id,
+            u.username,
+            u.nick_name AS nickName,
+            u.avatar,
+            -- 聚合角色名称（去重，空时返回空字符串）
+            IFNULL(GROUP_CONCAT(DISTINCT r.`name` SEPARATOR ','), '') AS roles,
+            -- 聚合权限值（去重，空时返回空字符串）
+            IFNULL(GROUP_CONCAT(DISTINCT p.permission_value SEPARATOR ','), '') AS permissionValueList
+        FROM
+            `user` u
+                LEFT JOIN user_role ur ON u.id = ur.user_id AND ur.is_deleted = 0
+                LEFT JOIN role r ON ur.role_id = r.id AND r.is_deleted = 0
+                LEFT JOIN role_permission rp ON r.id = rp.role_id AND rp.is_deleted = 0
+                LEFT JOIN permission p ON rp.permission_id = p.id AND p.is_deleted = 0
+        WHERE
+            u.id = #{userId}
+          AND u.is_deleted = 0
+          AND u.status = 0
+        GROUP BY
+            u.id, u.username, u.nick_name, u.avatar;
+    </select>
+
+</mapper>

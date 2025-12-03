@@ -1,6 +1,6 @@
 package com.wddyxd.itemsservice;
 
-import com.wddyxd.feign.clients.UserClient;
+import com.wddyxd.feign.clients.userservice.AuthClient;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,7 +24,7 @@ import java.util.List;
 @SpringBootApplication
 @ComponentScan("com.wddyxd")
 @MapperScan("com.wddyxd.itemsservice.mapper")
-@EnableFeignClients(clients={UserClient.class})
+@EnableFeignClients(clients={AuthClient.class})
 @EnableWebSecurity
 public class ItemsServiceApplication {
 

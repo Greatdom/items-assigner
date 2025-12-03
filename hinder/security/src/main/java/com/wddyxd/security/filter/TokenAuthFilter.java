@@ -1,10 +1,9 @@
 package com.wddyxd.security.filter;
 
 
-import com.wddyxd.common.constant.RedisKeyConstants;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.security.exception.SecurityAuthException;
-import com.wddyxd.security.pojo.CurrentUserInfo;
+import com.wddyxd.security.pojo.CurrentUserDTO;
 import com.wddyxd.security.pojo.TokenInfo;
 import com.wddyxd.security.security.UserInfoManager;
 import com.wddyxd.security.security.UserTokenManager;
@@ -12,7 +11,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -85,7 +83,7 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
         TokenInfo tokenInfo = userTokenManager.getTokenInfoFromToken(token);
         Long id = tokenInfo.getId();
         // 从redis获取用户信息
-        CurrentUserInfo redisUserInfo = userInfoManager.getInfoFromRedis(id);
+        CurrentUserDTO redisUserInfo = userInfoManager.getInfoFromRedis(id);
         if (redisUserInfo != null) {
             List<String> permissionValueList = redisUserInfo.getPermissionValueList();
             Collection<GrantedAuthority> authority = new ArrayList<>();

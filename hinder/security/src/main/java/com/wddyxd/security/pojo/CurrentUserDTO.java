@@ -10,7 +10,7 @@ import java.util.List;
  * @create: 2025-10-27 19:46
  **/
 
-public class CurrentUserInfo {
+public class CurrentUserDTO {
     private Long id;
     private String username;
     private String nickName;

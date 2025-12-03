@@ -25,9 +25,6 @@ public class UserDetail implements Serializable {
     private String region;// 地区
     private String idCard;// 身份证号
     private Integer isIdCardVerified;// 身份证是否验证
-    private String lastLoginDevice;// 最后登录设备
-    private String lastLoginIp;// 最后登录ip
-    private Date lastLoginTime;// 最后登录时间
     private BigDecimal money;// 账户余额
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
@@ -46,21 +43,11 @@ public class UserDetail implements Serializable {
                 ", region='" + region + '\'' +
                 ", idCard='" + idCard + '\'' +
                 ", isIdCardVerified=" + isIdCardVerified +
-                ", lastLoginDevice='" + lastLoginDevice + '\'' +
-                ", lastLoginIp='" + lastLoginIp + '\'' +
-                ", lastLoginTime=" + lastLoginTime +
                 ", money=" + money +
                 ", isDeleted=" + isDeleted +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 '}';
-    }
-    public String getLastLoginDevice() {
-        return lastLoginDevice;
-    }
-
-    public void setLastLoginDevice(String lastLoginDevice) {
-        this.lastLoginDevice = lastLoginDevice;
     }
     public Long getUserId() {
         return userId;
@@ -124,22 +111,6 @@ public class UserDetail implements Serializable {
 
     public void setIsIdCardVerified(Integer isIdCardVerified) {
         this.isIdCardVerified = isIdCardVerified;
-    }
-
-    public String getLastLoginIp() {
-        return lastLoginIp;
-    }
-
-    public void setLastLoginIp(String lastLoginIp) {
-        this.lastLoginIp = lastLoginIp;
-    }
-
-    public Date getLastLoginTime() {
-        return lastLoginTime;
-    }
-
-    public void setLastLoginTime(Date lastLoginTime) {
-        this.lastLoginTime = lastLoginTime;
     }
 
     public BigDecimal getMoney() {

@@ -10,8 +10,9 @@ import com.wddyxd.userservice.pojo.VO.EmailCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PhoneCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.entity.User;
-import com.wddyxd.userservice.pojo.securityDTO.LoginUserForm;
-import com.wddyxd.userservice.service.IUserService;
+import com.wddyxd.userservice.pojo.DTO.LoginUserForm;
+import com.wddyxd.userservice.service.Interface.IAuthService;
+import com.wddyxd.userservice.service.Interface.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user/auth")
 @Tag(name = "用户认证相关接口", description = "用户注册认证相关操作")
 public class AuthController {
+
     @Autowired
-    private IUserService userService;
+    private IAuthService authService;
 
     @PostMapping("/login")
     @Operation(summary = "用户登录接口", description = "在前端任何客户端按下登录按钮时触发,可以用用户名/手机/邮箱进行密码登录,\n" +
@@ -46,7 +48,7 @@ public class AuthController {
 //                - token包装用户id,timestamp,ip,device,client并设置7天有效期,一个用户支持3个token实现最多三个设备登录.
 //                - 然后将用户信息保存到redis14天有效期,最后给前端返回token.不能给被删除或封禁的用户登录.
 
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return null;
     }
 
     @PostMapping("/logout")
@@ -90,7 +92,7 @@ public class AuthController {
 //                如果用户被封禁或被删除则直接返回错误信息
 
 //        return Result.success(userService.passwordSecurityGetter(username));
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(authService.passwordSecurityGetter(username));
     }
 
     @GetMapping("/phoneCode/{phone}")

@@ -58,7 +58,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/user/auth/login", "POST"));
     }
 
-    //1 获取表单提交用户名和密码
+    //获取登录表单
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
@@ -103,7 +103,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         //认证成功，得到认证成功之后用户信息
         SecurityUser user = (SecurityUser)authResult.getPrincipal();
         System.out.println("用户信息："+user.getCurrentUserInfo());
-        //根据用户名生成token
+        //TODO根据用户名生成token,传入id,时间戳,设备及浏览器信息,客户端公网 IP,客户端局域网 IP,客户端名称
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setId(user.getCurrentUserInfo().getId());
         tokenInfo.setTimestamp(System.currentTimeMillis());

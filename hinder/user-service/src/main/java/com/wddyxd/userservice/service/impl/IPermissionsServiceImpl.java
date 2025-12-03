@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.userservice.mapper.PermissionsMapper;
 import com.wddyxd.userservice.pojo.entity.Permission;
 import com.wddyxd.userservice.pojo.entity.RolePermission;
-import com.wddyxd.userservice.service.IPermissionsService;
-import com.wddyxd.userservice.service.IRolePermissionsService;
+import com.wddyxd.userservice.service.Interface.IPermissionsService;
+import com.wddyxd.userservice.service.Interface.IRolePermissionsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

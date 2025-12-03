@@ -10,6 +10,7 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.userservice.mapper.AuthMapper;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.DTO.LoginUserForm;
 import com.wddyxd.userservice.pojo.entity.User;
@@ -38,15 +39,11 @@ import java.util.List;
 @Service
 public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
-
     @Autowired
     private UserMapper userMapper;
 
     @Autowired
     private IUserRoleService userRoleService;
-
-    @Autowired
-    private IPermissionsService permissionsService;
 
     IUserService proxy;
 
@@ -57,12 +54,6 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         proxy.addUserAndAssignRole(user, 1984518164557385730L);
     }
 
-    @Override
-    public void register(User user) {
-        proxy = (IUserService) AopContext.currentProxy();
-
-        proxy.addUserAndAssignRole(user, 1984521457576759298L);
-    }
     @Transactional
     @Override
     public void addUserAndAssignRole(User user, Long roleId) {
@@ -79,66 +70,11 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     @Override
     public CurrentUserDTO me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof com.wddyxd.security.pojo.CurrentUserDTO currentUserInfo) {
-            Long id = currentUserInfo.getId();// 获取 ID
-            // 校验用户ID不为空
-            if (id == null) {
-                throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
-            }
-            System.out.println("当前用户 ID: " + id);
-            CurrentUserDTO userInfo = getUserInfo(id);
-            if(userInfo == null){
-                throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
-            }else return userInfo;
+        if (authentication != null && authentication.getPrincipal() instanceof com.wddyxd.security.pojo.CurrentUserDTO currentUserDTO) {
+            CurrentUserDTO get = new CurrentUserDTO();
+            BeanUtils.copyProperties(currentUserDTO,get);
+            return get;
         }else throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
-    }
-
-    @Override
-    public SecurityUserDTO passwordSecurityGetter(String username) {
-        User user = baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
-        if(user == null) {
-            return null;
-        }
-        LoginUserForm loginUserForm = new LoginUserForm();
-        BeanUtils.copyProperties(user,loginUserForm);
-        CurrentUserDTO userInfo = getUserInfo(user.getId());
-        if(userInfo == null) {
-            return null;
-        }
-        com.wddyxd.userservice.pojo.securityDTO.CurrentUserInfo currentUserInfo = new com.wddyxd.userservice.pojo.securityDTO.CurrentUserInfo();
-        BeanUtils.copyProperties(userInfo,currentUserInfo);
-        return new SecurityUserDTO(loginUserForm,currentUserInfo);
-    }
-
-
-    @Override
-    public CurrentUserDTO getUserInfo(Long id) {
-        //TODO 可以现从redis拉取用户信息
-
-        // 1. 查询用户基本信息（过滤已删除用户）
-        QueryWrapper<User> userQuery = new QueryWrapper<>();
-        userQuery.eq("id", id)
-                .eq("is_deleted", 0); // 逻辑删除：0-未删除
-        User user = userMapper.selectOne(userQuery);
-        if (user == null) {
-            return null;
-        }
-        // 2. 查询用户关联的角色名称列表
-        List<String> roles = userMapper.selectRoleNamesByUserId(user.getId());
-
-        // 3. 查询用户关联的权限值列表
-        List<String> permissionValues = permissionsService.selectPermissionValueByUserId(user.getId());
-
-        // 4. 封装为CurrentUserDTO
-        CurrentUserDTO dto = new CurrentUserDTO();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setNickName(user.getNickName());
-        dto.setAvatar(user.getAvatar());
-        dto.setRoles(roles);
-        dto.setPermissionValueList(permissionValues);
-
-        return dto;
     }
 
     @Override

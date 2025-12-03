@@ -104,6 +104,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         SecurityUser user = (SecurityUser)authResult.getPrincipal();
         System.out.println("用户信息："+user.getCurrentUserInfo());
         //TODO根据用户名生成token,传入id,时间戳,设备及浏览器信息,客户端公网 IP,客户端局域网 IP,客户端名称
+        //TODO将这段逻辑集成一个方法
         TokenInfo tokenInfo = new TokenInfo();
         tokenInfo.setId(user.getCurrentUserInfo().getId());
         tokenInfo.setTimestamp(System.currentTimeMillis());

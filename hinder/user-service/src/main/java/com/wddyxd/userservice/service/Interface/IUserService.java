@@ -23,14 +23,11 @@ public interface IUserService extends IService<User> {
 
     CurrentUserDTO me();
 
-    CurrentUserDTO getUserInfo(Long id);
 
     Result<?> selectAll(Integer pageNum,Integer pageSize,String search);
 
-    SecurityUserDTO passwordSecurityGetter(String username);
 
     void add(User user);
 
-    void register(User user);
 
 }

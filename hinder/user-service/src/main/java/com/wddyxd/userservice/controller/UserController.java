@@ -78,7 +78,7 @@ public class UserController {
 //            - (随着开发的进行,token存储的信息会得到充分利用,比如token存储的客户端可以让token不能跨端使用,token存储的ip实现ip请求限流)
 //            - 然后从SecurityContextHolder获得用户信息并返回CurrentUserDTO
 //            - 只需返回没有被逻辑删除的数据
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(userService.me());
     }
 
     @GetMapping("/visit/{id}")

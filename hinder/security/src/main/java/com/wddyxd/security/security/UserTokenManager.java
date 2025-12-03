@@ -195,6 +195,7 @@ public class UserTokenManager {
         }
     }
     private TokenInfo IsValidToken(String token) {
+        //TODO随着参数变多,方法要改进
         if (token == null) {
             log.error(LogPrompt.PARAM_EMPTY_ERROR.msg);
             throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);

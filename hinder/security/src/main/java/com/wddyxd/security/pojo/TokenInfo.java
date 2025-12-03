@@ -10,9 +10,18 @@ package com.wddyxd.security.pojo;
 
 public class TokenInfo {
 
-    Long Id;
-    //用户Id、时间戳、客户端、IP、随机数
-    Long timestamp;
+    private Long Id;
+    //用户Id、时间戳、客户端、IP、设备
+    private Long timestamp;
+
+    private String localIP;
+
+    private String publicIP;
+
+    private String client;
+
+    private String device;
+
 
     public Long getTimestamp() {
         return timestamp;

@@ -31,7 +31,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
     @Override
     public PasswordSecurityGetterVO passwordSecurityGetter(String username) {
-        //TODO 可以现从redis拉取用户信息
+        //TODO 可以先从redis拉取用户信息
         //TODO 判断是用户名,手机号还是邮箱
         User user = baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
         if(user == null) {

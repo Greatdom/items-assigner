@@ -20,7 +20,6 @@ public class FinancialFlow implements Serializable {
     private Long userId;
     private Integer tradeType;//0-充值 1-提现 2-订单支付 3-退款 4-平台佣金
     private BigDecimal amount;//金额
-    private String tradeNo;//交易单号
     private Integer status;//0-处理中 1-成功 2-失败
     private String remark;//交易备注
     private Boolean isDeleted;
@@ -36,7 +35,6 @@ public class FinancialFlow implements Serializable {
                 ", userId=" + userId +
                 ", tradeType=" + tradeType +
                 ", amount=" + amount +
-                ", tradeNo='" + tradeNo + '\'' +
                 ", status=" + status +
                 ", remark='" + remark + '\'' +
                 ", isDeleted=" + isDeleted +
@@ -75,14 +73,6 @@ public class FinancialFlow implements Serializable {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
-    }
-
-    public String getTradeNo() {
-        return tradeNo;
-    }
-
-    public void setTradeNo(String tradeNo) {
-        this.tradeNo = tradeNo;
     }
 
     public Integer getStatus() {

@@ -4,6 +4,7 @@ package com.wddyxd.userservice.controller;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.userservice.pojo.DTO.PermissionSearchDTO;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,9 +25,7 @@ public class PermissionController {
     @GetMapping("/list")
     //需要permission.list权限
     @Operation(summary = "分页获取权限列表接口", description = "在管理员的权限管理主界面查看所有存在的权限")
-    public Result<?> list(@RequestParam(defaultValue = "1") Integer pageNum,
-                          @RequestParam(defaultValue = "10") Integer pageSize,
-                          @RequestParam(defaultValue = "") String search){
+    public Result<?> list(@RequestBody PermissionSearchDTO permissionSearchDTO){
 
 //       在管理员的权限管理主界面查看所有存在的权限,支持根据关键字搜索,
 //- 在mysql为权限值建立索引以支持关键字搜索

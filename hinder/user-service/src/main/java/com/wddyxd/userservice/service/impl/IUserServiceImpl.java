@@ -2,7 +2,6 @@ package com.wddyxd.userservice.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,16 +9,10 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.MD5Encoder;
-import com.wddyxd.common.utils.Result;
-import com.wddyxd.userservice.mapper.AuthMapper;
 import com.wddyxd.userservice.mapper.UserMapper;
-import com.wddyxd.userservice.pojo.DTO.LoginUserForm;
-import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserRole;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
-import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
-import com.wddyxd.userservice.service.Interface.IPermissionsService;
 import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import com.wddyxd.userservice.service.Interface.IUserService;
 import org.springframework.aop.framework.AopContext;
@@ -30,8 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 /**
  * @program: 新建文件夹

@@ -26,17 +26,17 @@ public class Permission implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Date updateTime;
 
-    //层级
-    @TableField(exist = false)
-    private Integer level;
-
-    //下级
-    @TableField(exist = false)
-    private List<Permission> children;
-
-    //是否选中
-    @TableField(exist = false)
-    private boolean isSelect;
+    @Override
+    public String toString() {
+        return "Permission{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", permissionValue='" + permissionValue + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 
     public Long getId() {
         return id;
@@ -86,27 +86,4 @@ public class Permission implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public List<Permission> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Permission> children) {
-        this.children = children;
-    }
-
-    public boolean isSelect() {
-        return isSelect;
-    }
-
-    public void setSelect(boolean select) {
-        isSelect = select;
-    }
 }

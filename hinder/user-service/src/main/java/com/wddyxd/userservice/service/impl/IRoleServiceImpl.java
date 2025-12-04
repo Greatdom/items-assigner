@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.mapper.RoleMapper;
+import com.wddyxd.userservice.pojo.VO.RoleVO;
 import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserRole;
@@ -47,4 +48,30 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
         return this.page(new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), wrapper);
     }
 
+    @Override
+    public Result<RoleVO> detail(Long id) {
+        //        查询role和permissions表中获取角色信息和角色关联的权限
+//- 注意无论角色是否被逻辑删除都应该被被查到,但权限应该是没有被逻辑删除的
+        return null;
+    }
+
+    @Override
+    public Result<Void> assign(Long userId, Long[] roleIds) {
+        return null;
+    }
+
+    @Override
+    public Result<Void> add(String name) {
+        return null;
+    }
+
+    @Override
+    public Result<Void> update(String name) {
+        return null;
+    }
+
+    @Override
+    public Result<Void> delete(Long id) {
+        return null;
+    }
 }

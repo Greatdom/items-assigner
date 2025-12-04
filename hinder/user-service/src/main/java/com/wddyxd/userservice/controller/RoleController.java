@@ -33,12 +33,7 @@ public class RoleController {
     //需要role.list权限
     @Operation(summary = "分页获取角色列表接口", description = "在管理员的角色管理主界面查看所有存在的角色")
     public Result<Page<Role>> list(@RequestBody SearchDTO searchDTO){
-
-//       在管理员的角色管理主界面查看所有存在的角色,支持根据关键字搜索,
-//- 在mysql为角色名建立索引以支持关键字搜索
-//- 返回List<Role>并由PageResult包装
-//- 注意无论角色是否被逻辑删除都应该被被查到
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(roleService.List(searchDTO));
     }
 
     @GetMapping("/detail/{id}")
@@ -72,7 +67,7 @@ public class RoleController {
     @PutMapping("/update")
     //需要role.update权限
     @Operation(summary = "更新角色内容接口", description = "管理员可以在角色管理界面更新角色信息")
-    public Result<Void> update(@RequestParam String name){
+    public Result<Void> update(@RequestBody Role role){
 //        更新角色信息,角色被逻辑删除则拒绝更新
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }

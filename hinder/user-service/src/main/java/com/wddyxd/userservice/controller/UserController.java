@@ -35,7 +35,7 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('user.list')")
+//    @PreAuthorize("hasAuthority('user.list')")
     @Operation(summary = "分页获取用户列表接口", description = "在管理员的用户管理主界面查看所有用户")
     public Result<Page<User>> list(@RequestBody SearchDTO searchDTO){
         return Result.success(userService.List(searchDTO));
@@ -86,7 +86,6 @@ public class UserController {
     }
 
     @PostMapping("/addAdmin")
-    @PreAuthorize("hasAuthority('user.add')")
     //需要user.add权限
     @Operation(summary = "添加管理员接口", description = "在后台的用户管理中添加用户,这里的用户指的是管理员")
     public Result<Void> addAdmin(@RequestBody CustomUserRegisterDTO customUserRegisterDTO){

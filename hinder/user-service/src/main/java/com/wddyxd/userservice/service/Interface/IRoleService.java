@@ -30,7 +30,7 @@ public interface IRoleService extends IService<Role> {
 
     public void add(String name);
 
-    public void update(String name);
+    public void update(Role role);
 
     public void delete(@PathVariable Long id);
 

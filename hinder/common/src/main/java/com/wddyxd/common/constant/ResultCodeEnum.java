@@ -14,6 +14,7 @@ public enum ResultCodeEnum {
 
     //CODE:400:参数错误
     LOGIN_FORM_ERROR(400, "登录表单格式错误"),
+    PARAM_ERROR(400, "参数错误"),
 
 
     //401:认证失败或未认证
@@ -45,6 +46,7 @@ public enum ResultCodeEnum {
 
     //1000:未知错误
     UNKNOWN_ERROR(1000, "未知错误"),
+    UNDEFINED_ERROR(1000, "尚未定义的错误"),
     ;
 
     public final Integer code;

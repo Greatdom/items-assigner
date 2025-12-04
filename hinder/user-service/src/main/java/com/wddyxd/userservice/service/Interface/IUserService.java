@@ -1,6 +1,7 @@
 package com.wddyxd.userservice.service.Interface;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface IUserService extends IService<User> {
 
-    Result<?> List(SearchDTO searchDTO);
+    Page<User> List(SearchDTO searchDTO);
 
     CurrentUserDTO me();
 

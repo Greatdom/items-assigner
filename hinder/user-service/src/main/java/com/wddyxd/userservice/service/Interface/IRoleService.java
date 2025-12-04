@@ -1,9 +1,12 @@
 package com.wddyxd.userservice.service.Interface;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.entity.Role;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -16,6 +19,6 @@ import java.util.List;
 
 public interface IRoleService extends IService<Role> {
 
-
+    public Page<Role> List(SearchDTO searchDTO) ;
 
 }

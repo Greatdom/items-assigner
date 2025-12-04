@@ -1,10 +1,16 @@
 package com.wddyxd.userservice.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.pojo.SearchDTO;
+import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.mapper.RoleMapper;
 import com.wddyxd.userservice.pojo.entity.Role;
+import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserRole;
 import com.wddyxd.userservice.service.Interface.IRoleService;
 import com.wddyxd.userservice.service.Interface.IUserRoleService;
@@ -26,7 +32,19 @@ import java.util.List;
 public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
     @Autowired
+    private RoleMapper roleMapper;
+
+    @Autowired
     private IUserRoleService userRoleService;
 
+    @Override
+    public Page<Role> List(SearchDTO searchDTO) {
+        searchDTO.validatePageParams(searchDTO);
+
+        LambdaQueryWrapper<Role> wrapper = Wrappers.lambdaQuery(Role.class)
+                .like(StringUtils.hasText(searchDTO.getSearch()), Role::getName, searchDTO.getSearch());
+
+        return this.page(new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), wrapper);
+    }
 
 }

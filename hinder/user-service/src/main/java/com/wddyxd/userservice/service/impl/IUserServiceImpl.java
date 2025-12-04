@@ -14,6 +14,7 @@ import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.mapper.AuthMapper;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.DTO.LoginUserForm;
+import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserRole;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
@@ -28,6 +29,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -48,17 +50,16 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     IUserService proxy;
 
+
     @Override
-    public Result<?> List(SearchDTO searchDTO) {
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
-        if(searchDTO.getSearch()!=null&&!searchDTO.getSearch().isEmpty()){
-            //TODO要给搜索的字段添加索引，而且不能只是按昵称查询
-            wrapper.like(User::getNickName, searchDTO.getSearch());
-        }
-        return Result.success(userMapper.selectPage(new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()),wrapper));
+    public Page<User> List(SearchDTO searchDTO) {
+        searchDTO.validatePageParams(searchDTO);
+
+        LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery(User.class)
+                .like(StringUtils.hasText(searchDTO.getSearch()), User::getUsername, searchDTO.getSearch());
+
+        return this.page(new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), wrapper);
     }
-
-
 
     @Override
     public void add(User user) {

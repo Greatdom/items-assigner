@@ -1,6 +1,7 @@
 package com.wddyxd.userservice.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
@@ -9,6 +10,7 @@ import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.VO.UserDetailVO;
 import com.wddyxd.userservice.pojo.VO.UserProfileVO;
 import com.wddyxd.userservice.pojo.VO.UserVisitVO;
+import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.service.Interface.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,8 +37,8 @@ public class UserController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('user.list')")
     @Operation(summary = "分页获取用户列表接口", description = "在管理员的用户管理主界面查看所有用户")
-    public Result<?> list(@RequestBody SearchDTO searchDTO){
-        return userService.List(searchDTO);
+    public Result<Page<User>> list(@RequestBody SearchDTO searchDTO){
+        return Result.success(userService.List(searchDTO));
     }
 
     @GetMapping("/detail/{id}")

@@ -34,9 +34,6 @@ import org.springframework.util.StringUtils;
 public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     private IUserRoleService userRoleService;
 
     IUserService proxy;

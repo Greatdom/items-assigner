@@ -32,12 +32,6 @@ import java.util.List;
 @Service
 public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
-    @Autowired
-    private RoleMapper roleMapper;
-
-    @Autowired
-    private IUserRoleService userRoleService;
-
     @Override
     public Page<Role> List(SearchDTO searchDTO) {
         searchDTO.validatePageParams(searchDTO);

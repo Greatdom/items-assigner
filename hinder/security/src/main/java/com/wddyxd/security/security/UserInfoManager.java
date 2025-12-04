@@ -1,8 +1,9 @@
 package com.wddyxd.security.security;
 
 
+import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.common.constant.LogPrompt;
-import com.wddyxd.common.constant.RedisKeyConstants;
+import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.CurrentUserDTO;
@@ -26,7 +27,6 @@ public class UserInfoManager {
 
 
     private final RedisTemplate<String, Object> redisTemplate;
-    private final Integer TOKEN_EXPIRE_DAYS = 7;
     private static final Logger log = LoggerFactory.getLogger(UserInfoManager.class);
 
     public UserInfoManager(RedisTemplate<String, Object> redisTemplate) {
@@ -42,10 +42,10 @@ public class UserInfoManager {
         }
         CurrentUserDTO currentUserInfo = securityUser.getCurrentUserInfo();
         Long id = currentUserInfo.getId();
-        String key = RedisKeyConstants.USER_LOGIN_USERINFO.key + id.toString();
+        String key = RedisKeyConstant.USER_LOGIN_USERINFO.key + id.toString();
 
         try {
-            redisTemplate.opsForValue().set(key, currentUserInfo, TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
+            redisTemplate.opsForValue().set(key, currentUserInfo, CommonConstant.REDIS_USER_LOGIN_USERINFO_EXPIRE_DAYS, TimeUnit.DAYS);
             log.info(LogPrompt.SUCCESS_INFO.msg);
         } catch (Exception e) {
             log.error(LogPrompt.REDIS_SERVER_ERROR.msg);
@@ -54,7 +54,7 @@ public class UserInfoManager {
     }
 
     public CurrentUserDTO getInfoFromRedis(Long id) {
-        String key = RedisKeyConstants.USER_LOGIN_USERINFO.key + id.toString();
+        String key = RedisKeyConstant.USER_LOGIN_USERINFO.key + id.toString();
         CurrentUserDTO currentUserInfo = null;
         try {
             Object value = redisTemplate.opsForValue().get(key);
@@ -64,7 +64,7 @@ public class UserInfoManager {
                 throw new SecurityAuthException(ResultCodeEnum.SERVER_ERROR);
             }
             currentUserInfo = (CurrentUserDTO) value;
-            redisTemplate.expire(key, TOKEN_EXPIRE_DAYS, TimeUnit.DAYS);
+            redisTemplate.expire(key, CommonConstant.REDIS_USER_LOGIN_USERINFO_EXPIRE_DAYS, TimeUnit.DAYS);
             log.info(LogPrompt.SUCCESS_INFO.msg);
             return currentUserInfo;
         }catch (Exception e) {

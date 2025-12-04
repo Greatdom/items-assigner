@@ -1,7 +1,6 @@
 package com.wddyxd.security.security;
 
 
-import com.wddyxd.common.constant.RedisKeyConstants;
 import com.wddyxd.common.utils.ResponseUtil;
 import com.wddyxd.common.utils.Result;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,12 +17,10 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
  **/
 
 public class TokenLogoutHandler implements LogoutHandler {
-    private UserTokenManager userTokenManager;
-    private RedisTemplate redisTemplate;
+    private final UserTokenManager userTokenManager;
 
-    public TokenLogoutHandler(UserTokenManager userTokenManager, RedisTemplate redisTemplate) {
+    public TokenLogoutHandler(UserTokenManager userTokenManager) {
         this.userTokenManager = userTokenManager;
-        this.redisTemplate = redisTemplate;
     }
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {

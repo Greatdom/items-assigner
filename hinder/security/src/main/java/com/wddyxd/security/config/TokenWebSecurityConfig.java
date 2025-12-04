@@ -98,7 +98,7 @@ public class TokenWebSecurityConfig {
                 // 退出登录配置
                 .logout(logout -> logout
                         .logoutUrl("/user/auth/logout")
-                        .addLogoutHandler(new TokenLogoutHandler(userTokenManager, redisTemplate))
+                        .addLogoutHandler(new TokenLogoutHandler(userTokenManager))
                 )
                 // 会话管理 - 无状态
                 .sessionManagement(session ->

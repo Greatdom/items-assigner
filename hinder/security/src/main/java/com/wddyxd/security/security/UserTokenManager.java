@@ -1,10 +1,10 @@
 package com.wddyxd.security.security;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.common.constant.LogPrompt;
-import com.wddyxd.common.constant.RedisKeyConstants;
+import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.TokenInfo;
@@ -38,16 +38,6 @@ public class UserTokenManager {
         this.redisTemplate = redisTemplate;
         this.zSetOps = redisTemplate.opsForZSet();
     }
-    //token有效时长
-    @Value("${token.expiration}")
-    private long tokenExpiration;
-    //编码秘钥
-    @Value("${token.signKey}")
-    private String tokenSignKey;
-    //在redis 中 token 过期时间（60 分钟）
-    private static final long TOKEN_EXPIRE_MINUTES = 60;
-    // 每个用户最大 token 数量
-    private static final int MAX_TOKEN_PER_USER = 3;
     private static final Logger log = LoggerFactory.getLogger(UserTokenManager.class);
     //1 使用jwt根据用户信息生成token
     public String createToken(TokenInfo tokenInfo) {
@@ -59,8 +49,8 @@ public class UserTokenManager {
         try {
             String tokenInfoJson = new ObjectMapper().writeValueAsString(tokenInfo);
             String token = Jwts.builder().setSubject(tokenInfoJson)
-                    .setExpiration(new Date(System.currentTimeMillis() + tokenExpiration))
-                    .signWith(SignatureAlgorithm.HS512, tokenSignKey)
+                    .setExpiration(new Date(System.currentTimeMillis() + CommonConstant.LOGIN_TOKEN_EXPIRATION))
+                    .signWith(SignatureAlgorithm.HS512, CommonConstant.LOGIN_TOKEN_SIGN_KEY)
                     .compressWith(CompressionCodecs.GZIP)
                     .compact();
             log.info(LogPrompt.SUCCESS_INFO.msg);
@@ -76,16 +66,16 @@ public class UserTokenManager {
         //TODO可用lua脚本解决高并发时超出token数量和事务问题
         try {
             // 1. 生成用户的有序集合键
-            String userTokenSetKey = RedisKeyConstants.USER_LOGIN_TOKEN_SET.key  + tokenInfo.getId().toString();
+            String userTokenSetKey = RedisKeyConstant.USER_LOGIN_TOKEN_SET.key  + tokenInfo.getId().toString();
             // 2. 生成当前 token 的字符串键
-            String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
+            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
             // 3. 添加 timestamp 到用户的有序集合（score 为当前时间戳，用于排序）
             zSetOps.add(userTokenSetKey, tokenInfo.getTimestamp(), tokenInfo.getTimestamp());
             // 4. 存储 token 对应的 value，并设置 15 分钟过期
-            redisTemplate.opsForValue().set(tokenKey, token, TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(tokenKey, token, CommonConstant.REDIS_USER_LOGIN_TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
             // 5. 检查集合大小，超过 3 个则删除最早的 token
             Long tokenCount = zSetOps.size(userTokenSetKey);
-            if (tokenCount != null && tokenCount > MAX_TOKEN_PER_USER) {
+            if (tokenCount != null && tokenCount > CommonConstant.MAX_LOGIN_TOKEN_PER_USER) {
                 // 取最早的 1 个 token（按 score 升序，取第一个）
                 Set<Object> oldestTimestamps = zSetOps.range(userTokenSetKey, 0, 0);
                 if (oldestTimestamps != null && !oldestTimestamps.isEmpty()) {
@@ -93,7 +83,7 @@ public class UserTokenManager {
                     // 删除有序集合中的旧 token
                     zSetOps.remove(userTokenSetKey, oldestTimestamp);
                     // 删除旧 token 对应的字符串键（使其立即失效）
-                    redisTemplate.delete(RedisKeyConstants.USER_LOGIN_TOKEN.key+ oldestTimestamp.toString());
+                    redisTemplate.delete(RedisKeyConstant.USER_LOGIN_TOKEN.key+ oldestTimestamp.toString());
                 }
             }
             log.info(LogPrompt.SUCCESS_INFO.msg);
@@ -106,8 +96,8 @@ public class UserTokenManager {
     public void refreshTokenExpire(String token) {
         TokenInfo tokenInfo = IsValidToken(token);
         try {
-            String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
-            boolean expireSuccess = redisTemplate.expire(tokenKey, TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
+            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
+            boolean expireSuccess = redisTemplate.expire(tokenKey, CommonConstant.REDIS_USER_LOGIN_TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
             if (!expireSuccess) {
                 log.error(LogPrompt.TOKEN_EXPIRED_INFO.msg);
                 throw new SecurityAuthException(ResultCodeEnum.TOKEN_EXPIRED_ERROR);
@@ -124,7 +114,7 @@ public class UserTokenManager {
     public String getToken(String token) {
         TokenInfo tokenInfo = IsValidToken(token);
         try {
-            String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
+            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
             return (String)redisTemplate.opsForValue().get(tokenKey);
         }catch (Exception e) {
             log.error(LogPrompt.REDIS_SERVER_ERROR.msg);
@@ -149,8 +139,8 @@ public class UserTokenManager {
     public void removeToken(String token) {
         TokenInfo tokenInfo = IsValidToken(token);
         try {
-            String userTokenSetKey = RedisKeyConstants.USER_LOGIN_TOKEN_SET.key + tokenInfo.getId().toString();
-            String tokenKey = RedisKeyConstants.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
+            String userTokenSetKey = RedisKeyConstant.USER_LOGIN_TOKEN_SET.key + tokenInfo.getId().toString();
+            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
             // 从有序集合中删除
             Long removedFromZSet = zSetOps.remove(userTokenSetKey, tokenInfo.getTimestamp());
             if (removedFromZSet == null || removedFromZSet == 0) {
@@ -175,7 +165,7 @@ public class UserTokenManager {
         }
         try {
             String tokenInfoJson = Jwts.parser()
-                    .setSigningKey(tokenSignKey)
+                    .setSigningKey(CommonConstant.LOGIN_TOKEN_SIGN_KEY)
                     .parseClaimsJws(token)
                     .getBody()
                     .getSubject();

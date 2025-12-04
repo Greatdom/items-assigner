@@ -2,6 +2,7 @@ package com.wddyxd.userservice.service.Interface;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
@@ -17,17 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface IUserService extends IService<User> {
 
+    Result<?> List(SearchDTO searchDTO);
+
+    CurrentUserDTO me();
 
     @Transactional
     void addUserAndAssignRole(User user, Long roleId);
 
-    CurrentUserDTO me();
-
-
-    Result<?> selectAll(Integer pageNum,Integer pageSize,String search);
-
-
     void add(User user);
+
 
 
 }

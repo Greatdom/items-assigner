@@ -3,6 +3,7 @@ package com.wddyxd.userservice.controller;
 
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,9 +25,7 @@ public class RoleController {
     @GetMapping("/list")
     //需要role.list权限
     @Operation(summary = "分页获取角色列表接口", description = "在管理员的角色管理主界面查看所有存在的角色")
-    public Result<?> list(@RequestParam(defaultValue = "1") Integer pageNum,
-                                     @RequestParam(defaultValue = "10") Integer pageSize,
-                                     @RequestParam(defaultValue = "") String search){
+    public Result<?> list(@RequestBody SearchDTO searchDTO){
 
 //       在管理员的角色管理主界面查看所有存在的角色,支持根据关键字搜索,
 //- 在mysql为角色名建立索引以支持关键字搜索

@@ -3,6 +3,7 @@ package com.wddyxd.userservice.controller;
 
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.VO.UserDetailVO;
@@ -33,17 +34,9 @@ public class UserController {
 
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('user.list')")
-    //需要user.list权限
     @Operation(summary = "分页获取用户列表接口", description = "在管理员的用户管理主界面查看所有用户")
-    public Result<?> list(@RequestParam(defaultValue = "1") Integer pageNum,
-                               @RequestParam(defaultValue = "10") Integer pageSize,
-                               @RequestParam(defaultValue = "") String search){
-
-//        在管理员的用户管理主界面查看所有用户,支持根据关键字在mysql为用户名,昵称建立索引以支持关键字搜索
-//                - 返回List<User>并由PageResult包装,对敏感信息进行脱敏处理
-//                - 注意无论用户是否被逻辑删除或被封禁都应该被被查到
-
-        return userService.selectAll(pageNum, pageSize, search);
+    public Result<?> list(@RequestBody SearchDTO searchDTO){
+        return userService.List(searchDTO);
     }
 
     @GetMapping("/detail/{id}")

@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.mapper.AuthMapper;
@@ -48,6 +49,18 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     IUserService proxy;
 
     @Override
+    public Result<?> List(SearchDTO searchDTO) {
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
+        if(searchDTO.getSearch()!=null&&!searchDTO.getSearch().isEmpty()){
+            //TODO要给搜索的字段添加索引，而且不能只是按昵称查询
+            wrapper.like(User::getNickName, searchDTO.getSearch());
+        }
+        return Result.success(userMapper.selectPage(new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()),wrapper));
+    }
+
+
+
+    @Override
     public void add(User user) {
         proxy = (IUserService) AopContext.currentProxy();
 
@@ -77,15 +90,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         }else throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
     }
 
-    @Override
-    public Result<?> selectAll(Integer pageNum,Integer pageSize,String search) {
-        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
-        if(search!=null&&!search.isEmpty()){
-            //TODO要给搜索的字段添加索引，而且不能只是按昵称查询
-            wrapper.like(User::getNickName, search);
-        }
-        return Result.success(userMapper.selectPage(new Page<>(pageNum, pageSize),wrapper));
-    }
+
 
 
 

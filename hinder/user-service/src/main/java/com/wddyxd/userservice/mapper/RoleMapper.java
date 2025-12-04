@@ -2,6 +2,7 @@ package com.wddyxd.userservice.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wddyxd.userservice.pojo.VO.RoleVO;
 import com.wddyxd.userservice.pojo.entity.Role;
 
 /**
@@ -12,4 +13,7 @@ import com.wddyxd.userservice.pojo.entity.Role;
  **/
 
 public interface RoleMapper extends BaseMapper<Role> {
+
+    public RoleVO detail(Long id);
+
 }

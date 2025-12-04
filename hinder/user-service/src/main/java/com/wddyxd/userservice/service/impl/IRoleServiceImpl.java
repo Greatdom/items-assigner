@@ -43,29 +43,23 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
     }
 
     @Override
-    public Result<RoleVO> detail(Long id) {
-        //        查询role和permissions表中获取角色信息和角色关联的权限
-//- 注意无论角色是否被逻辑删除都应该被被查到,但权限应该是没有被逻辑删除的
-        return null;
+    public RoleVO detail(Long id) {
+        return baseMapper.detail(id);
     }
 
     @Override
-    public Result<Void> assign(Long userId, Long[] roleIds) {
-        return null;
+    public void assign(Long userId, Long[] roleIds) {
     }
 
     @Override
-    public Result<Void> add(String name) {
-        return null;
+    public void add(String name) {
     }
 
     @Override
-    public Result<Void> update(String name) {
-        return null;
+    public void update(String name) {
     }
 
     @Override
-    public Result<Void> delete(Long id) {
-        return null;
+    public void delete(Long id) {
     }
 }

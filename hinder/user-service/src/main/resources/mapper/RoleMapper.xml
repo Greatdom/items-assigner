@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wddyxd.userservice.mapper.RoleMapper"> <!-- 替换为你的实际包路径 -->
+
+    <!-- 结果集映射：适配 CurrentUserDTO，指定 TypeHandler 自动转换 List<String> -->
+    <resultMap id="RoleVOMap" type="com.wddyxd.userservice.pojo.VO.RoleVO">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="isDeleted" property="isDeleted"/>
+        <result column="permissionNameList" property="permissionNameList" typeHandler="com.wddyxd.common.mybatishandler.StringToListTypeHandler"/>
+        <result column="permissionValueList" property="permissionValueList" typeHandler="com.wddyxd.common.mybatishandler.StringToListTypeHandler"/>
+    </resultMap>
+
+    <!-- 查询当前用户信息（含角色、权限） -->
+    <select id="detail" parameterType="java.lang.Long" resultMap="RoleVOMap">
+
+        SELECT
+            r.id,
+            r.name,
+            r.is_deleted,
+            -- 从成对字符串中拆分出权限值列表
+            IFNULL(GROUP_CONCAT(DISTINCT p.permission_value ORDER BY p.permission_value SEPARATOR ','), '') AS permissionValueList,
+            -- 从成对字符串中拆分出权限名称列表（保证和值一一对应）
+            IFNULL(GROUP_CONCAT(DISTINCT p.name ORDER BY p.permission_value SEPARATOR ','), '') AS permissionNameList
+        FROM
+            role r
+                LEFT JOIN role_permission rp
+                          ON r.id = rp.role_id
+                              AND rp.is_deleted = 0
+                LEFT JOIN permission p
+                          ON rp.permission_id = p.id
+                              AND p.is_deleted = 0
+        WHERE
+            r.id = #{id}
+        GROUP BY r.id, r.name, r.is_deleted;
+    </select>
+
+</mapper>

@@ -2,19 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wddyxd.userservice.mapper.AuthMapper"> <!-- 替换为你的实际包路径 -->
 
-    <!-- 结果集映射：适配 CurrentUserDTO，指定 TypeHandler 自动转换 List<String> -->
     <resultMap id="CurrentUserDTOMap" type="com.wddyxd.userservice.pojo.DTO.CurrentUserDTO">
         <id column="id" property="id"/>
         <result column="username" property="username"/>
         <result column="nickName" property="nickName"/>
         <result column="avatar" property="avatar"/>
-        <!-- 角色名称：调用自定义 TypeHandler 转换字符串为 List<String> -->
         <result column="roles" property="roles" typeHandler="com.wddyxd.common.mybatishandler.StringToListTypeHandler"/>
-        <!-- 权限值：调用自定义 TypeHandler 转换字符串为 List<String> -->
         <result column="permissionValueList" property="permissionValueList" typeHandler="com.wddyxd.common.mybatishandler.StringToListTypeHandler"/>
     </resultMap>
 
-    <!-- 查询当前用户信息（含角色、权限） -->
     <select id="getCurrentUserById" parameterType="java.lang.Long" resultMap="CurrentUserDTOMap">
         SELECT
             u.id,

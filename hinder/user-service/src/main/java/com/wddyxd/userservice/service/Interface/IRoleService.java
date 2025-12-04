@@ -24,14 +24,14 @@ public interface IRoleService extends IService<Role> {
 
     public Page<Role> List(SearchDTO searchDTO) ;
 
-    public Result<RoleVO> detail(Long id);
+    public RoleVO detail(Long id);
 
-    public Result<Void> assign(Long userId, Long[] roleIds);
+    public void assign(Long userId, Long[] roleIds);
 
-    public Result<Void> add(String name);
+    public void add(String name);
 
-    public Result<Void> update(String name);
+    public void update(String name);
 
-    public Result<Void> delete(@PathVariable Long id);
+    public void delete(@PathVariable Long id);
 
 }

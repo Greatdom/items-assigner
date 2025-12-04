@@ -8,8 +8,10 @@ import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
 import com.wddyxd.userservice.pojo.entity.Role;
+import com.wddyxd.userservice.service.Interface.IRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -23,6 +25,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user/role")
 @Tag(name = "角色控制器", description = "角色相关接口")
 public class RoleController {
+
+    @Autowired
+    private IRoleService roleService;
 
     @GetMapping("/list")
     //需要role.list权限
@@ -40,10 +45,7 @@ public class RoleController {
     //需要role.list权限
     @Operation(summary = "查看角色详细信息接口", description = "在管理员的角色管理主界面查看角色详情")
     public Result<RoleVO> detail(@PathVariable Long id){
-
-//        查询role和permissions表中获取角色信息和角色关联的权限
-//- 注意无论角色是否被逻辑删除都应该被被查到,但权限应该是没有被逻辑删除的
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(roleService.detail(id));
     }
 
     @PostMapping("/assign")

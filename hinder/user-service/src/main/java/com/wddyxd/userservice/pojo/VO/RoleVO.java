@@ -15,30 +15,60 @@ import java.util.List;
 
 public class RoleVO {
 
-    private Role role;
-    private List<Permission> permissions;
+    private Long id;
+    private String name;
+    private Boolean isDeleted;
+    private List<String> permissionNameList;
+    private List<Permission> permissionValueList;
 
     @Override
     public String toString() {
         return "RoleVO{" +
-                "role=" + role +
-                ", permissions=" + permissions +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", isDeleted=" + isDeleted +
+                ", permissionNameList=" + permissionNameList +
+                ", permissionValueList=" + permissionValueList +
                 '}';
     }
 
-    public Role getRole() {
-        return role;
+    public Boolean getDeleted() {
+        return isDeleted;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 
-    public List<Permission> getPermissions() {
-        return permissions;
+    public Long getId() {
+        return id;
     }
 
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<String> getPermissionNameList() {
+        return permissionNameList;
+    }
+
+    public void setPermissionNameList(List<String> permissionNameList) {
+        this.permissionNameList = permissionNameList;
+    }
+
+    public List<Permission> getPermissionValueList() {
+        return permissionValueList;
+    }
+
+    public void setPermissionValueList(List<Permission> permissionValueList) {
+        this.permissionValueList = permissionValueList;
     }
 }

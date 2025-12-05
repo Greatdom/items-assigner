@@ -9,14 +9,8 @@
 
 
 
-    <select id="selectPermissionValueByUserId" resultType="String">
-    	select
-        p.permission_value
-        from user_role ur
-        inner join role_permissions rp on rp.role_id = ur.role_id
-        inner join permissions p on p.id = rp.permissions_id
-        where ur.user_id = #{userId}
+    <!-- XML 同步修改：collection 用 @Param 定义的 ids，长度用 ids.length -->
+    <select id="checkAllPermissionIdsValid" resultType="boolean">
     </select>
-
 
 </mapper>

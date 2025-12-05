@@ -53,7 +53,8 @@ public class RoleController {
 //- 如果原先没有商户角色但添加了商户则创建商户表,并插入默认商户信息(但如果给了最高级商户角色但没有许可证呢Void)
 //- 只有超级管理员才可以给用户分配管理员角色,管理员只能给用户分配除管理员外的角色
 //- 如果查询不到用户或用户被逻辑删除则拒绝分配
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        roleService.assign(userId, roleIds);
+        return Result.success();
     }
 
     @PostMapping("/add")
@@ -61,7 +62,8 @@ public class RoleController {
     @Operation(summary = "添加角色接口", description = "管理员可以在角色管理界面添加角色")
     public Result<Void> add(@RequestParam String name){
 //        添加角色
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        roleService.add(name);
+        return Result.success();
     }
 
     @PutMapping("/update")
@@ -69,7 +71,8 @@ public class RoleController {
     @Operation(summary = "更新角色内容接口", description = "管理员可以在角色管理界面更新角色信息")
     public Result<Void> update(@RequestBody Role role){
 //        更新角色信息,角色被逻辑删除则拒绝更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        roleService.update(role);
+        return Result.success();
     }
 
     @DeleteMapping("/delete/{id}")
@@ -80,7 +83,8 @@ public class RoleController {
 //- role_permissions表role_id等于id和user_role表role_id等于id的行逻辑删除,
 //- 不能删除每个角色组的"默认角色",然后遍历用户,如果用户有该角色则将该角色变成所在组的"默认角色"
 //- 只有超级管理员才可以删除角色
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        roleService.delete(id);
+        return Result.success();
     }
 
 }

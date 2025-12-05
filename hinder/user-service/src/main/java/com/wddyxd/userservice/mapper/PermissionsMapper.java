@@ -3,6 +3,7 @@ package com.wddyxd.userservice.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wddyxd.userservice.pojo.entity.Permission;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ import java.util.List;
  **/
 
 public interface PermissionsMapper extends BaseMapper<Permission> {
-    List<String> selectPermissionValueByUserId(Long id);
+    boolean checkAllPermissionIdsValid(@Param("ids") Long[] ids);
 }

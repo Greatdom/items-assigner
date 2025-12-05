@@ -22,7 +22,7 @@ public interface IPermissionService extends IService<Permission> {
 
     public void add(String name,String permissionValue);
 
-    public void update(String name,String permissionValue);
+    public void update(Long id, String name,String permissionValue);
 
     public void delete(Long id);
 }

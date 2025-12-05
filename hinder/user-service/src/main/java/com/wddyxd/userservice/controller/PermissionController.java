@@ -44,7 +44,8 @@ public class PermissionController {
 //- 根据参数查询角色和角色的权限,然后删除角色拥有的权限,然后重新增加权限
 //- 只有超级管理员才可以给角色分配权限
 //- 如果角色被删除则拒绝执行接口
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        permissionService.assign(roleId, permissionIds);
+        return Result.success();
     }
 
     @PostMapping("/add")
@@ -52,15 +53,17 @@ public class PermissionController {
     @Operation(summary = "添加权限接口", description = "管理员可以在权限管理界面添加权限")
     public Result<Void> add(@RequestParam String name,@RequestParam String permissionValue){
 //        添加权限
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        permissionService.add(name, permissionValue);
+        return Result.success();
     }
 
     @PutMapping("/update")
     //需要permission.update权限
     @Operation(summary = "更改权限内容接口", description = "管理员可以在权限管理界面更新权限信息")
-    public Result<Void> update(@RequestParam String name,@RequestParam String permissionValue){
+    public Result<Void> update(@RequestParam Long id, @RequestParam String name,@RequestParam String permissionValue){
 //        更新权限信息,权限被逻辑删除则拒绝更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        permissionService.update(id,name, permissionValue);
+        return Result.success();
     }
 
     @DeleteMapping("/delete/{id}")
@@ -69,7 +72,8 @@ public class PermissionController {
     public Result<Void> delete(@PathVariable Long id){
 //        删除权限包括根据id将permissions表的主键等于id,
 //- role_permissions表permissions_id等于id的行逻辑删除
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        permissionService.delete(id);
+        return Result.success();
     }
 
 

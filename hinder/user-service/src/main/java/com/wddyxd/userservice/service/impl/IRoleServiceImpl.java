@@ -126,5 +126,11 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
     @Override
     public void delete(Long id) {
+        Role dbRole = this.getById(id);
+        if (dbRole == null) {
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        dbRole.setDeleted(true);
+        baseMapper.updateById(dbRole);
     }
 }

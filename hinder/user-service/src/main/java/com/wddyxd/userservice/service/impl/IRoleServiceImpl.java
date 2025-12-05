@@ -15,9 +15,11 @@ import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.mapper.RoleMapper;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
+import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserRole;
+import com.wddyxd.userservice.service.Interface.IMerchantSupplementService;
 import com.wddyxd.userservice.service.Interface.IRoleService;
 import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import com.wddyxd.userservice.service.Interface.IUserService;
@@ -46,6 +48,9 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
     @Autowired
     private IUserRoleService userRoleService;
+
+    @Autowired
+    private IMerchantSupplementService merchantSupplementService;
 
     @Override
     public Page<Role> List(SearchDTO searchDTO) {
@@ -102,6 +107,12 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
         userRoleService.assign(userId, roleIds);
 
         //如果用户之前没有被分配商户但现在被分配商户了就直接创建商户表
+        MerchantSupplement merchantSupplement = new MerchantSupplement();
+        merchantSupplement.setUserId(userId);
+        merchantSupplement.setShopStatus(1);//关店
+        merchantSupplement.setShopCategoryId(-1L);//默认分类?
+        merchantSupplement.setIsDeleted(false);
+        merchantSupplementService.add(merchantSupplement);
 
         //(可选)如果用户没有许可证就不能给他分配非默认商户角色
 

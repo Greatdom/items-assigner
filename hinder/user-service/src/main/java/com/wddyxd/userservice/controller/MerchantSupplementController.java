@@ -27,7 +27,7 @@ public class MerchantSupplementController {
     @DeleteMapping("/delete/{id}")
     //需要user.delete权限
     @Operation(summary = "删除商户接口", description = "只有管理员有权限删除商户,普通商户要注销需要将注销请求发送给管理员")
-    public Result<?> delete(@PathVariable Long id){
+    public Result<Void> delete(@PathVariable Long id){
 //       在删除账户之前在redis查看上次删除该用户的时间戳如果存在则直接返回,
 //- 否则要强制取消和退货为完成的订单(调用取消和退货订单接口)
 //- 然后先强制下架商品再删除商品(调用删除商品接口,其中回收所有的用户领取的自己发放的优惠券,然后将该商家的优惠劵折现删除),
@@ -40,7 +40,7 @@ public class MerchantSupplementController {
     @PutMapping("/update/custom")
     //访问者的id等于参数的id
     @Operation(summary = "更新基础商户信息接口", description = "更新基础商户信息")
-    public Result<?> updateCustom(@RequestBody UpdateMerchantCustomDTO updateMerchantCustomDTO){
+    public Result<Void> updateCustom(@RequestBody UpdateMerchantCustomDTO updateMerchantCustomDTO){
 //        传入UpdateMerchantCustomDTO,更新基础商户信息,查询不到用户或用户被逻辑删除则不应该执行更新
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
@@ -48,18 +48,18 @@ public class MerchantSupplementController {
     @PutMapping("/update/license")
     //更新者的id等于参数id
     @Operation(summary = "许可证认证接口", description = "许可证认证")
-    public Result<?> updateLicense(@RequestBody UpdateMerchantLicenseDTO updateMerchantLicenseDTO){
+    public Result<Void> updateLicense(@RequestBody UpdateMerchantLicenseDTO updateMerchantLicenseDTO){
 //        传入UpdateMerchantLicenseDTO,提供许可证后异步通知管理员审核,应该审核后管理员手动为其升级角色,
 //- 但这里实现为直接为该用户升级角色
 //- 查询不到用户或用户被逻辑删除则不应该执行更新
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-    @PutMapping("/status")
+    @PutMapping("/status/{id}")
     //更新者的id等于参数id
     @Operation(summary = "开张/关店接口", description = "开张/关店")
-    public Result<?> status(@RequestBody UpdateMerchantLicenseDTO updateMerchantLicenseDTO){
-//        开张/关店,此时用户无法在这家店发起订单并强制取消或退货还没有完成的订单
+    public Result<Void> status(@PathVariable Long id){
+//        传入用户id,开张/关店,此时用户无法在这家店发起订单并强制取消或退货还没有完成的订单
 //- 查询不到用户或用户被逻辑删除则跳过
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }

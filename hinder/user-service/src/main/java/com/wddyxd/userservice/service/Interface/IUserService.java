@@ -7,7 +7,6 @@ import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
-import com.wddyxd.userservice.pojo.securityDTO.SecurityUserDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 /**

@@ -10,9 +10,11 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.userservice.mapper.PermissionMapper;
 import com.wddyxd.userservice.pojo.entity.Permission;
+import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.pojo.entity.RolePermission;
 import com.wddyxd.userservice.service.Interface.IPermissionService;
 import com.wddyxd.userservice.service.Interface.IRolePermissionService;
+import com.wddyxd.userservice.service.Interface.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +38,9 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionMapper, Permis
     @Autowired
     private IRolePermissionService rolePermissionsService;
 
+    @Autowired
+    private IRoleService roleService;
+
     @Override
     public Page<Permission> List(SearchDTO searchDTO) {
         searchDTO.validatePageParams(searchDTO);
@@ -49,6 +54,7 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionMapper, Permis
     @Override
     @Transactional
     public void assign(Long roleId, Long[] permissionIds) {
+        //TODO幂等性问题
         //校验参数->过滤null -> 去重 -> 转回数组->再校验参数
         if(permissionIds == null|| roleId == null)
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
@@ -59,7 +65,7 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionMapper, Permis
                 .toArray(Long[]::new);
         if(permissionIdLength!=permissionIds.length)
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(permissionIdLength>0){
+        if(permissionIds.length>0){
             //校验permissionIds指向的权限是否可以正常使用
             LambdaQueryWrapper<Permission> query = new LambdaQueryWrapper<>();
             query.in(Permission::getId, Arrays.asList(permissionIds));
@@ -69,25 +75,16 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionMapper, Permis
                 throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
 
-        //执行旧权限删除
+        Role role = roleService.getById(roleId);
+        if(role == null || role.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
 
-
-        //如果permissionIdLengthV2>0则执行新权限加入
-        if(permissionIdLength>0){
-            List<RolePermission> rolePermissions = new ArrayList<>();
-            for (Long permissionId : permissionIds) {
-                RolePermission rolePermission = new RolePermission();
-                rolePermission.setRoleId(roleId);
-                rolePermission.setPermissionId(permissionId);
-                rolePermissions.add(rolePermission);
-            }
-            //...
-        }
-
+        rolePermissionsService.assign(roleId, permissionIds);
     }
 
     @Override
     public void add(String name, String permissionValue) {
+        //TODO幂等性问题
         Permission permission = new Permission();
         permission.setName(name);
         permission.setPermissionValue(permissionValue);

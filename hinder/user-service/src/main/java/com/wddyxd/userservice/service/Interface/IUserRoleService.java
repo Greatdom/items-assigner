@@ -12,4 +12,7 @@ import com.wddyxd.userservice.pojo.entity.UserRole;
  **/
 
 public interface IUserRoleService extends IService<UserRole> {
+
+    void assign(Long userId, Long[] roleIds);
+
 }

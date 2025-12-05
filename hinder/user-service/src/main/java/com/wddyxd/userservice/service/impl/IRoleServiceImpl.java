@@ -28,10 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +43,9 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IUserRoleService userRoleService;
 
     @Override
     public Page<Role> List(SearchDTO searchDTO) {
@@ -64,28 +64,31 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
     @Override
     public void assign(Long userId, Long[] roleIds) {
+        //TODO幂等性问题
         //校验参数是否合法
-        if (userId == null || roleIds == null || roleIds.length == 0) {
+        if (userId == null || roleIds == null) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         Long[] groupRoleId = new Long[CommonConstant.ROLE_GROUP_NUM];//0-用户 1-商户 2-管理员
         //O(n)时间复杂度,来确定最终的角色分组
-        for (Long roleId : roleIds) {
-            if(roleId==null){
-                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+            for (Long roleId : roleIds) {
+                if(roleId==null){
+                    throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+                }
+                Integer group = RoleConstant.ROLE_ID_TO_GROUP_MAP.get(roleId);
+                if (group == null||group>=CommonConstant.ROLE_GROUP_NUM||group<=-1) { // 仅处理枚举中存在的合法角色ID
+                    //非法角色，直接拒绝分配
+                    throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+                }
+                //一个角色分组只能分配一个角色,否则拒绝分配
+                if (groupRoleId[group] != null) {
+                    throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR); // 新增：同一分组多角色错误码
+                }
+                //分组校验通过，记录该分组的角色ID
+                groupRoleId[group] = roleId;
             }
-            Integer group = RoleConstant.ROLE_ID_TO_GROUP_MAP.get(roleId);
-            if (group == null||group>=CommonConstant.ROLE_GROUP_NUM||group<=-1) { // 仅处理枚举中存在的合法角色ID
-                //非法角色，直接拒绝分配
-                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
-            }
-            //一个角色分组只能分配一个角色,否则拒绝分配
-            if (groupRoleId[group] != null) {
-                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR); // 新增：同一分组多角色错误码
-            }
-            //分组校验通过，记录该分组的角色ID
-            groupRoleId[group] = roleId;
-        }
+        roleIds = new Long[CommonConstant.ROLE_GROUP_NUM];
+        System.arraycopy(groupRoleId, 0, roleIds, 0, groupRoleId.length);
         //根据userId得到一个没有被删除的用户
         User user = userService.getById(userId);
         if (user == null || user.getIsDeleted()==true) {
@@ -96,9 +99,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
         //全局只能有一个超级管理员
 
-        //删除该用户的所有关联角色
-
-        //用groupRoleId重新分配用户的角色
+        userRoleService.assign(userId, roleIds);
 
         //如果用户之前没有被分配商户但现在被分配商户了就直接创建商户表
 
@@ -109,6 +110,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
     @Override
     public void add(String name) {
+        //TODO幂等性问题
         Role role = new Role();
         role.setName(name);
         this.save(role);

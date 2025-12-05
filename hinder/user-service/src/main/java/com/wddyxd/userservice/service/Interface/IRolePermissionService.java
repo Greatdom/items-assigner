@@ -13,5 +13,6 @@ import com.wddyxd.userservice.pojo.entity.RolePermission;
 
 public interface IRolePermissionService extends IService<RolePermission> {
 
+    public void assign(Long roleId, Long[] permissionIds);
 
 }

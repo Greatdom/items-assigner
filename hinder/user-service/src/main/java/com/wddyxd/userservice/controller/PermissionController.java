@@ -72,8 +72,7 @@ public class PermissionController {
     public Result<Void> delete(@PathVariable Long id){
 //        删除权限包括根据id将permissions表的主键等于id,
 //- role_permissions表permissions_id等于id的行逻辑删除
-        permissionService.delete(id);
-        return Result.success();
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
 

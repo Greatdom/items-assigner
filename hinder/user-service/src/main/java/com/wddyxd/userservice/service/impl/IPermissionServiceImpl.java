@@ -104,11 +104,6 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionMapper, Permis
 
     @Override
     public void delete(Long id) {
-        Permission dbPermission = this.getById(id);
-        if(dbPermission == null){
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        }
-        dbPermission.setIsDeleted(true);
-        baseMapper.updateById(dbPermission);
+
     }
 }

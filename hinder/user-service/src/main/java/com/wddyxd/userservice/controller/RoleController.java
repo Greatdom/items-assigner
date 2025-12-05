@@ -83,8 +83,7 @@ public class RoleController {
 //- role_permissions表role_id等于id和user_role表role_id等于id的行逻辑删除,
 //- 不能删除每个角色组的"默认角色",然后遍历用户,如果用户有该角色则将该角色变成所在组的"默认角色"
 //- 只有超级管理员才可以删除角色
-        roleService.delete(id);
-        return Result.success();
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
 }

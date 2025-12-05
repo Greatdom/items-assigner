@@ -5,8 +5,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.userservice.pojo.DTO.*;
+import com.wddyxd.userservice.pojo.VO.UserDetailVO;
+import com.wddyxd.userservice.pojo.VO.UserProfileVO;
+import com.wddyxd.userservice.pojo.VO.UserVisitVO;
 import com.wddyxd.userservice.pojo.entity.User;
-import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -18,15 +21,38 @@ import org.springframework.transaction.annotation.Transactional;
 
 public interface IUserService extends IService<User> {
 
-    Page<User> List(SearchDTO searchDTO);
+    public Page<User> List(SearchDTO searchDTO);
 
-    CurrentUserDTO me();
+    public UserDetailVO detail(Long id);
 
-    @Transactional
-    void addUserAndAssignRole(User user, Long roleId);
+    public UserProfileVO profile(Long id);
 
-    void add(User user);
+    public CurrentUserDTO me();
 
+    public UserVisitVO visit(Long id);
 
+    public void addAdmin(CustomUserRegisterDTO customUserRegisterDTO);
+
+    public void updatePassword(UpdatePasswordDTO updatePasswordDTO);
+
+    public void updatePhone(UpdatePhoneDTO updatePhoneDTO);
+
+    public void updateEmail(UpdateEmailDTO updateEmailDTO);
+
+    public void updateAvatar(UpdateAvatarDTO updateAvatarDTO);
+
+    public void updateNickname(UpdateNickNameDTO updateNickNameDTO);
+
+    public void updateGender(UpdateGenderDTO updateGenderDTO);
+
+    public void updateBirthday(UpdateBirthdayDTO updateBirthdayDTO);
+
+    public void updateRegion(UpdateRegionDTO updateRegionDTO);
+
+    public void updateCard(UpdateCardDTO updateCardDTO);
+
+    public void status(Long id);
+
+    public void delete(Long id);
 
 }

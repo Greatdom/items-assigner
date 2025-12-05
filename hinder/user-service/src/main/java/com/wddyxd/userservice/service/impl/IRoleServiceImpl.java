@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.constant.RoleConstant;
+import com.wddyxd.common.constant.ShopCategoryConstant;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -68,6 +70,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
     }
 
     @Override
+    @Transactional
     public void assign(Long userId, Long[] roleIds) {
         //TODO幂等性问题
         //校验参数是否合法
@@ -92,8 +95,9 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
                 //分组校验通过，记录该分组的角色ID
                 groupRoleId[group] = roleId;
             }
-        roleIds = new Long[CommonConstant.ROLE_GROUP_NUM];
-        System.arraycopy(groupRoleId, 0, roleIds, 0, groupRoleId.length);
+        roleIds = Arrays.stream(roleIds)
+                .filter(Objects::nonNull)  // 滤掉null值
+                .toArray(Long[]::new);
         //根据userId得到一个没有被删除的用户
         User user = userService.getById(userId);
         if (user == null || user.getIsDeleted()==true) {
@@ -107,12 +111,12 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
         userRoleService.assign(userId, roleIds);
 
         //如果用户之前没有被分配商户但现在被分配商户了就直接创建商户表
-        MerchantSupplement merchantSupplement = new MerchantSupplement();
-        merchantSupplement.setUserId(userId);
-        merchantSupplement.setShopStatus(1);//关店
-        merchantSupplement.setShopCategoryId(-1L);//默认分类?
-        merchantSupplement.setIsDeleted(false);
-        merchantSupplementService.add(merchantSupplement);
+//        MerchantSupplement merchantSupplement = new MerchantSupplement();
+//        merchantSupplement.setUserId(userId);
+//        merchantSupplement.setShopStatus(1);//关店
+//        merchantSupplement.setShopCategoryId(ShopCategoryConstant.DEFAULT.getId());//默认分类
+//        merchantSupplement.setIsDeleted(false);
+//        merchantSupplementService.add(merchantSupplement);
 
         //(可选)如果用户没有许可证就不能给他分配非默认商户角色
 

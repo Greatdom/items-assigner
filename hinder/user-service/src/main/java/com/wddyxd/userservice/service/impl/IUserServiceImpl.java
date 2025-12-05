@@ -10,9 +10,12 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.MD5Encoder;
 import com.wddyxd.userservice.mapper.UserMapper;
+import com.wddyxd.userservice.pojo.DTO.*;
+import com.wddyxd.userservice.pojo.VO.UserDetailVO;
+import com.wddyxd.userservice.pojo.VO.UserProfileVO;
+import com.wddyxd.userservice.pojo.VO.UserVisitVO;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserRole;
-import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import com.wddyxd.userservice.service.Interface.IUserService;
 import org.springframework.aop.framework.AopContext;
@@ -50,24 +53,15 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     }
 
     @Override
-    public void add(User user) {
-        proxy = (IUserService) AopContext.currentProxy();
-
-        proxy.addUserAndAssignRole(user, 1984518164557385730L);
+    public UserDetailVO detail(Long id) {
+        return null;
     }
 
-    @Transactional
     @Override
-    public void addUserAndAssignRole(User user, Long roleId) {
-        user.setPassword(MD5Encoder.encrypt(user.getPassword()));
-        save(user);
-        UserRole userRole = new UserRole();
-        if(user.getId() == null)System.out.println("用户ID为空");
-        userRole.setUserId(user.getId());
-        userRole.setRoleId(roleId);
-        userRoleService.save(userRole);
-
+    public UserProfileVO profile(Long id) {
+        return null;
     }
+
 
     @Override
     public CurrentUserDTO me() {
@@ -79,8 +73,74 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         }else throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
     }
 
+    @Override
+    public UserVisitVO visit(Long id) {
+        return null;
+    }
 
+    @Override
+    public void addAdmin(CustomUserRegisterDTO customUserRegisterDTO) {
+        User user = new User();
+        user.setUsername(customUserRegisterDTO.getUsername());
+        user.setPassword(MD5Encoder.encrypt(customUserRegisterDTO.getPassword()));
+        user.setPhone(customUserRegisterDTO.getPhone());
+        user.setEmail(customUserRegisterDTO.getEmail());
+        user.setNickName("SUPER_ADMIN");
+        baseMapper.insert(user);
+    }
 
+    @Override
+    public void updatePassword(UpdatePasswordDTO updatePasswordDTO) {
 
+    }
 
+    @Override
+    public void updatePhone(UpdatePhoneDTO updatePhoneDTO) {
+
+    }
+
+    @Override
+    public void updateEmail(UpdateEmailDTO updateEmailDTO) {
+
+    }
+
+    @Override
+    public void updateAvatar(UpdateAvatarDTO updateAvatarDTO) {
+
+    }
+
+    @Override
+    public void updateNickname(UpdateNickNameDTO updateNickNameDTO) {
+
+    }
+
+    @Override
+    public void updateGender(UpdateGenderDTO updateGenderDTO) {
+
+    }
+
+    @Override
+    public void updateBirthday(UpdateBirthdayDTO updateBirthdayDTO) {
+
+    }
+
+    @Override
+    public void updateRegion(UpdateRegionDTO updateRegionDTO) {
+
+    }
+
+    @Override
+    public void updateCard(UpdateCardDTO updateCardDTO) {
+
+    }
+
+    @Override
+    public void status(Long id) {
+
+    }
+
+    @Override
+    public void delete(Long id) {
+
+    }
 }

@@ -186,10 +186,10 @@ public class UserController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-    @PutMapping("/status")
+    @PutMapping("/status/{id}")
     //需要user.update权限
     @Operation(summary = "封禁/解封用户接口", description = "封禁/解封用户")
-    public Result<Void> status(@RequestBody UpdateCardDTO updateCardDTO){
+    public Result<Void> status(@PathVariable Long id){
 //       封禁/解封用户,封禁用户时让用户强制下线,废除用户的token,同时给用户发短信或邮箱,
 //- 查询不到用户或用户被逻辑删除则跳过
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

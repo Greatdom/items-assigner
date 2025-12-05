@@ -27,7 +27,9 @@ public class ShopCategoryServiceTests {
 
     @Test
     public void add() {
-        shopCategoryService.add("测试");
+        shopCategoryService.add("默认分类");
+        shopCategoryService.add("书店");
+        shopCategoryService.add("食品");
     }
 
     @Test

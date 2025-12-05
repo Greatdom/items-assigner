@@ -2,6 +2,7 @@ package com.wddyxd.userservice.controller;
 
 
 import com.wddyxd.common.pojo.SearchDTO;
+import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.service.Interface.IRoleService;
 import org.junit.jupiter.api.Test;
@@ -22,17 +23,29 @@ public class RoleServiceTests {
 
     @Test
     public void detail() {
-        System.out.println(roleService.detail(1984518164557385728L));
+        System.out.println(roleService.detail(1996953140859625474L));
     }
 
     @Test
     public void add() {
-        roleService.add("ROLE_TEST");
+        roleService.add("ROLE_SUPER_ADMIN");
+        roleService.add("ROLE_CUSTOM_ADMIN");
+        roleService.add("ROLE_NEW_ADMIN");
+        roleService.add("ROLE_CUSTOM_MERCHANT");
+        roleService.add("ROLE_NEW_MERCHANT");
+        roleService.add("ROLE_CUSTOM_USER");
+        roleService.add("ROLE_NEW_USER");
+
+    }
+
+    @Test
+    public void assign() {
+        roleService.assign(1996953140859625474L, new Long[]{1996956488421613570L});
     }
 
     @Test
     public void list() {
-        System.out.println(roleService.List(new SearchDTO()));
+        System.out.println(Result.success(roleService.List(new SearchDTO())));
     }
 
     @Test

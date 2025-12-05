@@ -8,6 +8,7 @@ import com.wddyxd.userservice.pojo.DTO.UpdateMerchantLicenseDTO;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.service.Interface.IMerchantSupplementService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @program: items-assigner
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class IMerchantSupplementServiceImpl extends ServiceImpl<MerchantSupplementMapper, MerchantSupplement> implements IMerchantSupplementService {
 
     @Override
+    @Transactional
     public void add(MerchantSupplement merchantSupplement) {
         baseMapper.insert(merchantSupplement);
     }

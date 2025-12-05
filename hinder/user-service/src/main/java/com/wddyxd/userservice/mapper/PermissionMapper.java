@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wddyxd.userservice.pojo.entity.Permission;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 /**
  * @program: items-assigner
  * @description: permission 数据库接口
@@ -14,6 +12,6 @@ import java.util.List;
  * @create: 2025-10-20 20:58
  **/
 
-public interface PermissionsMapper extends BaseMapper<Permission> {
+public interface PermissionMapper extends BaseMapper<Permission> {
     boolean checkAllPermissionIdsValid(@Param("ids") Long[] ids);
 }

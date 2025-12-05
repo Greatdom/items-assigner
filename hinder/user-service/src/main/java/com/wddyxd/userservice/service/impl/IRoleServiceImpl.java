@@ -88,7 +88,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
         }
         //根据userId得到一个没有被删除的用户
         User user = userService.getById(userId);
-        if (user == null || user.getDeleted()==true) {
+        if (user == null || user.getIsDeleted()==true) {
             throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         }
 
@@ -117,7 +117,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
     @Override
     public void update(Role role) {
         Role dbRole = this.getById(role.getId());
-        if (dbRole == null || dbRole.getDeleted()) {
+        if (dbRole == null || dbRole.getIsDeleted()) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         dbRole.setName(role.getName());
@@ -130,7 +130,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
         if (dbRole == null) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
-        dbRole.setDeleted(true);
+        dbRole.setIsDeleted(true);
         baseMapper.updateById(dbRole);
     }
 }

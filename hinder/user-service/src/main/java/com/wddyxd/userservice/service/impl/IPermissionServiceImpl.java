@@ -8,14 +8,20 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
-import com.wddyxd.userservice.mapper.PermissionsMapper;
+import com.wddyxd.userservice.mapper.PermissionMapper;
 import com.wddyxd.userservice.pojo.entity.Permission;
-import com.wddyxd.userservice.pojo.entity.Role;
+import com.wddyxd.userservice.pojo.entity.RolePermission;
 import com.wddyxd.userservice.service.Interface.IPermissionService;
 import com.wddyxd.userservice.service.Interface.IRolePermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @program: 微服务脚手架
@@ -25,7 +31,7 @@ import org.springframework.util.StringUtils;
  **/
 
 @Service
-public class IPermissionServiceImpl extends ServiceImpl<PermissionsMapper, Permission> implements IPermissionService {
+public class IPermissionServiceImpl extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService {
 
     @Autowired
     private IRolePermissionService rolePermissionsService;
@@ -41,13 +47,42 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionsMapper, Permi
     }
 
     @Override
+    @Transactional
     public void assign(Long roleId, Long[] permissionIds) {
-//        permissionIds都指向存在的正常运作的权限才可继续执行接口,
-//- 根据参数查询角色和角色的权限,然后删除角色拥有的权限,然后重新增加权限
-//- 只有超级管理员才可以给角色分配权限
-//- 如果角色被删除则拒绝执行接口
+        //校验参数->过滤null -> 去重 -> 转回数组->再校验参数
+        if(permissionIds == null|| roleId == null)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        int permissionIdLength = permissionIds.length;
+        permissionIds = Arrays.stream(permissionIds)
+                .filter(Objects::nonNull)
+                .distinct()
+                .toArray(Long[]::new);
+        if(permissionIdLength!=permissionIds.length)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(permissionIdLength>0){
+            //校验permissionIds指向的权限是否可以正常使用
+            LambdaQueryWrapper<Permission> query = new LambdaQueryWrapper<>();
+            query.in(Permission::getId, Arrays.asList(permissionIds));
+            query.eq(Permission::getIsDeleted, 0);
+            Long count = baseMapper.selectCount(query);
+            if(count != permissionIds.length)
+                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
 
-        System.out.println(baseMapper.checkAllPermissionIdsValid(permissionIds));
+        //执行旧权限删除
+
+
+        //如果permissionIdLengthV2>0则执行新权限加入
+        if(permissionIdLength>0){
+            List<RolePermission> rolePermissions = new ArrayList<>();
+            for (Long permissionId : permissionIds) {
+                RolePermission rolePermission = new RolePermission();
+                rolePermission.setRoleId(roleId);
+                rolePermission.setPermissionId(permissionId);
+                rolePermissions.add(rolePermission);
+            }
+            //...
+        }
 
     }
 
@@ -62,7 +97,7 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionsMapper, Permi
     @Override
     public void update(Long id, String name, String permissionValue) {
         Permission dbPermission = this.getById(id);
-        if (dbPermission == null || dbPermission.getDeleted()) {
+        if (dbPermission == null || dbPermission.getIsDeleted()) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         dbPermission.setName(name);
@@ -76,7 +111,7 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionsMapper, Permi
         if(dbPermission == null){
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
-        dbPermission.setDeleted(true);
+        dbPermission.setIsDeleted(true);
         baseMapper.updateById(dbPermission);
     }
 }

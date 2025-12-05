@@ -11,5 +11,5 @@ import com.wddyxd.userservice.pojo.entity.RolePermission;
  * @create: 2025-10-20 20:59
  **/
 
-public interface RolePermissionsMapper extends BaseMapper<RolePermission> {
+public interface RolePermissionMapper extends BaseMapper<RolePermission> {
 }

@@ -30,7 +30,7 @@ public class PermissionServiceTests {
     @Test
     public void assignV1(){
 
-        permissionService.assign(-1L,new Long[]{-1L});
+        permissionService.assign(-1L,new Long[]{1L,-2L,3L});
     }
 
     @Test

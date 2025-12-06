@@ -23,9 +23,9 @@ public interface IAuthService extends IService<User> {
 
     public EmailCodeSecurityGetterVO emailCodeSecurityGetter(String email);
 
-    public String phoneCode(String phone);
+    public void phoneCode(String phone);
 
-    public String emailCode(String email);
+    public void emailCode(String email);
 
     public String customUserRegister(CustomUserRegisterDTO customUserRegisterDTO);
 

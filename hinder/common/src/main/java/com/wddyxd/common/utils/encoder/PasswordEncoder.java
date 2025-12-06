@@ -1,8 +1,5 @@
-package com.wddyxd.common.utils;
+package com.wddyxd.common.utils.encoder;
 
-
-import com.wddyxd.common.constant.ResultCodeEnum;
-import com.wddyxd.common.exceptionhandler.CustomException;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,9 +11,13 @@ import java.security.NoSuchAlgorithmException;
  * @create: 2025-10-20 20:06
  **/
 
-public class MD5Encoder {
+public class PasswordEncoder implements Encoder{
     //TODO 可以换成更好的加密方式
-    public static String encrypt(String strSrc) {
+    public String encode(String strSrc) {
+        return MD5(strSrc);
+    }
+
+    private String MD5(String strSrc){
         try {
             char hexChars[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8',
                     '9', 'a', 'b', 'c', 'd', 'e', 'f' };

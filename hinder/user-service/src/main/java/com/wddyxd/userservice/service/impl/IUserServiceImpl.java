@@ -8,23 +8,20 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
-import com.wddyxd.common.utils.MD5Encoder;
+import com.wddyxd.common.utils.encoder.PasswordEncoder;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.VO.UserDetailVO;
 import com.wddyxd.userservice.pojo.VO.UserProfileVO;
 import com.wddyxd.userservice.pojo.VO.UserVisitVO;
 import com.wddyxd.userservice.pojo.entity.User;
-import com.wddyxd.userservice.pojo.entity.UserRole;
 import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import com.wddyxd.userservice.service.Interface.IUserService;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 /**
@@ -80,9 +77,10 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public void addAdmin(CustomUserRegisterDTO customUserRegisterDTO) {
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
         User user = new User();
         user.setUsername(customUserRegisterDTO.getUsername());
-        user.setPassword(MD5Encoder.encrypt(customUserRegisterDTO.getPassword()));
+        user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));
         user.setPhone(customUserRegisterDTO.getPhone());
         user.setEmail(customUserRegisterDTO.getEmail());
         user.setNickName("SUPER_ADMIN");

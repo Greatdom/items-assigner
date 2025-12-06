@@ -16,6 +16,8 @@ public class CommonConstant {
 
     public static final Integer REDIS_USER_LOGIN_TOKEN_EXPIRE_MINUTES = 60;
     public static final Integer REDIS_USER_LOGIN_USERINFO_EXPIRE_DAYS = 7;
+    public static final Integer REDIS_USER_LOGIN_PHONE_CODE_EXPIRE_MINUTES = 15;
+    public static final Integer REDIS_USER_LOGIN_EMAIL_CODE_EXPIRE_MINUTES = 15;
 
     public static final Integer ROLE_GROUP_NUM = 3;
 

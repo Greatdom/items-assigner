@@ -1,7 +1,6 @@
 package com.wddyxd.security.config;
 
 
-import com.wddyxd.security.exception.CustomUnAuthExceptionHandler;
 import com.wddyxd.security.filter.TokenAuthFilter;
 import com.wddyxd.security.filter.TokenLoginFilter;
 import com.wddyxd.security.provider.EmailCodeAuthenticationProvider;
@@ -40,8 +39,7 @@ public class TokenWebSecurityConfig {
 
     private final UserInfoManager userInfoManager;
     private final UserTokenManager userTokenManager;
-    private final RedisTemplate<String, Object> redisTemplate;
-    private final DefaultPasswordEncoder defaultPasswordEncoder;
+    private final SecurityPasswordEncoder defaultPasswordEncoder;
     private final UserDetailsService passwordUserDetailsService;
     private final UserDetailsService phoneCodeUserDetailsService;
     private final UserDetailsService emailCodeUserDetailsService;
@@ -53,7 +51,7 @@ public class TokenWebSecurityConfig {
             @Qualifier("passwordUserDetailsService") UserDetailsService passwordUserDetailsService,
             @Qualifier("phoneCodeUserDetailsService") UserDetailsService phoneCodeUserDetailsService,
             @Qualifier("emailCodeUserDetailsService") UserDetailsService emailCodeUserDetailsService,
-                                  DefaultPasswordEncoder defaultPasswordEncoder,
+                                  SecurityPasswordEncoder defaultPasswordEncoder,
                                   UserTokenManager userTokenManager,
                                   RedisTemplate<String, Object> redisTemplate,
                                     UserInfoManager userInfoManager,
@@ -65,7 +63,6 @@ public class TokenWebSecurityConfig {
         this.emailCodeUserDetailsService = emailCodeUserDetailsService;
         this.defaultPasswordEncoder = defaultPasswordEncoder;
         this.userTokenManager = userTokenManager;
-        this.redisTemplate = redisTemplate;
         this.userInfoManager = userInfoManager;
         this.unAuthEntryPoint = unAuthEntryPoint;
         this.AuthFailureHandler = AuthFailureHandler;

@@ -1,16 +1,15 @@
-package com.wddyxd.userservice.pojo.VO;
+package com.wddyxd.feign.pojo.userservice.authcontroller;
 
-
-import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 
 /**
  * @program: items-assigner
- * @description: 用户登录接口的手机验证码登录接口的结果包装类,包装手机验证码和用户信息
+ * @description: description
  * @author: wddyxd
- * @create: 2025-12-01 10:36
+ * @create: 2025-12-06 14:43
  **/
 
 public class PhoneCodeSecurityGetterVO {
+
 
     private String phoneCode;
     private CurrentUserDTO currentUserDTO;
@@ -38,4 +37,5 @@ public class PhoneCodeSecurityGetterVO {
     public void setCurrentUserDTO(CurrentUserDTO currentUserDTO) {
         this.currentUserDTO = currentUserDTO;
     }
+
 }

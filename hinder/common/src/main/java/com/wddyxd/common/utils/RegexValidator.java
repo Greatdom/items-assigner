@@ -26,9 +26,9 @@ public class RegexValidator {
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9]([\\w\\-\\.]*[a-zA-Z0-9])?@[a-zA-Z0-9]([\\w\\-]*[a-zA-Z0-9])?(\\.[a-zA-Z0-9]([\\w\\-]*[a-zA-Z0-9])?){1,}$";
 
     /**
-     * 用户名正则：4-16位，仅字母/数字（不能包含特殊字符）
+     * 用户名正则：4-16位，仅字母（不能包含特殊字符）
      */
-    private static final String USERNAME_REGEX = "^[a-zA-Z0-9]{4,16}$";
+    private static final String USERNAME_REGEX = "^[a-zA-Z]{4,16}$";
 
     /**
      * 密码正则：4-16位，字母/数字/特殊字符（特殊字符包含!@#$%^&*()_+-=[]{}|;:,.<>?）
@@ -68,7 +68,7 @@ public class RegexValidator {
     }
 
     /**
-     * 校验用户名（4-16位字母/数字，无特殊字符）
+     * 校验用户名（4-16位字母，无特殊字符）
      * @param username 用户名字符串
      * @return true=合法，false=非法
      */

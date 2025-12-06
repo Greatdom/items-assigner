@@ -4,12 +4,14 @@ package com.wddyxd.userservice.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.CommonConstant;
+import com.wddyxd.common.constant.LogPrompt;
 import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.RegexValidator;
 import com.wddyxd.common.utils.encoder.EmailCodeGetter;
 import com.wddyxd.common.utils.encoder.PhoneCodeGetter;
+import com.wddyxd.security.security.UserInfoManager;
 import com.wddyxd.userservice.mapper.AuthMapper;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.DTO.CustomUserRegisterDTO;
@@ -19,9 +21,13 @@ import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PhoneCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.service.Interface.IAuthService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -39,34 +45,77 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
 
+    private static final Logger log = LoggerFactory.getLogger(IAuthServiceImpl.class);
+
+
+
+
     @Override
     public PasswordSecurityGetterVO passwordSecurityGetter(String username) {
-        //TODO 可以先从redis拉取用户信息
-        //TODO 判断是用户名,手机号还是邮箱
-        User user = baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+        User user;
+        if(RegexValidator.validateEmail(username)){
+            user = baseMapper.selectOne(new QueryWrapper<User>().eq("email", username));
+        }else if(RegexValidator.validatePhone(username)){
+            user = baseMapper.selectOne(new QueryWrapper<User>().eq("phone", username));
+        }else if(RegexValidator.validateUsername(username)){
+            user = baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+        }else{
+            return null;
+        }
+        //判断能否找到用户
         if(user == null) {
             return null;
         }
-        LoginUserForm loginUserForm = new LoginUserForm();
-        BeanUtils.copyProperties(user,loginUserForm);
-        CurrentUserDTO userInfo = baseMapper.getCurrentUserById(user.getId());
-        if(userInfo == null) {
-            return null;
-        }
-        PasswordSecurityGetterVO result = new PasswordSecurityGetterVO();
-        result.setPassword(user.getPassword());
-        result.setCurrentUserDTO(userInfo);
-        return result;
+        //获取用户信息并包装
+        CurrentUserDTO currentUserDTO = currentUserDTOGetter(user.getId());
+        if(currentUserDTO == null)return null;
+        PasswordSecurityGetterVO passwordSecurityGetterVO = new PasswordSecurityGetterVO();
+        passwordSecurityGetterVO.setCurrentUserDTO(currentUserDTO);
+        passwordSecurityGetterVO.setPassword(user.getPassword());
+        return passwordSecurityGetterVO;
+
     }
 
     @Override
     public PhoneCodeSecurityGetterVO phoneCodeSecurityGetter(String phone) {
-        return null;
+        User user = baseMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
+        if(user == null) {
+            return null;
+        }
+        //从redis拉取手机验证码
+        String redisKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + phone;
+        String phoneCode = (String) redisTemplate.opsForValue().get(redisKey);
+        if(phoneCode == null) {
+            return null;
+        }
+        //获取用户信息并包装
+        CurrentUserDTO currentUserDTO = currentUserDTOGetter(user.getId());
+        if(currentUserDTO == null)return null;
+        PhoneCodeSecurityGetterVO phoneCodeSecurityGetterVO = new PhoneCodeSecurityGetterVO();
+        phoneCodeSecurityGetterVO.setCurrentUserDTO(currentUserDTO);
+        phoneCodeSecurityGetterVO.setPhoneCode(phoneCode);
+        return phoneCodeSecurityGetterVO;
     }
 
     @Override
     public EmailCodeSecurityGetterVO emailCodeSecurityGetter(String email) {
-        return null;
+        User user = baseMapper.selectOne(new QueryWrapper<User>().eq("email", email));
+        if(user == null) {
+            return null;
+        }
+        //从redis拉取邮箱验证码
+        String redisKey = RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key + email;
+        String emailCode = (String) redisTemplate.opsForValue().get(redisKey);
+        if(emailCode == null) {
+            return null;
+        }
+        //获取用户信息并包装
+        CurrentUserDTO currentUserDTO = currentUserDTOGetter(user.getId());
+        if(currentUserDTO == null)return null;
+        EmailCodeSecurityGetterVO emailCodeSecurityGetterVO = new EmailCodeSecurityGetterVO();
+        emailCodeSecurityGetterVO.setCurrentUserDTO(currentUserDTO);
+        emailCodeSecurityGetterVO.setEmailCode(emailCode);
+        return emailCodeSecurityGetterVO;
     }
 
     @Override
@@ -118,18 +167,40 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     }
 
     @Override
-    public String customUserRegister(CustomUserRegisterDTO customUserRegisterDTO) {
-        return "";
+    public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO) {
     }
 
     @Override
-    public String merchantRegister(CustomUserRegisterDTO customUserRegisterDTO) {
-        return "";
+    public void merchantRegister(CustomUserRegisterDTO customUserRegisterDTO) {
+
     }
 
     @Override
-    public String rebuildPassword(CustomUserRegisterDTO customUserRegisterDTO) {
-        return "";
+    public void rebuildPassword(CustomUserRegisterDTO customUserRegisterDTO) {
+
+    }
+
+
+
+    private CurrentUserDTO currentUserDTOGetter(Long userId){
+        //从redis拉取用户信息
+        CurrentUserDTO currentUserDTO = new CurrentUserDTO();
+        String redisKey = RedisKeyConstant.USER_LOGIN_USERINFO.key + userId;
+        try {
+            Object object = redisTemplate.opsForValue().get(redisKey);
+            if(object instanceof com.wddyxd.security.pojo.CurrentUserDTO tempCurrentUserDTO){
+                BeanUtils.copyProperties(tempCurrentUserDTO,currentUserDTO);
+                log.info(LogPrompt.REDIS_INFO.msg);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        //否则用数据库获取用户信息
+        if(currentUserDTO.getId()== null || currentUserDTO.getId() <= 0){
+            log.info(LogPrompt.MYSQL_INFO.msg);
+            currentUserDTO = baseMapper.getCurrentUserById(userId);
+        }
+        return currentUserDTO;
     }
 
 }

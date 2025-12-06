@@ -118,9 +118,9 @@ public class TokenWebSecurityConfig {
         PasswordAuthenticationProvider passwordAuthenticationProvider =
                 new PasswordAuthenticationProvider(passwordUserDetailsService, defaultPasswordEncoder);
         PhoneCodeAuthenticationProvider phoneAuthenticationProvider =
-                new PhoneCodeAuthenticationProvider(phoneCodeUserDetailsService, defaultPasswordEncoder);
+                new PhoneCodeAuthenticationProvider(phoneCodeUserDetailsService);
         EmailCodeAuthenticationProvider emailAuthenticationProvider =
-                new EmailCodeAuthenticationProvider(emailCodeUserDetailsService, defaultPasswordEncoder);
+                new EmailCodeAuthenticationProvider(emailCodeUserDetailsService);
         return new ProviderManager(
                 Arrays.asList(passwordAuthenticationProvider, phoneAuthenticationProvider, emailAuthenticationProvider)
         );

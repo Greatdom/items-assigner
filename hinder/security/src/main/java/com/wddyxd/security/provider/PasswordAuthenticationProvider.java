@@ -7,7 +7,6 @@ import com.wddyxd.security.pojo.LoginAuthenticationToken;
 import com.wddyxd.security.pojo.SecurityUser;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

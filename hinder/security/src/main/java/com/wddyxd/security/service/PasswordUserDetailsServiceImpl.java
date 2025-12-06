@@ -38,7 +38,6 @@ public class PasswordUserDetailsServiceImpl implements UserDetailsService {
         }
         LoginUserForm loginUserForm = new LoginUserForm();
         loginUserForm.setPassword(get.getPassword());
-        loginUserForm.setUsername(get.getCurrentUserDTO().getUsername());
         CurrentUserDTO currentUserDTO = new CurrentUserDTO();
         BeanUtils.copyProperties(get.getCurrentUserDTO(),currentUserDTO);
         return new SecurityUser(loginUserForm,currentUserDTO);

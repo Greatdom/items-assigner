@@ -15,6 +15,8 @@ public enum LogPrompt {
     DELETE_UNEXIST_INFO("试图删除不存在的记录"),
 
     //INFO
+    MYSQL_INFO("从数据库查询"),
+    REDIS_INFO("从Redis查询"),
     SUCCESS_INFO("操作成功");
 
     public final String msg;

@@ -27,10 +27,10 @@ public interface IAuthService extends IService<User> {
 
     public void emailCode(String email);
 
-    public String customUserRegister(CustomUserRegisterDTO customUserRegisterDTO);
+    public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO);
 
-    public String merchantRegister(CustomUserRegisterDTO customUserRegisterDTO);
+    public void merchantRegister(CustomUserRegisterDTO customUserRegisterDTO);
 
-    public String rebuildPassword(CustomUserRegisterDTO customUserRegisterDTO);
+    public void rebuildPassword(CustomUserRegisterDTO customUserRegisterDTO);
 
 }

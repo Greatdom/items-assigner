@@ -2,9 +2,12 @@ package com.wddyxd.security.provider;
 
 
 import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.LoginAuthenticationToken;
+import com.wddyxd.security.pojo.SecurityUser;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,15 +26,11 @@ import org.springframework.stereotype.Component;
 public class PhoneCodeAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
 
     // PhoneAuthenticationProvider
     public PhoneCodeAuthenticationProvider(
-            @Qualifier("phoneCodeUserDetailsService") UserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder) {
+            @Qualifier("phoneCodeUserDetailsService") UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder;
-        // 注意：短信登录可能不需要密码编码器，可以根据需要调整
     }
 
     @Override
@@ -45,20 +44,15 @@ public class PhoneCodeAuthenticationProvider implements AuthenticationProvider {
         String phone = (String) customToken.getPrincipal();
         String phoneCode = (String) customToken.getCredentials();
 
-        System.out.println("PhoneAuthenticationProvider.phone");
         // 加载用户信息
-        UserDetails userDetails = userDetailsService.loadUserByUsername(phone);
-        throw new RuntimeException(ResultCodeEnum.FUNCTION_ERROR.msg);
-        // 创建已认证的token
-//        return new LoginAuthenticationToken("smswww", code, "sms", userDetails.getAuthorities());
+        SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(phone);
+        if(!securityUser.getLoginUserForm().getPhoneCode().equals(phoneCode))
+            throw new SecurityAuthException(ResultCodeEnum.USER_OR_PASSWORD_ERROR);
+        return new UsernamePasswordAuthenticationToken(securityUser, null, null);
     }
     @Override
     public boolean supports(Class<?> authentication) {
         return LoginAuthenticationToken.class.isAssignableFrom(authentication);
-    }
-
-    public PasswordEncoder getPasswordEncoder() {
-        return passwordEncoder;
     }
 
 }

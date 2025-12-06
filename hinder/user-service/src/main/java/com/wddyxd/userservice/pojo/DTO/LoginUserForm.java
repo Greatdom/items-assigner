@@ -71,13 +71,6 @@ public class LoginUserForm implements Serializable {
         this.emailCode = emailCode;
     }
 
-    public String getLoginType() {
-        return loginType;
-    }
-
-    public void setLoginType(String loginType) {
-        this.loginType = loginType;
-    }
 
     public String getPassword() {
         return password;
@@ -104,4 +97,11 @@ public class LoginUserForm implements Serializable {
         this.username = username;
     }
 
+    public String getLoginType() {
+        return loginType;
+    }
+
+    public void setLoginType(String loginType) {
+        this.loginType = loginType;
+    }
 }

@@ -60,9 +60,9 @@ public class RoleController {
     @PostMapping("/add")
     //需要role.add权限
     @Operation(summary = "添加角色接口", description = "管理员可以在角色管理界面添加角色")
-    public Result<Void> add(@RequestParam String name){
+    public Result<Void> add(@RequestParam String name,@RequestParam Integer group){
 //        添加角色
-        roleService.add(name);
+        roleService.add(name,group);
         return Result.success();
     }
 

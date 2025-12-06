@@ -17,6 +17,7 @@ public class RoleVO {
 
     private Long id;
     private String name;
+    private Integer group;
     private Boolean isDeleted;
     private List<String> permissionNameList;
     private List<Permission> permissionValueList;
@@ -26,6 +27,7 @@ public class RoleVO {
         return "RoleVO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", group=" + group +
                 ", isDeleted=" + isDeleted +
                 ", permissionNameList=" + permissionNameList +
                 ", permissionValueList=" + permissionValueList +
@@ -38,6 +40,14 @@ public class RoleVO {
 
     public void setDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Integer getGroup() {
+        return group;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
     }
 
     public Long getId() {

@@ -6,6 +6,7 @@
     <resultMap id="RoleVOMap" type="com.wddyxd.userservice.pojo.VO.RoleVO">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
+        <result column="group" property="group"/>
         <result column="isDeleted" property="isDeleted"/>
         <result column="permissionNameList" property="permissionNameList" typeHandler="com.wddyxd.common.mybatishandler.StringToListTypeHandler"/>
         <result column="permissionValueList" property="permissionValueList" typeHandler="com.wddyxd.common.mybatishandler.StringToListTypeHandler"/>
@@ -17,7 +18,8 @@
         SELECT
             r.id,
             r.name,
-            r.is_deleted,
+            r.group,
+            r.is_deleted as isDeleted,
             -- 从成对字符串中拆分出权限值列表
             IFNULL(GROUP_CONCAT(DISTINCT p.permission_value ORDER BY p.permission_value SEPARATOR ','), '') AS permissionValueList,
             -- 从成对字符串中拆分出权限名称列表（保证和值一一对应）

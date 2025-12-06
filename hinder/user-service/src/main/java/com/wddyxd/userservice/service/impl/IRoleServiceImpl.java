@@ -124,20 +124,26 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
     }
 
     @Override
-    public void add(String name) {
+    public void add(String name,Integer group) {
+        if(group==null||group>=CommonConstant.ROLE_GROUP_NUM||group<0)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //TODO幂等性问题
         Role role = new Role();
         role.setName(name);
+        role.setGroup(group);
         this.save(role);
     }
 
     @Override
     public void update(Role role) {
+        if(role.getName()== null||role.getGroup()==null)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         Role dbRole = this.getById(role.getId());
         if (dbRole == null || dbRole.getIsDeleted()) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         dbRole.setName(role.getName());
+        dbRole.setGroup(role.getGroup());
         baseMapper.updateById(dbRole);
     }
 

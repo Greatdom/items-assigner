@@ -18,6 +18,7 @@ public class Role implements Serializable {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     private String name;//角色名称
+    private Integer group;
     private Boolean isDeleted;
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
@@ -29,6 +30,7 @@ public class Role implements Serializable {
         return "Role{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", group=" + group +
                 ", isDeleted=" + isDeleted +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
@@ -45,6 +47,14 @@ public class Role implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public Integer getGroup() {
+        return group;
+    }
+
+    public void setGroup(Integer group) {
+        this.group = group;
     }
 
     public void setName(String name) {

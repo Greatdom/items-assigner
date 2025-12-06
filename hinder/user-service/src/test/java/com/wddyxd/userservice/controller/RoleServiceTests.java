@@ -23,18 +23,18 @@ public class RoleServiceTests {
 
     @Test
     public void detail() {
-        System.out.println(roleService.detail(1996953140859625474L));
+        System.out.println(roleService.detail(1996956488421613570L));
     }
 
     @Test
     public void add() {
-        roleService.add("ROLE_SUPER_ADMIN");
-        roleService.add("ROLE_CUSTOM_ADMIN");
-        roleService.add("ROLE_NEW_ADMIN");
-        roleService.add("ROLE_CUSTOM_MERCHANT");
-        roleService.add("ROLE_NEW_MERCHANT");
-        roleService.add("ROLE_CUSTOM_USER");
-        roleService.add("ROLE_NEW_USER");
+        roleService.add("ROLE_SUPER_ADMIN",2);
+        roleService.add("ROLE_CUSTOM_ADMIN",2);
+        roleService.add("ROLE_NEW_ADMIN",2);
+        roleService.add("ROLE_CUSTOM_MERCHANT",1);
+        roleService.add("ROLE_NEW_MERCHANT",1);
+        roleService.add("ROLE_CUSTOM_USER",0);
+        roleService.add("ROLE_NEW_USER",0);
 
     }
 

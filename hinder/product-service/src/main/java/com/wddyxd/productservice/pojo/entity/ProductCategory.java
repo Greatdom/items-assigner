@@ -49,8 +49,12 @@ public class ProductCategory  implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    public void setDeleted(Boolean deleted) {
+    public void setIsDeleted(Boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public Boolean getIsDeleted() {
+        return isDeleted;
     }
 
     public Date getCreateTime() {

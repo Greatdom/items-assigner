@@ -21,6 +21,7 @@ public enum ResultCodeEnum {
     UN_LOGIN_ERROR(401, "您尚未登录"),
     AUTH_FAILED_ERROR(401, "认证失败"),
     USER_OR_PASSWORD_ERROR(401, "用户名或密码错误"),
+    CODE_ERROR(401, "验证码错误"),
     USER_NOT_EXIST_ERROR(401, "用户不存在"),
     USER_EXIST_ERROR(401, "用户已存在"),
     USER_NOT_ACTIVE_ERROR(401, "用户未激活"),

@@ -47,7 +47,7 @@ public class PhoneCodeAuthenticationProvider implements AuthenticationProvider {
         // 加载用户信息
         SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(phone);
         if(!securityUser.getLoginUserForm().getPhoneCode().equals(phoneCode))
-            throw new SecurityAuthException(ResultCodeEnum.USER_OR_PASSWORD_ERROR);
+            throw new SecurityAuthException(ResultCodeEnum.CODE_ERROR);
         return new UsernamePasswordAuthenticationToken(securityUser, null, null);
     }
     @Override

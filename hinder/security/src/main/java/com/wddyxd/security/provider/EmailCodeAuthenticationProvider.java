@@ -48,7 +48,7 @@ public class EmailCodeAuthenticationProvider implements AuthenticationProvider {
         SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(email);
 
         if(!securityUser.getLoginUserForm().getEmailCode().equals(emailCode))
-            throw new SecurityAuthException(ResultCodeEnum.USER_OR_PASSWORD_ERROR);
+            throw new SecurityAuthException(ResultCodeEnum.CODE_ERROR);
         return new UsernamePasswordAuthenticationToken(securityUser, null, null);
     }
     @Override

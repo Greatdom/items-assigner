@@ -1,15 +1,14 @@
 package com.wddyxd.userservice.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wddyxd.common.constant.CommonConstant;
-import com.wddyxd.common.constant.LogPrompt;
-import com.wddyxd.common.constant.RedisKeyConstant;
-import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.constant.*;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.RegexValidator;
 import com.wddyxd.common.utils.encoder.EmailCodeGetter;
+import com.wddyxd.common.utils.encoder.PasswordEncoder;
 import com.wddyxd.common.utils.encoder.PhoneCodeGetter;
 import com.wddyxd.security.security.UserInfoManager;
 import com.wddyxd.userservice.mapper.AuthMapper;
@@ -20,7 +19,11 @@ import com.wddyxd.userservice.pojo.VO.EmailCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PhoneCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.entity.User;
+import com.wddyxd.userservice.pojo.entity.UserDetail;
 import com.wddyxd.userservice.service.Interface.IAuthService;
+import com.wddyxd.userservice.service.Interface.IRoleService;
+import com.wddyxd.userservice.service.Interface.IUserDetailService;
+import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +32,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,8 +52,11 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
     private static final Logger log = LoggerFactory.getLogger(IAuthServiceImpl.class);
 
+    @Autowired
+    private IUserDetailService userDetailService;
 
-
+    @Autowired
+    private IRoleService roleService;
 
     @Override
     public PasswordSecurityGetterVO passwordSecurityGetter(String username) {
@@ -82,10 +90,16 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         if(user == null) {
             return null;
         }
-        //从redis拉取手机验证码
+        //从redis拉取并删除手机验证码
         String redisKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + phone;
-        String phoneCode = (String) redisTemplate.opsForValue().get(redisKey);
-        if(phoneCode == null) {
+        String phoneCode = null;
+        try {
+            phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisKey);
+            if(phoneCode == null) {
+                return null;
+            }
+        } catch (Exception e) {
+            log.error(LogPrompt.REDIS_SERVER_ERROR.msg);
             return null;
         }
         //获取用户信息并包装
@@ -103,9 +117,9 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         if(user == null) {
             return null;
         }
-        //从redis拉取邮箱验证码
+        //从redis拉取并删除邮箱验证码
         String redisKey = RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key + email;
-        String emailCode = (String) redisTemplate.opsForValue().get(redisKey);
+        String emailCode = (String) redisTemplate.opsForValue().getAndDelete(redisKey);
         if(emailCode == null) {
             return null;
         }
@@ -167,7 +181,47 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     }
 
     @Override
+    @Transactional
     public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO) {
+        //判断用户名,手机号和邮箱的合法性
+        if(!RegexValidator.validateUsername(customUserRegisterDTO.getUsername())
+        || !RegexValidator.validatePhone(customUserRegisterDTO.getPhone())
+        || !RegexValidator.validateEmail(customUserRegisterDTO.getEmail())
+        ) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+
+
+        //获取手机验证码和邮箱验证码
+        String redisPhoneCodeKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + customUserRegisterDTO.getPhone();
+        String redisEmailCodeKey = RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key + customUserRegisterDTO.getEmail();
+        String phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisPhoneCodeKey);
+        if(phoneCode == null || !phoneCode.equals(customUserRegisterDTO.getPhoneCode())
+        )throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        String emailCode = (String) redisTemplate.opsForValue().getAndDelete(redisEmailCodeKey);
+        if(emailCode == null || !emailCode.equals(customUserRegisterDTO.getEmailCode())
+        )throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+
+        //根据用户名,手机号和邮箱分别获取user表一条数据
+        User userUsername  = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, customUserRegisterDTO.getUsername()));
+        User userPhone  = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getPhone, customUserRegisterDTO.getPhone()));
+        User userEmail  = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, customUserRegisterDTO.getEmail()));
+
+        //判断查找到的数据是不是都是null,是则注册用户
+        if(userUsername == null && userPhone == null && userEmail == null) {
+            PasswordEncoder passwordEncoder = new PasswordEncoder();
+            User user = new User();
+            user.setUsername(customUserRegisterDTO.getUsername());
+            user.setPhone(customUserRegisterDTO.getPhone());
+            user.setEmail(customUserRegisterDTO.getEmail());
+            //加密密码
+            user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));
+            //注册并分配角色
+            baseMapper.insert(user);
+            UserDetail userDetail = new UserDetail();
+            userDetail.setUserId(user.getId());
+            userDetail.setMoney(new BigDecimal(0));
+            userDetailService.add(userDetail);
+            roleService.assign(user.getId(), new Long[]{RoleConstant.ROLE_NEW_USER.getId()});
+        }
     }
 
     @Override

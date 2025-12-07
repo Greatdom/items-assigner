@@ -42,7 +42,7 @@ public class IShopCategoryServiceImpl extends ServiceImpl<ShopCategoryMapper, Sh
     @Override
     public void update(Long id, String name) {
         ShopCategory dbShopCategory = baseMapper.selectById(id);
-        if(dbShopCategory == null || dbShopCategory.getDeleted()) {
+        if(dbShopCategory == null || dbShopCategory.getIsDeleted()) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         dbShopCategory.setName(name);

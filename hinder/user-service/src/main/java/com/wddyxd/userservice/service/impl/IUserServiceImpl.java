@@ -36,8 +36,8 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     @Autowired
     private IUserRoleService userRoleService;
 
-    IUserService proxy;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Page<User> List(SearchDTO searchDTO) {
@@ -77,7 +77,6 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public void addAdmin(CustomUserRegisterDTO customUserRegisterDTO) {
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
         User user = new User();
         user.setUsername(customUserRegisterDTO.getUsername());
         user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));

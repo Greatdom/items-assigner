@@ -2,6 +2,7 @@ package com.wddyxd.security.security;
 
 
 import com.wddyxd.common.utils.encoder.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecurityPasswordEncoder implements org.springframework.security.crypto.password.PasswordEncoder {
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public SecurityPasswordEncoder() {
         this(-1);
     }
@@ -22,7 +26,6 @@ public class SecurityPasswordEncoder implements org.springframework.security.cry
     //进行MD5加密
     @Override
     public String encode(CharSequence charSequence) {
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
         return passwordEncoder.encode(charSequence.toString());
     }
     //进行密码比对

@@ -1,4 +1,6 @@
 package com.wddyxd.common.utils.encoder;
+import org.springframework.stereotype.Component;
+
 import java.util.random.RandomGenerator;
 
 /**
@@ -7,7 +9,7 @@ import java.util.random.RandomGenerator;
  * @author: wddyxd
  * @create: 2025-12-06 13:04
  **/
-
+@Component
 public class PhoneCodeGetter implements Encoder{
 
     @Override

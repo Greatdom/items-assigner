@@ -69,6 +69,15 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     @Autowired
     private IShopCategoryService shopCategoryService;
 
+    @Autowired
+    private EmailCodeGetter emailCodeGetter;
+
+    @Autowired
+    private PhoneCodeGetter phoneCodeGetter;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public PasswordSecurityGetterVO passwordSecurityGetter(String username) {
         User user;
@@ -153,7 +162,6 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         //判断手机号合法性
         if(!RegexValidator.validatePhone(phone))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        PhoneCodeGetter phoneCodeGetter = new PhoneCodeGetter();
         String phoneCode = phoneCodeGetter.encode(phone);
 
         //在redis中添加手机验证码,过期时间为15分钟
@@ -177,7 +185,6 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         //判断邮箱合法性
         if(!RegexValidator.validateEmail(email))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        EmailCodeGetter emailCodeGetter = new EmailCodeGetter();
         String emailCode = emailCodeGetter.encode(email);
 
         //在redis中添加邮箱验证码,过期时间为15分钟
@@ -288,7 +295,6 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     private void addUser(CustomUserRegisterDTO customUserRegisterDTO){
 
 
-        PasswordEncoder passwordEncoder = new PasswordEncoder();
         User user = new User();
         user.setUsername(customUserRegisterDTO.getUsername());
         user.setPhone(customUserRegisterDTO.getPhone());

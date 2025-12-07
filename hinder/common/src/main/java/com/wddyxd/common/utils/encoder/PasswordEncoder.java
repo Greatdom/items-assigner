@@ -1,6 +1,8 @@
 package com.wddyxd.common.utils.encoder;
 
 
+import org.springframework.stereotype.Component;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -10,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
  * @author: wddyxd
  * @create: 2025-10-20 20:06
  **/
-
+@Component
 public class PasswordEncoder implements Encoder{
     //TODO 可以换成更好的加密方式
     public String encode(String strSrc) {

@@ -2,7 +2,9 @@ package com.wddyxd.orderservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.wddyxd.common.pojo.BaseEntity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,9 +15,7 @@ import java.util.Date;
  **/
 
 @TableName("order_address")
-public class OrderAddress {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+public class OrderAddress extends BaseEntity implements Serializable {
     private Long orderId;
     private Long userId;
     private String receiver;//收货人姓名
@@ -24,16 +24,11 @@ public class OrderAddress {
     private String city;// 城市
     private String district;//区县
     private String address;//详细地址
-    private Boolean isDeleted;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
     @Override
     public String toString() {
         return "OrderAddress{" +
-                "id=" + id +
+                super.toString() +
                 ", orderId=" + orderId +
                 ", userId=" + userId +
                 ", receiver='" + receiver + '\'' +
@@ -42,18 +37,7 @@ public class OrderAddress {
                 ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
                 ", address='" + address + '\'' +
-                ", isDeleted=" + isDeleted +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getOrderId() {
@@ -120,27 +104,4 @@ public class OrderAddress {
         this.address = address;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

@@ -2,6 +2,7 @@ package com.wddyxd.productservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.wddyxd.common.pojo.BaseEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,9 +16,7 @@ import java.util.Date;
  **/
 
 @TableName("coupon")
-public class Coupon implements Serializable {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+public class Coupon extends BaseEntity implements Serializable {
     private String name;//优惠券名称
     private Integer getType;//0-满减 1-折扣
     private Integer targetType;//0-全场通用 1-指定商户可用 2-指定商品可用
@@ -30,16 +29,11 @@ public class Coupon implements Serializable {
     private Integer stock;//发放总量
     private Integer sendingStock;//剩余数量
     private Integer status;//0-未生效 1-生效中 2-已过期
-    private Boolean isDeleted;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
     @Override
     public String toString() {
         return "Coupon{" +
-                "id=" + id +
+                super.toString() +
                 ", name='" + name + '\'' +
                 ", getType=" + getType +
                 ", targetType=" + targetType +
@@ -52,18 +46,7 @@ public class Coupon implements Serializable {
                 ", stock=" + stock +
                 ", sendingStock=" + sendingStock +
                 ", status=" + status +
-                ", isDeleted=" + isDeleted +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -162,27 +145,4 @@ public class Coupon implements Serializable {
         this.status = status;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

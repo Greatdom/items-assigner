@@ -35,4 +35,7 @@
             u.id, u.username, u.nick_name, u.avatar;
     </select>
 
+
+
+
 </mapper>

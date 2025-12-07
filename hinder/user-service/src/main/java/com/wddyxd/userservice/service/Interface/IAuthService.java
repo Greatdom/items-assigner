@@ -3,6 +3,7 @@ package com.wddyxd.userservice.service.Interface;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.userservice.pojo.DTO.CustomUserRegisterDTO;
+import com.wddyxd.userservice.pojo.DTO.MerchantRegisterDTO;
 import com.wddyxd.userservice.pojo.VO.EmailCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PhoneCodeSecurityGetterVO;
@@ -29,7 +30,7 @@ public interface IAuthService extends IService<User> {
 
     public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO);
 
-    public void merchantRegister(CustomUserRegisterDTO customUserRegisterDTO);
+    public void merchantRegister(MerchantRegisterDTO merchantRegisterDTO);
 
     public void rebuildPassword(CustomUserRegisterDTO customUserRegisterDTO);
 

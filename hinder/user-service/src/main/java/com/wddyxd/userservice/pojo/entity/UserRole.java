@@ -2,6 +2,7 @@ package com.wddyxd.userservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.wddyxd.common.pojo.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,24 +15,17 @@ import java.util.Date;
  **/
 
 @TableName("user_role")
-public class UserRole implements Serializable {
-    @TableId(type = IdType.ASSIGN_ID)
-
-    private Long id;
+public class UserRole extends BaseEntity implements Serializable {
     private Long userId;
     private Long roleId;
-    private Boolean isDeleted;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        return "UserRole{" +
+                super.toString() +
+                "userId=" + userId +
+                ", roleId=" + roleId +
+                '}';
     }
 
     public Long getUserId() {
@@ -50,27 +44,4 @@ public class UserRole implements Serializable {
         this.roleId = roleId;
     }
 
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

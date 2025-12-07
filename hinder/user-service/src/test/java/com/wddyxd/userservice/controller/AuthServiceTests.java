@@ -2,6 +2,7 @@ package com.wddyxd.userservice.controller;
 
 
 import com.wddyxd.userservice.pojo.DTO.CustomUserRegisterDTO;
+import com.wddyxd.userservice.pojo.DTO.MerchantRegisterDTO;
 import com.wddyxd.userservice.service.Interface.IAuthService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +53,8 @@ public class AuthServiceTests {
 
     @Test
     public void merchantRegister(){
-        CustomUserRegisterDTO customUserRegisterDTO = new CustomUserRegisterDTO();
-        authService.merchantRegister(customUserRegisterDTO);
+        MerchantRegisterDTO merchantRegisterDTO = new MerchantRegisterDTO();
+        authService.merchantRegister(merchantRegisterDTO);
     }
 
     @Test

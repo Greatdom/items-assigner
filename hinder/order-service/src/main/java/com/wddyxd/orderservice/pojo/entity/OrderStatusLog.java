@@ -2,6 +2,7 @@ package com.wddyxd.orderservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.wddyxd.common.pojo.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,41 +14,23 @@ import java.util.Date;
  * @create: 2025-11-24 00:13
  **/
 @TableName("order_status_log")
-public class OrderStatusLog implements Serializable {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+public class OrderStatusLog extends BaseEntity implements Serializable {
     private Long orderId;
     private Long operatorId;//0-系统，其他为用户/商户/管理员ID
     private Date operateTime;//操作时间
     private String status;//0-待付款 1-待发货 2-待收货 3-已完成 4-已取消
     private String remark;//状态变更说明
-    private Boolean isDeleted;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
     @Override
     public String toString() {
         return "OrderStatusLog{" +
-                "id=" + id +
+                super.toString() +
                 ", orderId=" + orderId +
                 ", operatorId=" + operatorId +
                 ", operateTime=" + operateTime +
                 ", status='" + status + '\'' +
                 ", remark='" + remark + '\'' +
-                ", isDeleted=" + isDeleted +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getOrderId() {
@@ -90,27 +73,4 @@ public class OrderStatusLog implements Serializable {
         this.remark = remark;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

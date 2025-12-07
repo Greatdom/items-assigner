@@ -2,6 +2,7 @@ package com.wddyxd.productservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.wddyxd.common.pojo.BaseEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -14,34 +15,24 @@ import java.util.Date;
  * @create: 2025-11-23 19:53
  **/
 @TableName("product_sku")
-public class ProductSku  implements Serializable {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+public class ProductSku extends BaseEntity implements Serializable {
     private Long productId;
     private String specs;//'规格描述，如"红色-XL"',
     private BigDecimal price;//该规格的价格
     private Integer sales;//该规格的销量
     private Integer stock;//该规格的库存
     private String logo;
-    private Boolean isDeleted;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
     @Override
     public String toString() {
         return "ProductSku{" +
-                "id=" + id +
+                super.toString() +
                 ", productId=" + productId +
                 ", specs='" + specs + '\'' +
                 ", price=" + price +
                 ", sales=" + sales +
                 ", stock=" + stock +
                 ", logo='" + logo + '\'' +
-                ", isDeleted=" + isDeleted +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
                 '}';
     }
 
@@ -51,14 +42,6 @@ public class ProductSku  implements Serializable {
 
     public void setSales(Integer sales) {
         this.sales = sales;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getProductId() {
@@ -101,27 +84,4 @@ public class ProductSku  implements Serializable {
         this.logo = logo;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

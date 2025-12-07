@@ -2,6 +2,7 @@ package com.wddyxd.userservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.wddyxd.common.pojo.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,27 +15,19 @@ import java.util.Date;
  **/
 
 @TableName("user")
-public class User implements Serializable {
-    private static final long serialVersionUID = 1L;
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+public class User extends BaseEntity implements Serializable {
     private String username;//用户名
     private String phone;// 手机
     private String email;//邮箱
     private String password;//密码
     private String nickName;//昵称
     private String avatar;//头像
-    private Boolean isDeleted;
     private Integer status;//状态 0-正常 1-被封禁
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                super.toString() +
                 ", username='" + username + '\'' +
                 ", phone='" + phone + '\'' +
                 ", email='" + email + '\'' +
@@ -42,9 +35,6 @@ public class User implements Serializable {
                 ", nickName='" + nickName + '\'' +
                 ", salt='" + avatar + '\'' +
                 ", status=" + status + '\'' +
-                ", isDeleted=" + isDeleted +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
                 '}';
     }
 
@@ -54,14 +44,6 @@ public class User implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -112,27 +94,4 @@ public class User implements Serializable {
         this.avatar = avatar;
     }
 
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

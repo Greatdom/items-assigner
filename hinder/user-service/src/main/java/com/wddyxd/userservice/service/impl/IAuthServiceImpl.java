@@ -1,6 +1,12 @@
 package com.wddyxd.userservice.service.impl;
 
 
+import cn.hutool.core.bean.BeanUtil;
+import com.wddyxd.userservice.pojo.DTO.MerchantRegisterDTO;
+import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
+import com.wddyxd.userservice.pojo.entity.ShopCategory;
+import com.wddyxd.userservice.service.Interface.*;
+import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -20,10 +26,6 @@ import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PhoneCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserDetail;
-import com.wddyxd.userservice.service.Interface.IAuthService;
-import com.wddyxd.userservice.service.Interface.IRoleService;
-import com.wddyxd.userservice.service.Interface.IUserDetailService;
-import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +37,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -57,6 +62,12 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
     @Autowired
     private IRoleService roleService;
+
+    @Autowired
+    private IMerchantSupplementService merchantSupplementService;
+
+    @Autowired
+    private IShopCategoryService shopCategoryService;
 
     @Override
     public PasswordSecurityGetterVO passwordSecurityGetter(String username) {
@@ -183,13 +194,85 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     @Override
     @Transactional
     public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO) {
+        if(customUserRegisterDTO == null)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        checkCodeTrue(customUserRegisterDTO);
+        if(this.checkUserUnique(customUserRegisterDTO))
+            this.addUser(customUserRegisterDTO);
+        else throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
+    }
+
+    @Override
+    @Transactional
+    public void merchantRegister(MerchantRegisterDTO merchantRegisterDTO) {
+        if(merchantRegisterDTO == null)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        ShopCategory shopCategory = shopCategoryService.getById(merchantRegisterDTO.getShopCategoryId());
+        if(shopCategory == null) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        CustomUserRegisterDTO customUserRegisterDTO = new CustomUserRegisterDTO();
+        BeanUtil.copyProperties(merchantRegisterDTO, customUserRegisterDTO);
+        checkCodeTrue(customUserRegisterDTO);
+        if(this.checkUserUnique(customUserRegisterDTO)) {
+            this.addUser(customUserRegisterDTO);
+            this.addMerchant(merchantRegisterDTO);
+        } else {
+            this.addMerchant(merchantRegisterDTO);
+        }
+    }
+
+    @Override
+    public void rebuildPassword(CustomUserRegisterDTO customUserRegisterDTO) {
+
+    }
+    //所有字段都未匹配到用户 → true,所有匹配到的字段都指向同一个用户 → false,否则抛出异常
+    private boolean checkUserUnique(CustomUserRegisterDTO customUserRegisterDTO) {
         //判断用户名,手机号和邮箱的合法性
         if(!RegexValidator.validateUsername(customUserRegisterDTO.getUsername())
-        || !RegexValidator.validatePhone(customUserRegisterDTO.getPhone())
-        || !RegexValidator.validateEmail(customUserRegisterDTO.getEmail())
+                || !RegexValidator.validatePhone(customUserRegisterDTO.getPhone())
+                || !RegexValidator.validateEmail(customUserRegisterDTO.getEmail())
         ) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
 
-
+        //一次查询所有匹配的未删除用户,匹配用户名/手机号/邮箱任一条件
+        List<User> userList = baseMapper.selectList(new LambdaQueryWrapper<User>()
+                .eq(User::getIsDeleted, 0)
+                .and(wrapper -> wrapper
+                        .eq(User::getUsername, customUserRegisterDTO.getUsername())
+                        .or()
+                        .eq(User::getPhone, customUserRegisterDTO.getPhone())
+                        .or()
+                        .eq(User::getEmail, customUserRegisterDTO.getEmail())));
+        //分别记录用户名/手机号/邮箱匹配的用户ID
+        Long usernameMatchId = null;
+        Long phoneMatchId = null;
+        Long emailMatchId = null;
+        if (!CollectionUtils.isEmpty(userList)) {
+            for (User user : userList) {
+                if (customUserRegisterDTO.getUsername().equals(user.getUsername())) {
+                    usernameMatchId = user.getId();
+                }
+                if (customUserRegisterDTO.getPhone().equals(user.getPhone())) {
+                    phoneMatchId = user.getId();
+                }
+                if (customUserRegisterDTO.getEmail().equals(user.getEmail())) {
+                    emailMatchId = user.getId();
+                }
+            }
+        }
+        //按规则判断返回值
+        // 情况1：所有字段都未匹配到用户 → 返回0
+        if (usernameMatchId == null && phoneMatchId == null && emailMatchId == null) {
+            return true;
+        }
+        // 情况2：所有匹配到的字段都指向同一个用户 → 返回1
+        Set<Long> matchIdSet = new HashSet<>();
+        if (usernameMatchId != null) matchIdSet.add(usernameMatchId);
+        if (phoneMatchId != null) matchIdSet.add(phoneMatchId);
+        if (emailMatchId != null) matchIdSet.add(emailMatchId);
+        if (matchIdSet.size() == 1) {
+            return false;
+        }
+        throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
+    }
+    //如果手机和邮箱的验证码都正确则返回,否则抛出异常
+    private void checkCodeTrue(CustomUserRegisterDTO customUserRegisterDTO){
         //获取手机验证码和邮箱验证码
         String redisPhoneCodeKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + customUserRegisterDTO.getPhone();
         String redisEmailCodeKey = RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key + customUserRegisterDTO.getEmail();
@@ -199,42 +282,45 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         String emailCode = (String) redisTemplate.opsForValue().getAndDelete(redisEmailCodeKey);
         if(emailCode == null || !emailCode.equals(customUserRegisterDTO.getEmailCode())
         )throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-
-        //根据用户名,手机号和邮箱分别获取user表一条数据
-        User userUsername  = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, customUserRegisterDTO.getUsername()));
-        User userPhone  = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getPhone, customUserRegisterDTO.getPhone()));
-        User userEmail  = baseMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, customUserRegisterDTO.getEmail()));
-
-        //判断查找到的数据是不是都是null,是则注册用户
-        if(userUsername == null && userPhone == null && userEmail == null) {
-            PasswordEncoder passwordEncoder = new PasswordEncoder();
-            User user = new User();
-            user.setUsername(customUserRegisterDTO.getUsername());
-            user.setPhone(customUserRegisterDTO.getPhone());
-            user.setEmail(customUserRegisterDTO.getEmail());
-            //加密密码
-            user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));
-            //注册并分配角色
-            baseMapper.insert(user);
-            UserDetail userDetail = new UserDetail();
-            userDetail.setUserId(user.getId());
-            userDetail.setMoney(new BigDecimal(0));
-            userDetailService.add(userDetail);
-            roleService.assign(user.getId(), new Long[]{RoleConstant.ROLE_NEW_USER.getId()});
-        }
     }
 
-    @Override
-    public void merchantRegister(CustomUserRegisterDTO customUserRegisterDTO) {
+    //注册普通用户
+    private void addUser(CustomUserRegisterDTO customUserRegisterDTO){
+
+
+        PasswordEncoder passwordEncoder = new PasswordEncoder();
+        User user = new User();
+        user.setUsername(customUserRegisterDTO.getUsername());
+        user.setPhone(customUserRegisterDTO.getPhone());
+        user.setEmail(customUserRegisterDTO.getEmail());
+        //加密密码
+        user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));
+        //注册并分配角色
+        baseMapper.insert(user);
+        UserDetail userDetail = new UserDetail();
+        userDetail.setUserId(user.getId());
+        userDetail.setMoney(new BigDecimal(0));
+        userDetailService.add(userDetail);
+        roleService.assign(user.getId(), new Long[]{RoleConstant.ROLE_NEW_USER.getId()});
 
     }
 
-    @Override
-    public void rebuildPassword(CustomUserRegisterDTO customUserRegisterDTO) {
-
+    private void addMerchant(MerchantRegisterDTO merchantRegisterDTO){
+        User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, merchantRegisterDTO.getUsername())
+                .eq(User::getPhone, merchantRegisterDTO.getPhone())
+                .eq(User::getEmail, merchantRegisterDTO.getEmail()));
+        if(user == null)
+            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+        MerchantSupplement merchantSupplement = new MerchantSupplement();
+        merchantSupplement.setUserId(user.getId());
+        merchantSupplement.setName(merchantRegisterDTO.getShopName());
+        merchantSupplement.setShopCategoryId(merchantRegisterDTO.getShopCategoryId());
+        merchantSupplement.setShopAddress(merchantRegisterDTO.getShopAddress());
+        merchantSupplement.setShopStatus(1);//关店
+        merchantSupplementService.save(merchantSupplement);
+        roleService.assign(user.getId(), new Long[]{RoleConstant.ROLE_NEW_MERCHANT.getId()});
     }
-
-
 
     private CurrentUserDTO currentUserDTOGetter(Long userId){
         //从redis拉取用户信息

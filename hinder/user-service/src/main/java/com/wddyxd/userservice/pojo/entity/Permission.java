@@ -2,6 +2,7 @@ package com.wddyxd.userservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.wddyxd.common.pojo.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -15,35 +16,17 @@ import java.util.List;
  **/
 
 @TableName("permission")
-public class Permission implements Serializable {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+public class Permission extends BaseEntity implements Serializable {
     private String name;//权限名称
     private String permissionValue;//权限值
-    private Boolean isDeleted;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
     @Override
     public String toString() {
         return "Permission{" +
-                "id=" + id +
+                super.toString() +
                 ", name='" + name + '\'' +
                 ", permissionValue='" + permissionValue + '\'' +
-                ", isDeleted=" + isDeleted +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -60,30 +43,6 @@ public class Permission implements Serializable {
 
     public void setPermissionValue(String permissionValue) {
         this.permissionValue = permissionValue;
-    }
-
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public void setIsDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 
 }

@@ -2,6 +2,7 @@ package com.wddyxd.productservice.pojo.entity;
 
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.wddyxd.common.pojo.BaseEntity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,33 +14,15 @@ import java.util.Date;
  * @create: 2025-11-23 19:47
  **/
 @TableName("product_category")
-public class ProductCategory  implements Serializable {
-    @TableId(type = IdType.ASSIGN_ID)
-    private Long id;
+public class ProductCategory extends BaseEntity implements Serializable {
     private String name;//分类名称
-    private Boolean isDeleted;
-    @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
-    @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
 
     @Override
     public String toString() {
         return "ProductCategory{" +
-                "id=" + id +
+                super.toString() +
                 ", name='" + name + '\'' +
-                ", isDeleted=" + isDeleted +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -48,28 +31,5 @@ public class ProductCategory  implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-    public void setIsDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Boolean getIsDeleted() {
-        return isDeleted;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
     }
 }

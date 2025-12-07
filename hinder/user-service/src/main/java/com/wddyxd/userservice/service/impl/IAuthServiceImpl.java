@@ -2,7 +2,7 @@ package com.wddyxd.userservice.service.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import com.wddyxd.userservice.pojo.DTO.MerchantRegisterDTO;
+import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.pojo.entity.ShopCategory;
 import com.wddyxd.userservice.service.Interface.*;
@@ -18,9 +18,6 @@ import com.wddyxd.common.utils.encoder.PasswordEncoder;
 import com.wddyxd.common.utils.encoder.PhoneCodeGetter;
 import com.wddyxd.security.security.UserInfoManager;
 import com.wddyxd.userservice.mapper.AuthMapper;
-import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
-import com.wddyxd.userservice.pojo.DTO.CustomUserRegisterDTO;
-import com.wddyxd.userservice.pojo.DTO.LoginUserForm;
 import com.wddyxd.userservice.pojo.VO.EmailCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PhoneCodeSecurityGetterVO;
@@ -106,6 +103,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
     @Override
     public PhoneCodeSecurityGetterVO phoneCodeSecurityGetter(String phone) {
+        //TODO validate
         User user = baseMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if(user == null) {
             return null;
@@ -133,6 +131,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
     @Override
     public EmailCodeSecurityGetterVO emailCodeSecurityGetter(String email) {
+        //TODO validate
         User user = baseMapper.selectOne(new QueryWrapper<User>().eq("email", email));
         if(user == null) {
             return null;
@@ -226,8 +225,25 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     }
 
     @Override
-    public void rebuildPassword(CustomUserRegisterDTO customUserRegisterDTO) {
+    public void rebuildPassword(RebuildPasswordDTO rebuildPasswordDTO) {
+        //参数校验
+        if(!RegexValidator.validateUsername(rebuildPasswordDTO.getUsername())
+                || !RegexValidator.validatePhone(rebuildPasswordDTO.getPhone())
+        ) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        //获取用户
+        User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getIsDeleted,0)
+                .eq(User::getUsername,rebuildPasswordDTO.getUsername())
+                .eq(User::getPhone,rebuildPasswordDTO.getPhone()));
+        if(user == null) throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+        //获取验证码
+        String redisKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + rebuildPasswordDTO.getPhone();
+        String phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisKey);
+        if(phoneCode == null||!phoneCode.equals(rebuildPasswordDTO.getPhoneCode())) throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+        user.setPassword(passwordEncoder.encode(rebuildPasswordDTO.getNewPassword()));
+        baseMapper.updateById(user);
 
+        //强制删除用户token
     }
     //所有字段都未匹配到用户 → true,所有匹配到的字段都指向同一个用户 → false,否则抛出异常
     private boolean checkUserUnique(CustomUserRegisterDTO customUserRegisterDTO) {
@@ -283,6 +299,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         //获取手机验证码和邮箱验证码
         String redisPhoneCodeKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + customUserRegisterDTO.getPhone();
         String redisEmailCodeKey = RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key + customUserRegisterDTO.getEmail();
+        //TODO 同时获取和删除验证码是不符合用户体验的
         String phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisPhoneCodeKey);
         if(phoneCode == null || !phoneCode.equals(customUserRegisterDTO.getPhoneCode())
         )throw new CustomException(ResultCodeEnum.PARAM_ERROR);

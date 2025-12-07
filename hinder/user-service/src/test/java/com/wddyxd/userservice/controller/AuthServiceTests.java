@@ -3,6 +3,7 @@ package com.wddyxd.userservice.controller;
 
 import com.wddyxd.userservice.pojo.DTO.CustomUserRegisterDTO;
 import com.wddyxd.userservice.pojo.DTO.MerchantRegisterDTO;
+import com.wddyxd.userservice.pojo.DTO.RebuildPasswordDTO;
 import com.wddyxd.userservice.service.Interface.IAuthService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,8 @@ public class AuthServiceTests {
 
     @Test
     public void rebuildPassword(){
-        CustomUserRegisterDTO customUserRegisterDTO = new CustomUserRegisterDTO();
-        authService.rebuildPassword(customUserRegisterDTO);
+        RebuildPasswordDTO rebuildPasswordDTO = new RebuildPasswordDTO();
+        authService.rebuildPassword(rebuildPasswordDTO);
     }
 
 }

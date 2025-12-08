@@ -15,7 +15,7 @@ import java.util.Date;
  * @create: 2025-12-07 16:43
  **/
 
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;

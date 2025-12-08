@@ -8,7 +8,7 @@ package com.wddyxd.userservice.pojo.DTO.update;
  * @create: 2025-12-08 19:37
  **/
 
-public class BaseUserUpdateDTO {
+public abstract class BaseUserUpdateDTO {
     private Long id;
 
     public Long getId() {

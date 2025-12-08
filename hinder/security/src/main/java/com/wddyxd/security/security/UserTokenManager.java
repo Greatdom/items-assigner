@@ -68,10 +68,10 @@ public class UserTokenManager {
             // 1. 生成用户的有序集合键
             String userTokenSetKey = RedisKeyConstant.USER_LOGIN_TOKEN_SET.key  + tokenInfo.getId().toString();
             // 2. 生成当前 token 的字符串键
-            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
+            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getId().toString() + ":" + tokenInfo.getTimestamp().toString();
             // 3. 添加 timestamp 到用户的有序集合（score 为当前时间戳，用于排序）
             zSetOps.add(userTokenSetKey, tokenInfo.getTimestamp(), tokenInfo.getTimestamp());
-            // 4. 存储 token 对应的 value，并设置 15 分钟过期
+            // 4. 存储 token 对应的 value，并设置过期时间
             redisTemplate.opsForValue().set(tokenKey, token, CommonConstant.REDIS_USER_LOGIN_TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
             // 5. 检查集合大小，超过 3 个则删除最早的 token
             Long tokenCount = zSetOps.size(userTokenSetKey);
@@ -83,7 +83,7 @@ public class UserTokenManager {
                     // 删除有序集合中的旧 token
                     zSetOps.remove(userTokenSetKey, oldestTimestamp);
                     // 删除旧 token 对应的字符串键（使其立即失效）
-                    redisTemplate.delete(RedisKeyConstant.USER_LOGIN_TOKEN.key+ oldestTimestamp.toString());
+                    redisTemplate.delete(RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getId().toString() + ":" + oldestTimestamp.toString());
                 }
             }
             log.info(LogPrompt.SUCCESS_INFO.msg);
@@ -96,7 +96,7 @@ public class UserTokenManager {
     public void refreshTokenExpire(String token) {
         TokenInfo tokenInfo = IsValidToken(token);
         try {
-            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
+            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getId().toString() + ":" + tokenInfo.getTimestamp().toString();
             boolean expireSuccess = redisTemplate.expire(tokenKey, CommonConstant.REDIS_USER_LOGIN_TOKEN_EXPIRE_MINUTES, TimeUnit.MINUTES);
             if (!expireSuccess) {
                 log.error(LogPrompt.TOKEN_EXPIRED_INFO.msg);
@@ -114,7 +114,7 @@ public class UserTokenManager {
     public String getToken(String token) {
         TokenInfo tokenInfo = IsValidToken(token);
         try {
-            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
+            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getId().toString() + ":" + tokenInfo.getTimestamp().toString();
             return (String)redisTemplate.opsForValue().get(tokenKey);
         }catch (Exception e) {
             log.error(LogPrompt.REDIS_SERVER_ERROR.msg);
@@ -140,7 +140,7 @@ public class UserTokenManager {
         TokenInfo tokenInfo = IsValidToken(token);
         try {
             String userTokenSetKey = RedisKeyConstant.USER_LOGIN_TOKEN_SET.key + tokenInfo.getId().toString();
-            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getTimestamp().toString();
+            String tokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + tokenInfo.getId().toString() + ":" + tokenInfo.getTimestamp().toString();
             // 从有序集合中删除
             Long removedFromZSet = zSetOps.remove(userTokenSetKey, tokenInfo.getTimestamp());
             if (removedFromZSet == null || removedFromZSet == 0) {

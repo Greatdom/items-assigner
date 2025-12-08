@@ -32,7 +32,10 @@ public enum ResultCodeEnum {
     USER_INFO_ERROR(401, "得不到用户信息"),
 
     //429:请求过频繁
-    SERVER_BUSY_ERROR(503, "服务器繁忙,请稍后重试"),
+    SERVER_BUSY_ERROR(429, "服务器繁忙,请稍后重试"),
+
+    //430:存储资源达到上限
+    STORAGE_LIMIT_ERROR(430, "数据存储有限制"),
 
     //403:权限不足
     ACCESS_DENIED_ERROR(403, "权限不足"),

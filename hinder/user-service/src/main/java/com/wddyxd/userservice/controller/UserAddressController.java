@@ -28,13 +28,13 @@ public class UserAddressController {
     @Autowired
     private IUserAddressService userAddressService;
 
-    @GetMapping("/list/{id}")
+    @GetMapping("/list")
     //访问者的id等于参数的id
     @Operation(summary = "获取个人用户地址簿", description = "获取个人用户地址簿")
-    public Result<List<UserAddress>> list(@PathVariable Long id){
+    public Result<List<UserAddress>> list(){
 //        在用户端个人中心或后台的用户管理可查询用户端地址簿,返回List<UserAddressDTO>
 //- 只需返回没有被逻辑删除的地址
-        return Result.success(userAddressService.List(id));
+        return Result.success(userAddressService.List());
     }
 
     @PostMapping("/add")

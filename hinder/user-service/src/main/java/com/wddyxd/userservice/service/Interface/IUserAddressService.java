@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface IUserAddressService extends IService<UserAddress> {
 
-    public List<UserAddress> List(Long id);
+    public List<UserAddress> List();
 
     public void add(UserAddressDTO userAddressDTO);
 

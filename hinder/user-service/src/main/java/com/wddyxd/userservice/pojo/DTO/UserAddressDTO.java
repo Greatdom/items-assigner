@@ -12,6 +12,8 @@ public class UserAddressDTO {
 
     private Long id;
 
+    private Long userId;
+
     private String receiver;
 
     private String phone;
@@ -30,6 +32,7 @@ public class UserAddressDTO {
     public String toString() {
         return "UserAddressVO{" +
                 "id=" + id +
+                ", userId=" + userId +
                 ", receiver='" + receiver + '\'' +
                 ", phone='" + phone + '\'' +
                 ", province='" + province + '\'' +
@@ -54,6 +57,14 @@ public class UserAddressDTO {
 
     public void setReceiver(String receiver) {
         this.receiver = receiver;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getPhone() {

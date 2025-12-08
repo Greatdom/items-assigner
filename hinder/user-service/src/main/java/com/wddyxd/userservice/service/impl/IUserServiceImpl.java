@@ -1,6 +1,7 @@
 package com.wddyxd.userservice.service.impl;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -9,6 +10,7 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.encoder.PasswordEncoder;
+import com.wddyxd.security.service.GetCurrentUserInfoService;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.VO.UserDetailVO;
@@ -34,10 +36,10 @@ import org.springframework.util.StringUtils;
 public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
-    private IUserRoleService userRoleService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private GetCurrentUserInfoService getCurrentUserInfoService;
 
     @Override
     public Page<User> List(SearchDTO searchDTO) {
@@ -62,12 +64,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public CurrentUserDTO me() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof com.wddyxd.security.pojo.CurrentUserDTO currentUserDTO) {
-            CurrentUserDTO get = new CurrentUserDTO();
-            BeanUtils.copyProperties(currentUserDTO,get);
-            return get;
-        }else throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+        return BeanUtil.copyProperties(getCurrentUserInfoService.getCurrentUserInfo(), CurrentUserDTO.class);
     }
 
     @Override
@@ -84,6 +81,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         user.setEmail(customUserRegisterDTO.getEmail());
         user.setNickName("SUPER_ADMIN");
         baseMapper.insert(user);
+        //TODO unfinished
     }
 
     @Override

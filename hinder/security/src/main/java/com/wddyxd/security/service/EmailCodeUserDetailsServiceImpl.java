@@ -28,15 +28,14 @@ public class EmailCodeUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.wddyxd.feign.pojo.userservice.authcontroller.EmailCodeSecurityGetterVO get;
+        com.wddyxd.feign.pojo.userservice.authcontroller.CurrentUserDTO get;
         get = authClient.emailCodeSecurityGetter(username).getData();
-        if(get== null||get.getEmailCode()==null||get.getCurrentUserDTO()== null){
+        if(get== null){
             throw new SecurityAuthException(ResultCodeEnum.USER_OR_PASSWORD_ERROR);
         }
         LoginUserForm loginUserForm = new LoginUserForm();
-        loginUserForm.setEmailCode(get.getEmailCode());
         CurrentUserDTO currentUserDTO = new CurrentUserDTO();
-        BeanUtils.copyProperties(get.getCurrentUserDTO(),currentUserDTO);
+        BeanUtils.copyProperties(get,currentUserDTO);
         return new SecurityUser(loginUserForm,currentUserDTO);
     }
 }

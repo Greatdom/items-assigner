@@ -9,7 +9,7 @@ import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
  * @author: wddyxd
  * @create: 2025-12-01 10:36
  **/
-
+@Deprecated
 public class PhoneCodeSecurityGetterVO {
 
     private String phoneCode;

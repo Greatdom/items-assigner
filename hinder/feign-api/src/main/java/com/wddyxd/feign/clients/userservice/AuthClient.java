@@ -3,6 +3,7 @@ package com.wddyxd.feign.clients.userservice;
 
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.fallback.AuthClientFallbackFactory;
+import com.wddyxd.feign.pojo.userservice.authcontroller.CurrentUserDTO;
 import com.wddyxd.feign.pojo.userservice.authcontroller.EmailCodeSecurityGetterVO;
 import com.wddyxd.feign.pojo.userservice.authcontroller.PasswordSecurityGetterVO;
 import com.wddyxd.feign.pojo.userservice.authcontroller.PhoneCodeSecurityGetterVO;
@@ -23,10 +24,10 @@ public interface AuthClient {
     Result<PasswordSecurityGetterVO> passwordSecurityGetter(@PathVariable String username);
 
     @GetMapping("/user/auth/phoneCodeSecurityGetter/{phone}")
-    Result<PhoneCodeSecurityGetterVO> phoneCodeSecurityGetter(@PathVariable String phone);
+    Result<CurrentUserDTO> phoneCodeSecurityGetter(@PathVariable String phone);
 
     @GetMapping("/user/auth/emailCodeSecurityGetter/{email}")
-    Result<EmailCodeSecurityGetterVO> emailCodeSecurityGetter(@PathVariable String email);
+    Result<CurrentUserDTO> emailCodeSecurityGetter(@PathVariable String email);
 
 
 }

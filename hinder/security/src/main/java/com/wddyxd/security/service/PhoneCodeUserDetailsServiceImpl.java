@@ -30,15 +30,14 @@ public class PhoneCodeUserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        com.wddyxd.feign.pojo.userservice.authcontroller.PhoneCodeSecurityGetterVO get;
+        com.wddyxd.feign.pojo.userservice.authcontroller.CurrentUserDTO get;
         get = authClient.phoneCodeSecurityGetter(username).getData();
-        if(get== null||get.getPhoneCode()==null||get.getCurrentUserDTO()== null){
+        if(get== null){
             throw new SecurityAuthException(ResultCodeEnum.USER_OR_PASSWORD_ERROR);
         }
         LoginUserForm loginUserForm = new LoginUserForm();
-        loginUserForm.setPhoneCode(get.getPhoneCode());
         CurrentUserDTO currentUserDTO = new CurrentUserDTO();
-        BeanUtils.copyProperties(get.getCurrentUserDTO(),currentUserDTO);
+        BeanUtils.copyProperties(get,currentUserDTO);
         return new SecurityUser(loginUserForm,currentUserDTO);
     }
 }

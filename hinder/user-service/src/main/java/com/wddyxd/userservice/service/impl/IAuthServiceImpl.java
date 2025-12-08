@@ -103,39 +103,27 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     }
 
     @Override
-    public PhoneCodeSecurityGetterVO phoneCodeSecurityGetter(String phone) {
+    public CurrentUserDTO phoneCodeSecurityGetter(String phone) {
         if(!RegexValidator.validatePhone(phone))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-
         User user = baseMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if(user == null) {
             return null;
         }
-
-
         //获取用户信息并包装
-        CurrentUserDTO currentUserDTO = currentUserDTOGetter(user.getId());
-        if(currentUserDTO == null)return null;
-        PhoneCodeSecurityGetterVO phoneCodeSecurityGetterVO = new PhoneCodeSecurityGetterVO();
-        phoneCodeSecurityGetterVO.setCurrentUserDTO(currentUserDTO);
-        return phoneCodeSecurityGetterVO;
+        return currentUserDTOGetter(user.getId());
     }
 
     @Override
-    public EmailCodeSecurityGetterVO emailCodeSecurityGetter(String email) {
+    public CurrentUserDTO emailCodeSecurityGetter(String email) {
         if(!RegexValidator.validateEmail(email))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         User user = baseMapper.selectOne(new QueryWrapper<User>().eq("email", email));
         if(user == null) {
             return null;
         }
-
         //获取用户信息并包装
-        CurrentUserDTO currentUserDTO = currentUserDTOGetter(user.getId());
-        if(currentUserDTO == null)return null;
-        EmailCodeSecurityGetterVO emailCodeSecurityGetterVO = new EmailCodeSecurityGetterVO();
-        emailCodeSecurityGetterVO.setCurrentUserDTO(currentUserDTO);
-        return emailCodeSecurityGetterVO;
+        return currentUserDTOGetter(user.getId());
     }
 
     @Override

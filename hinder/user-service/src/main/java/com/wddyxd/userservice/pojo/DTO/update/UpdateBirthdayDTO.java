@@ -1,4 +1,4 @@
-package com.wddyxd.userservice.pojo.DTO;
+package com.wddyxd.userservice.pojo.DTO.update;
 
 
 /**
@@ -9,4 +9,9 @@ package com.wddyxd.userservice.pojo.DTO;
  **/
 
 public class UpdateBirthdayDTO {
+
+    private String birthday;
+
+
+
 }

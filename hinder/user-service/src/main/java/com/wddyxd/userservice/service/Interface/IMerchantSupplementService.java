@@ -2,8 +2,8 @@ package com.wddyxd.userservice.service.Interface;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wddyxd.userservice.pojo.DTO.UpdateMerchantCustomDTO;
-import com.wddyxd.userservice.pojo.DTO.UpdateMerchantLicenseDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantCustomDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantLicenseDTO;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 
 /**

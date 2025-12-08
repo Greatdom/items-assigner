@@ -7,6 +7,7 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.DTO.*;
+import com.wddyxd.userservice.pojo.DTO.update.*;
 import com.wddyxd.userservice.pojo.VO.UserDetailVO;
 import com.wddyxd.userservice.pojo.VO.UserProfileVO;
 import com.wddyxd.userservice.pojo.VO.UserVisitVO;
@@ -15,7 +16,6 @@ import com.wddyxd.userservice.service.Interface.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 

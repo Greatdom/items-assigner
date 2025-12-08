@@ -1,4 +1,4 @@
-package com.wddyxd.userservice.pojo.DTO;
+package com.wddyxd.userservice.pojo.DTO.update;
 
 
 /**

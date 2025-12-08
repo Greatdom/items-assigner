@@ -3,8 +3,8 @@ package com.wddyxd.userservice.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.userservice.mapper.MerchantSupplementMapper;
-import com.wddyxd.userservice.pojo.DTO.UpdateMerchantCustomDTO;
-import com.wddyxd.userservice.pojo.DTO.UpdateMerchantLicenseDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantCustomDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantLicenseDTO;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.service.Interface.IMerchantSupplementService;
 import org.springframework.stereotype.Service;

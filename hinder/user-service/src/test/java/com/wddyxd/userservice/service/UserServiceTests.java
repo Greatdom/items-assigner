@@ -3,9 +3,9 @@ package com.wddyxd.userservice.service;
 
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.userservice.pojo.DTO.CustomUserRegisterDTO;
-import com.wddyxd.userservice.pojo.DTO.UpdateEmailDTO;
-import com.wddyxd.userservice.pojo.DTO.UpdatePasswordDTO;
-import com.wddyxd.userservice.pojo.DTO.UpdatePhoneDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdateEmailDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdatePasswordDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdatePhoneDTO;
 import com.wddyxd.userservice.service.Interface.IUserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

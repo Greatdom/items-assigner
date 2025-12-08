@@ -8,5 +8,15 @@ package com.wddyxd.userservice.pojo.DTO.update;
  * @create: 2025-12-01 15:54
  **/
 
-public class UpdateNickNameDTO {
+public class UpdateNickNameDTO extends BaseUserUpdateDTO{
+
+    private String nickName;
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }

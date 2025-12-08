@@ -8,10 +8,15 @@ package com.wddyxd.userservice.pojo.DTO.update;
  * @create: 2025-12-01 16:02
  **/
 
-public class UpdateBirthdayDTO {
+public class UpdateBirthdayDTO extends BaseUserUpdateDTO{
 
     private String birthday;
 
+    public String getBirthday() {
+        return birthday;
+    }
 
-
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
 }

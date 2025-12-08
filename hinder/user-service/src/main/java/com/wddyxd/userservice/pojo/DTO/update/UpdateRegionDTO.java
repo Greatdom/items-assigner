@@ -8,5 +8,16 @@ package com.wddyxd.userservice.pojo.DTO.update;
  * @create: 2025-12-01 16:04
  **/
 
-public class UpdateRegionDTO {
+public class UpdateRegionDTO extends BaseUserUpdateDTO{
+
+    private String region;
+
+    public String getRegion(){
+        return region;
+    }
+
+    public void setRegion(String region){
+        this.region = region;
+    }
+
 }

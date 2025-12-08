@@ -8,5 +8,25 @@ package com.wddyxd.userservice.pojo.DTO.update;
  * @create: 2025-12-01 19:11
  **/
 
-public class UpdateMerchantLicenseDTO {
+public class UpdateMerchantLicenseDTO extends BaseUserUpdateDTO{
+
+    private String ShopLicense;
+
+    private String ShopLicenseImage;
+
+    public String getShopLicense() {
+        return ShopLicense;
+    }
+
+    public void setShopLicense(String shopLicense) {
+        ShopLicense = shopLicense;
+    }
+
+    public String getShopLicenseImage() {
+        return ShopLicenseImage;
+    }
+
+    public void setShopLicenseImage(String shopLicenseImage) {
+        ShopLicenseImage = shopLicenseImage;
+    }
 }

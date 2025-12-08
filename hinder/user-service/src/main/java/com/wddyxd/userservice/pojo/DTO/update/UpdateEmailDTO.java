@@ -8,5 +8,35 @@ package com.wddyxd.userservice.pojo.DTO.update;
  * @create: 2025-12-01 15:39
  **/
 
-public class UpdateEmailDTO {
+public class UpdateEmailDTO extends BaseUserUpdateDTO{
+
+    private String oldEmail;
+
+    private String newEmail;
+
+    private String emailCode;
+
+    public String getOldEmail() {
+        return oldEmail;
+    }
+
+    public void setOldEmail(String oldEmail) {
+        this.oldEmail = oldEmail;
+    }
+
+    public String getNewEmail() {
+        return newEmail;
+    }
+
+    public void setNewEmail(String newEmail) {
+        this.newEmail = newEmail;
+    }
+
+    public String getEmailCode() {
+        return emailCode;
+    }
+
+    public void setEmailCode(String emailCode) {
+        this.emailCode = emailCode;
+    }
 }

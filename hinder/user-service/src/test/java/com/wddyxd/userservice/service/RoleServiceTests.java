@@ -1,4 +1,4 @@
-package com.wddyxd.userservice.controller;
+package com.wddyxd.userservice.service;
 
 
 import com.wddyxd.common.pojo.SearchDTO;

@@ -6,16 +6,12 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.userservice.pojo.DTO.UserAddressDTO;
 import com.wddyxd.userservice.pojo.entity.ShopCategory;
 import com.wddyxd.userservice.service.Interface.IShopCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @program: items-assigner

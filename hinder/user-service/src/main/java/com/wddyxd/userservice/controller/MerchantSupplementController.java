@@ -6,12 +6,9 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.DTO.UpdateMerchantCustomDTO;
 import com.wddyxd.userservice.pojo.DTO.UpdateMerchantLicenseDTO;
-import com.wddyxd.userservice.pojo.DTO.UserAddressDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * @program: items-assigner

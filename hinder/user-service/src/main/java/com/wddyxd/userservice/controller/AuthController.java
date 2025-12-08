@@ -1,19 +1,11 @@
 package com.wddyxd.userservice.controller;
 
 
-import com.wddyxd.common.constant.ResultCodeEnum;
-import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
-import com.wddyxd.userservice.pojo.DTO.CustomUserRegisterDTO;
-import com.wddyxd.userservice.pojo.DTO.MerchantRegisterDTO;
-import com.wddyxd.userservice.pojo.VO.EmailCodeSecurityGetterVO;
+import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
-import com.wddyxd.userservice.pojo.VO.PhoneCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.entity.User;
-import com.wddyxd.userservice.pojo.DTO.LoginUserForm;
 import com.wddyxd.userservice.service.Interface.IAuthService;
-import com.wddyxd.userservice.service.Interface.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +48,7 @@ public class AuthController {
     @Operation(summary = "用户登出接口", description = "按下登出按钮后触发,然后删除redis中的token信息")
     public Result<User> logout(){
 //        在TokenLogoutHandler删除redis中的token信息然后返回空结果
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return null;
     }
 
     @GetMapping("/phoneCodeSecurityGetter/{phone}")
@@ -68,7 +60,7 @@ public class AuthController {
 //                - 拿不到用户信息就去mysql继续得到用户信息CurrentUserVO,但拿不到手机验证码就返回错误. 将数据包装到PhoneCodeSecurityGetterVO并返回
 //                如果用户被封禁或被删除则直接返回错误信息
 
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(authService.phoneCodeSecurityGetter(phone));
     }
 
     @GetMapping("/emailCodeSecurityGetter/{email}")
@@ -80,7 +72,7 @@ public class AuthController {
 //                - 拿不到用户信息就去mysql继续得到用户信息CurrentUserVO,但拿不到邮箱验证码就返回错误. 将数据包装到EmailCodeSecurityGetterVO并返回
 //                如果用户被封禁或被删除则直接返回错误信息
 
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(authService.emailCodeSecurityGetter(email));
     }
 
     @GetMapping("/passwordSecurityGetter/{username}")
@@ -106,7 +98,8 @@ public class AuthController {
 //- 在redis查询到手机号的访问信息则直接返回提示,
 //- 验证码保存在redis中,过期时间为15分钟,然后在redis记录该手机号的访问信息,过期时间为60秒,返回空值
 
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        authService.phoneCode(phone);
+        return Result.success();
     }
 
     @GetMapping("/emailCode/{email}")
@@ -119,7 +112,8 @@ public class AuthController {
 //- 在redis查询到邮箱的访问信息则直接返回提示,
 //- 验证码保存在redis中,过期时间为15分钟,然后在redis记录该邮箱的访问信息,过期时间为60秒,返回空值
 
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        authService.emailCode(email);
+        return Result.success();
     }
 
     @PostMapping("/customUserRegister")
@@ -129,7 +123,8 @@ public class AuthController {
 //                - 如果三份数据都是null则注册用户,分配ROLE_NEW_USER角色,创建user表,关联user_role表,创建user_detail表并填充默认数据
 //                - 其他情况返回错误
 //        - 其中,用加密算法(这里用MD5)加密密码,同时将事先存储到redis的phoneCode和emailCode提取来验证手机和邮箱的有效性
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        authService.customUserRegister(customUserRegisterDTO);
+        return Result.success();
     }
 
     @PostMapping("/merchantRegister")
@@ -141,15 +136,17 @@ public class AuthController {
 //                - 并创建merchant_supplement表,注意新注册的商店是关店状态
 //                - 其他情况返回错误
 //                        - 其中,用加密算法(这里用MD5)加密密码,同时将事先存储到redis的phoneCode和emailCode提取来验证手机和邮箱的有效性
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        authService.merchantRegister(merchantRegisterDTO);
+        return Result.success();
     }
 
     @PostMapping("/rebuildPassword")
     @Operation(summary = "根据验证码找回密码接口", description = "支持根据手机验证码为账号找回密码")
-    public Result<Void> rebuildPassword(@RequestBody CustomUserRegisterDTO customUserRegisterDTO){
+    public Result<Void> rebuildPassword(@RequestBody RebuildPasswordDTO rebuildPasswordDTO){
 //        需要手机和验证码和新密码,后端会判断手机和验证码是否合法且吻合.
 //- 成功更改密码后时redis存储5秒过期的时间戳,过期时间内不能重新更改密码,更改密码后强制在redis的当前用户的token删除
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        authService.rebuildPassword(rebuildPasswordDTO);
+        return Result.success();
     }
 
 }

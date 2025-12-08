@@ -2,9 +2,11 @@ package com.wddyxd.security.provider;
 
 
 import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.utils.FlexibleCodeCheckerService;
 import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.LoginAuthenticationToken;
 import com.wddyxd.security.pojo.SecurityUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +29,9 @@ public class PhoneCodeAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
 
+    @Autowired
+    private FlexibleCodeCheckerService flexibleCodeCheckerService;
+
     // PhoneAuthenticationProvider
     public PhoneCodeAuthenticationProvider(
             @Qualifier("phoneCodeUserDetailsService") UserDetailsService userDetailsService) {
@@ -43,10 +48,10 @@ public class PhoneCodeAuthenticationProvider implements AuthenticationProvider {
         }
         String phone = (String) customToken.getPrincipal();
         String phoneCode = (String) customToken.getCredentials();
-
         // 加载用户信息
         SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(phone);
-        if(!securityUser.getLoginUserForm().getPhoneCode().equals(phoneCode))
+        // 校验手机验证码
+        if (!flexibleCodeCheckerService.checkPhoneCode(phone, phoneCode))
             throw new SecurityAuthException(ResultCodeEnum.CODE_ERROR);
         return new UsernamePasswordAuthenticationToken(securityUser, null, null);
     }

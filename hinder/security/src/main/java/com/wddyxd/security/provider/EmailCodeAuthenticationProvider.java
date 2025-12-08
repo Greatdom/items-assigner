@@ -2,9 +2,11 @@ package com.wddyxd.security.provider;
 
 
 import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.utils.FlexibleCodeCheckerService;
 import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.LoginAuthenticationToken;
 import com.wddyxd.security.pojo.SecurityUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +30,9 @@ public class EmailCodeAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
 
+    @Autowired
+    private FlexibleCodeCheckerService flexibleCodeCheckerService;
+
     // EmailAuthenticationProvider
     public EmailCodeAuthenticationProvider(
             @Qualifier("emailCodeUserDetailsService") UserDetailsService userDetailsService) {
@@ -46,8 +51,8 @@ public class EmailCodeAuthenticationProvider implements AuthenticationProvider {
         String emailCode = (String) customToken.getCredentials();
         // 加载用户信息
         SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(email);
-
-        if(!securityUser.getLoginUserForm().getEmailCode().equals(emailCode))
+        // 校验邮箱验证码
+        if(!flexibleCodeCheckerService.checkEmailCode(email, emailCode))
             throw new SecurityAuthException(ResultCodeEnum.CODE_ERROR);
         return new UsernamePasswordAuthenticationToken(securityUser, null, null);
     }

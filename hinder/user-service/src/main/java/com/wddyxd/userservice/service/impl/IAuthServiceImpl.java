@@ -6,6 +6,7 @@ import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.pojo.entity.ShopCategory;
 import com.wddyxd.userservice.service.Interface.*;
+import com.wddyxd.common.utils.FlexibleCodeCheckerService;
 import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -16,7 +17,6 @@ import com.wddyxd.common.utils.RegexValidator;
 import com.wddyxd.common.utils.encoder.EmailCodeGetter;
 import com.wddyxd.common.utils.encoder.PasswordEncoder;
 import com.wddyxd.common.utils.encoder.PhoneCodeGetter;
-import com.wddyxd.security.security.UserInfoManager;
 import com.wddyxd.userservice.mapper.AuthMapper;
 import com.wddyxd.userservice.pojo.VO.EmailCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +73,9 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private FlexibleCodeCheckerService flexibleCodeCheckerService;
+
     @Override
     public PasswordSecurityGetterVO passwordSecurityGetter(String username) {
         User user;
@@ -103,51 +104,37 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
     @Override
     public PhoneCodeSecurityGetterVO phoneCodeSecurityGetter(String phone) {
-        //TODO validate
+        if(!RegexValidator.validatePhone(phone))
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+
         User user = baseMapper.selectOne(new QueryWrapper<User>().eq("phone", phone));
         if(user == null) {
             return null;
         }
-        //从redis拉取并删除手机验证码
-        String redisKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + phone;
-        String phoneCode = null;
-        try {
-            phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisKey);
-            if(phoneCode == null) {
-                return null;
-            }
-        } catch (Exception e) {
-            log.error(LogPrompt.REDIS_SERVER_ERROR.msg);
-            return null;
-        }
+
+
         //获取用户信息并包装
         CurrentUserDTO currentUserDTO = currentUserDTOGetter(user.getId());
         if(currentUserDTO == null)return null;
         PhoneCodeSecurityGetterVO phoneCodeSecurityGetterVO = new PhoneCodeSecurityGetterVO();
         phoneCodeSecurityGetterVO.setCurrentUserDTO(currentUserDTO);
-        phoneCodeSecurityGetterVO.setPhoneCode(phoneCode);
         return phoneCodeSecurityGetterVO;
     }
 
     @Override
     public EmailCodeSecurityGetterVO emailCodeSecurityGetter(String email) {
-        //TODO validate
+        if(!RegexValidator.validateEmail(email))
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         User user = baseMapper.selectOne(new QueryWrapper<User>().eq("email", email));
         if(user == null) {
             return null;
         }
-        //从redis拉取并删除邮箱验证码
-        String redisKey = RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key + email;
-        String emailCode = (String) redisTemplate.opsForValue().getAndDelete(redisKey);
-        if(emailCode == null) {
-            return null;
-        }
+
         //获取用户信息并包装
         CurrentUserDTO currentUserDTO = currentUserDTOGetter(user.getId());
         if(currentUserDTO == null)return null;
         EmailCodeSecurityGetterVO emailCodeSecurityGetterVO = new EmailCodeSecurityGetterVO();
         emailCodeSecurityGetterVO.setCurrentUserDTO(currentUserDTO);
-        emailCodeSecurityGetterVO.setEmailCode(emailCode);
         return emailCodeSecurityGetterVO;
     }
 
@@ -201,7 +188,11 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     @Transactional
     public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO) {
         if(customUserRegisterDTO == null)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        checkCodeTrue(customUserRegisterDTO);
+        //验证码校验
+        if(flexibleCodeCheckerService.checkPhoneAndEmailCodeWrong(
+                customUserRegisterDTO.getPhone(), customUserRegisterDTO.getPhoneCode(),
+                customUserRegisterDTO.getEmail(), customUserRegisterDTO.getEmailCode()
+        )) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         if(this.checkUserUnique(customUserRegisterDTO))
             this.addUser(customUserRegisterDTO);
         else throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
@@ -215,7 +206,11 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         if(shopCategory == null) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         CustomUserRegisterDTO customUserRegisterDTO = new CustomUserRegisterDTO();
         BeanUtil.copyProperties(merchantRegisterDTO, customUserRegisterDTO);
-        checkCodeTrue(customUserRegisterDTO);
+        //验证码校验
+        if(flexibleCodeCheckerService.checkPhoneAndEmailCodeWrong(
+                customUserRegisterDTO.getPhone(), customUserRegisterDTO.getPhoneCode(),
+                customUserRegisterDTO.getEmail(), customUserRegisterDTO.getEmailCode()
+        )) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         if(this.checkUserUnique(customUserRegisterDTO)) {
             this.addUser(customUserRegisterDTO);
             this.addMerchant(merchantRegisterDTO);
@@ -237,13 +232,15 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
                 .eq(User::getPhone,rebuildPasswordDTO.getPhone()));
         if(user == null) throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         //获取验证码
-        String redisKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + rebuildPasswordDTO.getPhone();
-        String phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisKey);
+        String redisPhoneKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + rebuildPasswordDTO.getPhone();
+        String phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisPhoneKey);
         if(phoneCode == null||!phoneCode.equals(rebuildPasswordDTO.getPhoneCode())) throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         user.setPassword(passwordEncoder.encode(rebuildPasswordDTO.getNewPassword()));
         baseMapper.updateById(user);
 
         //强制删除用户token
+        String redisTokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + user.getId();
+        redisTemplate.delete(redisTokenKey);
     }
     //所有字段都未匹配到用户 → true,所有匹配到的字段都指向同一个用户 → false,否则抛出异常
     private boolean checkUserUnique(CustomUserRegisterDTO customUserRegisterDTO) {
@@ -294,20 +291,6 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         }
         throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
     }
-    //如果手机和邮箱的验证码都正确则返回,否则抛出异常
-    private void checkCodeTrue(CustomUserRegisterDTO customUserRegisterDTO){
-        //获取手机验证码和邮箱验证码
-        String redisPhoneCodeKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + customUserRegisterDTO.getPhone();
-        String redisEmailCodeKey = RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key + customUserRegisterDTO.getEmail();
-        //TODO 同时获取和删除验证码是不符合用户体验的
-        String phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisPhoneCodeKey);
-        if(phoneCode == null || !phoneCode.equals(customUserRegisterDTO.getPhoneCode())
-        )throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        String emailCode = (String) redisTemplate.opsForValue().getAndDelete(redisEmailCodeKey);
-        if(emailCode == null || !emailCode.equals(customUserRegisterDTO.getEmailCode())
-        )throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-    }
-
     //注册普通用户
     private void addUser(CustomUserRegisterDTO customUserRegisterDTO){
 

@@ -213,19 +213,16 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         if(!RegexValidator.validateUsername(rebuildPasswordDTO.getUsername())
                 || !RegexValidator.validatePhone(rebuildPasswordDTO.getPhone())
         ) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(!RegexValidator.validatePhone(rebuildPasswordDTO.getPhoneCode()))
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //获取用户
         User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
                 .eq(User::getIsDeleted,0)
                 .eq(User::getUsername,rebuildPasswordDTO.getUsername())
                 .eq(User::getPhone,rebuildPasswordDTO.getPhone()));
         if(user == null) throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
-        //获取验证码
-        String redisPhoneKey = RedisKeyConstant.USER_LOGIN_PHONE_CODE.key + rebuildPasswordDTO.getPhone();
-        String phoneCode = (String) redisTemplate.opsForValue().getAndDelete(redisPhoneKey);
-        if(phoneCode == null||!phoneCode.equals(rebuildPasswordDTO.getPhoneCode())) throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         user.setPassword(passwordEncoder.encode(rebuildPasswordDTO.getNewPassword()));
         baseMapper.updateById(user);
-
         //强制删除用户token
         String redisTokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + user.getId();
         redisTemplate.delete(redisTokenKey);

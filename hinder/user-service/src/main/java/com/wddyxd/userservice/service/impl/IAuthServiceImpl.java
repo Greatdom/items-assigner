@@ -184,14 +184,16 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
                 customUserRegisterDTO.getPhone(), customUserRegisterDTO.getPhoneCode(),
                 customUserRegisterDTO.getEmail(), customUserRegisterDTO.getEmailCode()
         )) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(this.checkUserUnique(customUserRegisterDTO))
+        if(this.checkUserUnique(customUserRegisterDTO)==null) {
+            customUserRegisterDTO.setUserId(IdWorker.getId());
             this.addUser(customUserRegisterDTO);
+        }
         else throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
     }
 
     @Override
     @Transactional
-    public void merchantRegister(MerchantRegisterDTO merchantRegisterDTO) {
+    public long merchantRegister(MerchantRegisterDTO merchantRegisterDTO) {
         if(merchantRegisterDTO == null)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         ShopCategory shopCategory = shopCategoryService.getById(merchantRegisterDTO.getShopCategoryId());
         if(shopCategory == null) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
@@ -202,12 +204,17 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
                 customUserRegisterDTO.getPhone(), customUserRegisterDTO.getPhoneCode(),
                 customUserRegisterDTO.getEmail(), customUserRegisterDTO.getEmailCode()
         )) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(this.checkUserUnique(customUserRegisterDTO)) {
+        Long userId = this.checkUserUnique(customUserRegisterDTO);
+        if(userId==null) {
+            customUserRegisterDTO.setUserId(IdWorker.getId());
             this.addUser(customUserRegisterDTO);
+            merchantRegisterDTO.setUserId(customUserRegisterDTO.getUserId());
             this.addMerchant(merchantRegisterDTO);
         } else {
+            merchantRegisterDTO.setUserId(userId);
             this.addMerchant(merchantRegisterDTO);
         }
+        return merchantRegisterDTO.getUserId();
     }
 
     @Override
@@ -230,8 +237,8 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         String redisTokenKey = RedisKeyConstant.USER_LOGIN_TOKEN.key + user.getId();
         redisTemplate.delete(redisTokenKey);
     }
-    //所有字段都未匹配到用户 → true,所有匹配到的字段都指向同一个用户 → false,否则抛出异常
-    private boolean checkUserUnique(CustomUserRegisterDTO customUserRegisterDTO) {
+    //所有字段都未匹配到用户 → null,所有匹配到的字段都指向同一个用户 → userId,否则抛出异常
+    private Long checkUserUnique(CustomUserRegisterDTO customUserRegisterDTO) {
         //判断用户名,手机号和邮箱的合法性
         if(!RegexValidator.validateUsername(customUserRegisterDTO.getUsername())
                 || !RegexValidator.validatePhone(customUserRegisterDTO.getPhone())
@@ -265,9 +272,9 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
             }
         }
         //按规则判断返回值
-        // 情况1：所有字段都未匹配到用户 → 返回0
+        // 情况1：所有字段都未匹配到用户 → 返回null
         if (usernameMatchId == null && phoneMatchId == null && emailMatchId == null) {
-            return true;
+            return null;
         }
         // 情况2：所有匹配到的字段都指向同一个用户 → 返回1
         Set<Long> matchIdSet = new HashSet<>();
@@ -275,7 +282,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         if (phoneMatchId != null) matchIdSet.add(phoneMatchId);
         if (emailMatchId != null) matchIdSet.add(emailMatchId);
         if (matchIdSet.size() == 1) {
-            return false;
+            return usernameMatchId;
         }
         throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
     }
@@ -284,7 +291,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
 
         User user = new User();
-        user.setId(IdWorker.getId());
+        user.setId(customUserRegisterDTO.getUserId());
         user.setUsername(customUserRegisterDTO.getUsername());
         user.setPhone(customUserRegisterDTO.getPhone());
         user.setEmail(customUserRegisterDTO.getEmail());
@@ -297,24 +304,17 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         userDetail.setMoney(new BigDecimal(0));
         userDetailService.add(userDetail);
         userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), user.getId(), RoleConstant.ROLE_NEW_USER.getId());
-
     }
 
     private void addMerchant(MerchantRegisterDTO merchantRegisterDTO){
-        User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, merchantRegisterDTO.getUsername())
-                .eq(User::getPhone, merchantRegisterDTO.getPhone())
-                .eq(User::getEmail, merchantRegisterDTO.getEmail()));
-        if(user == null)
-            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
         MerchantSupplement merchantSupplement = new MerchantSupplement();
-        merchantSupplement.setUserId(user.getId());
+        merchantSupplement.setUserId(merchantRegisterDTO.getUserId());
         merchantSupplement.setName(merchantRegisterDTO.getShopName());
         merchantSupplement.setShopCategoryId(merchantRegisterDTO.getShopCategoryId());
         merchantSupplement.setShopAddress(merchantRegisterDTO.getShopAddress());
         merchantSupplement.setShopStatus(1);//关店
         merchantSupplementService.save(merchantSupplement);
-        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), user.getId(), RoleConstant.ROLE_NEW_MERCHANT.getId());
+        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), merchantRegisterDTO.getUserId(), RoleConstant.ROLE_NEW_MERCHANT.getId());
     }
 
     private CurrentUserDTO currentUserDTOGetter(Long userId){

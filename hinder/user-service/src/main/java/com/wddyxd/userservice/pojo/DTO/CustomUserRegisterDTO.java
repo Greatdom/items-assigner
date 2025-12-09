@@ -10,6 +10,8 @@ package com.wddyxd.userservice.pojo.DTO;
 
 public class CustomUserRegisterDTO {
 
+    private Long userId;
+
     private String username;
 
     private String phone;
@@ -25,6 +27,7 @@ public class CustomUserRegisterDTO {
     @Override
     public String toString() {
         return "CustomUserRegisterDTO{" +
+                "userId=" + userId +
                 "username='" + username + '\'' +
                 ", phone='" + phone + '\'' +
                 ", phoneCode='" + phoneCode + '\'' +
@@ -32,6 +35,14 @@ public class CustomUserRegisterDTO {
                 ", emailCode='" + emailCode + '\'' +
                 ", password='" + password + '\'' +
                 '}';
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getUsername() {

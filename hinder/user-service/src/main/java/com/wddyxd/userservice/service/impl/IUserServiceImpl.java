@@ -87,24 +87,9 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public void addAdmin(CustomUserRegisterDTO customUserRegisterDTO) {
-//        User user = new User();
-//        user.setUsername(customUserRegisterDTO.getUsername());
-//        user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));
-//        user.setPhone(customUserRegisterDTO.getPhone());
-//        user.setEmail(customUserRegisterDTO.getEmail());
-//        user.setNickName("SUPER_ADMIN");
-//        baseMapper.insert(user);
-//        //如果是管理者,应该额外配置用户和商户角色
-//        //TODO unfinished
         MerchantRegisterDTO merchantRegisterDTO = BeanUtil.copyProperties(customUserRegisterDTO, MerchantRegisterDTO.class);
-        authService.merchantRegister(merchantRegisterDTO);
-        User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
-                .eq(User::getUsername, merchantRegisterDTO.getUsername())
-                .eq(User::getPhone, merchantRegisterDTO.getPhone())
-                .eq(User::getEmail, merchantRegisterDTO.getEmail()));
-        if(user == null)
-            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
-        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), user.getId(), RoleConstant.ROLE_NEW_USER.getId());
+        long userId = authService.merchantRegister(merchantRegisterDTO);
+        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), userId, RoleConstant.ROLE_CUSTOM_ADMIN.getId());
 
 
     }

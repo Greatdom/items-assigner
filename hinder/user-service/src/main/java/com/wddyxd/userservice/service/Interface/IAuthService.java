@@ -32,7 +32,7 @@ public interface IAuthService extends IService<User> {
 
     public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO);
 
-    public void merchantRegister(MerchantRegisterDTO merchantRegisterDTO);
+    public long merchantRegister(MerchantRegisterDTO merchantRegisterDTO);
 
     public void rebuildPassword(RebuildPasswordDTO rebuildPasswordDTO);
 

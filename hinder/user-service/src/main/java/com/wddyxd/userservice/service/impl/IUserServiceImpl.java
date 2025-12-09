@@ -89,7 +89,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     public void addAdmin(CustomUserRegisterDTO customUserRegisterDTO) {
         MerchantRegisterDTO merchantRegisterDTO = BeanUtil.copyProperties(customUserRegisterDTO, MerchantRegisterDTO.class);
         long userId = authService.merchantRegister(merchantRegisterDTO);
-        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), userId, RoleConstant.ROLE_CUSTOM_ADMIN.getId());
+        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), userId, RoleConstant.ROLE_NEW_ADMIN.getId());
 
 
     }

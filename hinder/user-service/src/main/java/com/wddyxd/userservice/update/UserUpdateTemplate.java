@@ -1,6 +1,7 @@
 package com.wddyxd.userservice.update;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -68,9 +69,12 @@ public class UserUpdateTemplate {
     //按需加载关联表数据
     private UserRelatedData loadRelatedData(Long userId, List<UserUpdateStrategy.RelatedTableType> needLoadTables){
         UserRelatedData relatedData = new UserRelatedData();
-        User user = userMapper.selectById(userId);
-        relatedData.setUser(user);
-        //按需加载其他表
+        //按需加载表
+        if(needLoadTables.contains(UserUpdateStrategy.RelatedTableType.USER)){
+            relatedData.setUser(userMapper.selectOne(new LambdaQueryWrapper<User>()
+                    .eq(User::getId, userId)
+                    .eq(User::getIsDeleted, 0)));
+        }
         if(needLoadTables.contains(UserUpdateStrategy.RelatedTableType.USER_DETAIL)){
             UserDetail userDetail = userDetailMapper.selectByUserId(userId);
             relatedData.setUserDetail(userDetail);
@@ -79,12 +83,6 @@ public class UserUpdateTemplate {
             MerchantSupplement merchantSupplement = merchantSupplementMapper.selectByUserId(userId);
             relatedData.setMerchantSupplement(merchantSupplement);
         }
-        if(needLoadTables.contains(UserUpdateStrategy.RelatedTableType.USER_ROLE)){
-            List<UserRole> userRoles = userRoleMapper.selectByUserId(userId);
-            relatedData.setUserRoles(userRoles);
-        }
-
-
 
         return relatedData;
     }

@@ -1,11 +1,14 @@
 package com.wddyxd.userservice.update;
 
 
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.constant.RoleConstant;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.userservice.mapper.UserDetailMapper;
+import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
-import com.wddyxd.userservice.pojo.DTO.update.UpdateBirthdayDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdateCardDTO;
 import com.wddyxd.userservice.pojo.entity.UserDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,31 +19,37 @@ import java.util.List;
  * @program: items-assigner
  * @description: description
  * @author: wddyxd
- * @create: 2025-12-09 22:10
+ * @create: 2025-12-09 22:22
  **/
 
 @Component
-public class BirthdayUpdateStrategy implements UserUpdateStrategy<UpdateBirthdayDTO>{
+public class CardUpdateStrategy implements UserUpdateStrategy<UpdateCardDTO>{
 
     @Autowired
     private UserDetailMapper userDetailMapper;
 
+    @Autowired
+    private UserRoleMapper userRoleMapper;
+
     @Override
-    public void validate(UpdateBirthdayDTO dto, UserRelatedData userRelatedData) {
+    public void validate(UpdateCardDTO dto, UserRelatedData userRelatedData) {
         if(!userRelatedData.hasUserDetail()||dto==null)
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
     }
 
     @Override
-    public void update(UpdateBirthdayDTO dto, UserRelatedData userRelatedData) {
+    public void update(UpdateCardDTO dto, UserRelatedData userRelatedData) {
         UserDetail userDetail = userRelatedData.getUserDetail();
-        userDetail.setBirthday(dto.getBirthday());
+        userDetail.setRealName(dto.getRealName());
+        userDetail.setIdCard(dto.getIdCard());
+        userDetail.setIsIdCardVerified(1);
         userDetailMapper.updateById(userDetail);
+        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), userDetail.getUserId(), RoleConstant.ROLE_CUSTOM_USER.getId());
     }
 
     @Override
-    public Class<UpdateBirthdayDTO> getDTOClass() {
-        return UpdateBirthdayDTO.class;
+    public Class<UpdateCardDTO> getDTOClass() {
+        return UpdateCardDTO.class;
     }
 
     @Override

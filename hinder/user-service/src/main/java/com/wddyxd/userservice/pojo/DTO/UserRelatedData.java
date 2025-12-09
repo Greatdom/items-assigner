@@ -22,10 +22,6 @@ public class UserRelatedData {
     private UserDetail userDetail;
 
     private MerchantSupplement merchantSupplement;
-
-    private List<UserRole> userRoles;
-
-
     public boolean hasUser(){
         return user != null && !user.getIsDeleted();
     }
@@ -61,13 +57,5 @@ public class UserRelatedData {
 
     public void setMerchantSupplement(MerchantSupplement merchantSupplement) {
         this.merchantSupplement = merchantSupplement;
-    }
-
-    public List<UserRole> getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(List<UserRole> userRoles) {
-        this.userRoles = userRoles;
     }
 }

@@ -15,7 +15,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface MerchantSupplementMapper extends BaseMapper<MerchantSupplement> {
 
-    @Select("select * from merchant_supplement where user_id = #{userId}")
+    @Select("select * from merchant_supplement where user_id = #{userId} and is_deleted = 0")
     public MerchantSupplement selectByUserId(Long userId);
 
 }

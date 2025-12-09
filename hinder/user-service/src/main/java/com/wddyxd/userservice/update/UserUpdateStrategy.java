@@ -32,8 +32,7 @@ public interface UserUpdateStrategy<T extends BaseUserUpdateDTO> {
     enum RelatedTableType{
         USER,//用户表
         USER_DETAIL,//用户详情表
-        MERCHANT_SUPPLEMENT,//商家补充表
-        USER_ROLE//用户角色表
+        MERCHANT_SUPPLEMENT//商家补充表
     }
 
 }

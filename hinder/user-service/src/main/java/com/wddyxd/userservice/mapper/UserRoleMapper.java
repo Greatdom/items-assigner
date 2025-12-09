@@ -4,9 +4,11 @@ package com.wddyxd.userservice.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wddyxd.userservice.pojo.entity.UserRole;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @program: items-assigner
@@ -17,7 +19,5 @@ import java.util.List;
 @Mapper
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
-    @Select("select * from user_role where user_id = #{userId}")
-    public List<UserRole> selectByUserId(Long userId);
-
+    void insertUserRoleWithDeleteSameGroup(@Param("id") Long id, @Param("userId") Long userId, @Param("roleId") Long roleId);
 }

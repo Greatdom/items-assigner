@@ -133,12 +133,14 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public void updateRegion(UpdateRegionDTO updateRegionDTO) {
-
+        UserUpdateStrategy<UpdateRegionDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdateRegionDTO.class);
+        updateTemplate.update(updateRegionDTO, strategy);
     }
 
     @Override
     public void updateCard(UpdateCardDTO updateCardDTO) {
-
+        UserUpdateStrategy<UpdateCardDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdateCardDTO.class);
+        updateTemplate.update(updateCardDTO, strategy);
     }
 
     @Override

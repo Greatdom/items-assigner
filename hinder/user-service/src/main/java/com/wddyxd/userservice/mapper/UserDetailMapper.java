@@ -16,7 +16,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserDetailMapper extends BaseMapper<UserDetail> {
 
-    @Select("select * from user_detail where user_id = #{userId}")
+    @Select("select * from user_detail where user_id = #{userId} and is_deleted = 0")
     public UserDetail selectByUserId(Long userId);
 
 }

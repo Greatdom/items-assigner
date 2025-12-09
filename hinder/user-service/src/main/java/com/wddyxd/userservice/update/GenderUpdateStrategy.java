@@ -29,7 +29,7 @@ public class GenderUpdateStrategy implements UserUpdateStrategy<UpdateGenderDTO>
 
     @Override
     public void validate(UpdateGenderDTO dto, UserRelatedData userRelatedData) {
-        if(!userRelatedData.hasUser()||!userRelatedData.hasUserDetail()||dto==null)
+        if(!userRelatedData.hasUserDetail()||dto==null)
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         if(dto.getGender() == null||dto.getGender() < 0||dto.getGender() > 3)
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
@@ -49,6 +49,6 @@ public class GenderUpdateStrategy implements UserUpdateStrategy<UpdateGenderDTO>
 
     @Override
     public List<RelatedTableType> needLoadTables() {
-        return List.of(RelatedTableType.USER, RelatedTableType.USER_DETAIL);
+        return List.of(RelatedTableType.USER_DETAIL);
     }
 }

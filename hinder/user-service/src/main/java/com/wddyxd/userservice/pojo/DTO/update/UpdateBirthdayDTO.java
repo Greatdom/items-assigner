@@ -1,6 +1,8 @@
 package com.wddyxd.userservice.pojo.DTO.update;
 
 
+import java.util.Date;
+
 /**
  * @program: items-assigner
  * @description: 更新生日接口的请求体
@@ -10,13 +12,13 @@ package com.wddyxd.userservice.pojo.DTO.update;
 
 public class UpdateBirthdayDTO extends BaseUserUpdateDTO{
 
-    private String birthday;
+    private Date birthday;
 
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 }

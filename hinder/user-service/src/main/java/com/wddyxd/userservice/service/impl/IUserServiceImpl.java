@@ -85,32 +85,38 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
         user.setEmail(customUserRegisterDTO.getEmail());
         user.setNickName("SUPER_ADMIN");
         baseMapper.insert(user);
+        //如果是管理者,应该额外配置用户和商户角色
         //TODO unfinished
     }
 
     @Override
     public void updatePassword(UpdatePasswordDTO updatePasswordDTO) {
-
+        UserUpdateStrategy<UpdatePasswordDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdatePasswordDTO.class);
+        updateTemplate.update(updatePasswordDTO, strategy);
     }
 
     @Override
     public void updatePhone(UpdatePhoneDTO updatePhoneDTO) {
-
+        UserUpdateStrategy<UpdatePhoneDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdatePhoneDTO.class);
+        updateTemplate.update(updatePhoneDTO, strategy);
     }
 
     @Override
     public void updateEmail(UpdateEmailDTO updateEmailDTO) {
-
+        UserUpdateStrategy<UpdateEmailDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdateEmailDTO.class);
+        updateTemplate.update(updateEmailDTO, strategy);
     }
 
     @Override
     public void updateAvatar(UpdateAvatarDTO updateAvatarDTO) {
-
+        UserUpdateStrategy<UpdateAvatarDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdateAvatarDTO.class);
+        updateTemplate.update(updateAvatarDTO, strategy);
     }
 
     @Override
     public void updateNickname(UpdateNickNameDTO updateNickNameDTO) {
-
+        UserUpdateStrategy<UpdateNickNameDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdateNickNameDTO.class);
+        updateTemplate.update(updateNickNameDTO, strategy);
     }
 
     @Override
@@ -121,7 +127,8 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public void updateBirthday(UpdateBirthdayDTO updateBirthdayDTO) {
-
+        UserUpdateStrategy<UpdateBirthdayDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdateBirthdayDTO.class);
+        updateTemplate.update(updateBirthdayDTO, strategy);
     }
 
     @Override

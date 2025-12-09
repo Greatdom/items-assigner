@@ -3,19 +3,25 @@ package com.wddyxd.userservice.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.constant.RoleConstant;
+import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.encoder.PasswordEncoder;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import com.wddyxd.userservice.mapper.UserMapper;
+import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.DTO.update.*;
 import com.wddyxd.userservice.pojo.VO.UserDetailVO;
 import com.wddyxd.userservice.pojo.VO.UserProfileVO;
 import com.wddyxd.userservice.pojo.VO.UserVisitVO;
 import com.wddyxd.userservice.pojo.entity.User;
+import com.wddyxd.userservice.service.Interface.IAuthService;
 import com.wddyxd.userservice.service.Interface.IUserService;
 import com.wddyxd.userservice.update.UserUpdateStrategy;
 import com.wddyxd.userservice.update.UserUpdateStrategyFactory;
@@ -34,9 +40,6 @@ import org.springframework.util.StringUtils;
 public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private GetCurrentUserInfoService getCurrentUserInfoService;
 
     @Autowired
@@ -44,6 +47,12 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Autowired
     private UserUpdateTemplate updateTemplate;
+
+    @Autowired
+    private IAuthService authService;
+
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Override
     public Page<User> List(SearchDTO searchDTO) {
@@ -78,15 +87,26 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public void addAdmin(CustomUserRegisterDTO customUserRegisterDTO) {
-        User user = new User();
-        user.setUsername(customUserRegisterDTO.getUsername());
-        user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));
-        user.setPhone(customUserRegisterDTO.getPhone());
-        user.setEmail(customUserRegisterDTO.getEmail());
-        user.setNickName("SUPER_ADMIN");
-        baseMapper.insert(user);
-        //如果是管理者,应该额外配置用户和商户角色
-        //TODO unfinished
+//        User user = new User();
+//        user.setUsername(customUserRegisterDTO.getUsername());
+//        user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));
+//        user.setPhone(customUserRegisterDTO.getPhone());
+//        user.setEmail(customUserRegisterDTO.getEmail());
+//        user.setNickName("SUPER_ADMIN");
+//        baseMapper.insert(user);
+//        //如果是管理者,应该额外配置用户和商户角色
+//        //TODO unfinished
+        MerchantRegisterDTO merchantRegisterDTO = BeanUtil.copyProperties(customUserRegisterDTO, MerchantRegisterDTO.class);
+        authService.merchantRegister(merchantRegisterDTO);
+        User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, merchantRegisterDTO.getUsername())
+                .eq(User::getPhone, merchantRegisterDTO.getPhone())
+                .eq(User::getEmail, merchantRegisterDTO.getEmail()));
+        if(user == null)
+            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), user.getId(), RoleConstant.ROLE_NEW_USER.getId());
+
+
     }
 
     @Override

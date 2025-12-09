@@ -2,6 +2,8 @@ package com.wddyxd.userservice.service.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.pojo.entity.ShopCategory;
@@ -55,8 +57,6 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     @Autowired
     private IUserDetailService userDetailService;
 
-    @Autowired
-    private IRoleService roleService;
 
     @Autowired
     private IMerchantSupplementService merchantSupplementService;
@@ -75,6 +75,9 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
     @Autowired
     private FlexibleCodeCheckerService flexibleCodeCheckerService;
+
+    @Autowired
+    private UserRoleMapper userRoleMapper;
 
     @Override
     public PasswordSecurityGetterVO passwordSecurityGetter(String username) {
@@ -281,6 +284,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
 
         User user = new User();
+        user.setId(IdWorker.getId());
         user.setUsername(customUserRegisterDTO.getUsername());
         user.setPhone(customUserRegisterDTO.getPhone());
         user.setEmail(customUserRegisterDTO.getEmail());
@@ -292,7 +296,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         userDetail.setUserId(user.getId());
         userDetail.setMoney(new BigDecimal(0));
         userDetailService.add(userDetail);
-        roleService.assign(user.getId(), new Long[]{RoleConstant.ROLE_NEW_USER.getId()});
+        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), user.getId(), RoleConstant.ROLE_NEW_USER.getId());
 
     }
 
@@ -310,7 +314,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         merchantSupplement.setShopAddress(merchantRegisterDTO.getShopAddress());
         merchantSupplement.setShopStatus(1);//关店
         merchantSupplementService.save(merchantSupplement);
-        roleService.assign(user.getId(), new Long[]{RoleConstant.ROLE_NEW_MERCHANT.getId()});
+        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), user.getId(), RoleConstant.ROLE_NEW_MERCHANT.getId());
     }
 
     private CurrentUserDTO currentUserDTOGetter(Long userId){

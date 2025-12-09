@@ -24,7 +24,7 @@ public class UserAddressTests {
 
     @Test
     public void List(){
-        System.out.println(userAddressService.List(-1L));
+        System.out.println(userAddressService.List());
     }
 
     @Test

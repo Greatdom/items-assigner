@@ -6,6 +6,8 @@ import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserDetail;
 import com.wddyxd.userservice.pojo.entity.UserRole;
 
+import java.util.List;
+
 /**
  * @program: items-assigner
  * @description: 用户关联的多表数据载体
@@ -21,7 +23,7 @@ public class UserRelatedData {
 
     private MerchantSupplement merchantSupplement;
 
-    private UserRole userRole;
+    private List<UserRole> userRoles;
 
 
     public boolean hasUser(){
@@ -61,11 +63,11 @@ public class UserRelatedData {
         this.merchantSupplement = merchantSupplement;
     }
 
-    public UserRole getUserRole() {
-        return userRole;
+    public List<UserRole> getUserRoles() {
+        return userRoles;
     }
 
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
+    public void setUserRoles(List<UserRole> userRoles) {
+        this.userRoles = userRoles;
     }
 }

@@ -10,8 +10,10 @@ import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
 import com.wddyxd.userservice.pojo.DTO.update.BaseUserUpdateDTO;
+import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserDetail;
+import com.wddyxd.userservice.pojo.entity.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -27,7 +29,7 @@ import java.util.List;
  **/
 
 @Component
-public abstract class UserUpdateTemplate {
+public class UserUpdateTemplate {
 
     @Autowired
     private UserMapper userMapper;
@@ -46,13 +48,13 @@ public abstract class UserUpdateTemplate {
 
     //通用多表更新流程
     @Transactional
-    public <T extends BaseUserUpdateDTO> Result<Void> update(T dto, UserUpdateStrategy<T> strategy){
+    public <T extends BaseUserUpdateDTO> void update(T dto, UserUpdateStrategy<T> strategy){
         if(dto == null || dto.getId() == null)
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //按需加载多表数据
         UserRelatedData relatedData = loadRelatedData(dto.getId(), strategy.needLoadTables());
 
-        if(relatedData == null || !relatedData.hasUser())
+        if(!relatedData.hasUser())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
 
         strategy.validate(dto, relatedData);
@@ -61,14 +63,29 @@ public abstract class UserUpdateTemplate {
 
         postProcess(dto, relatedData, strategy);
 
-        return Result.success();
     }
     //按需加载关联表数据
     private UserRelatedData loadRelatedData(Long userId, List<UserUpdateStrategy.RelatedTableType> needLoadTables){
         UserRelatedData relatedData = new UserRelatedData();
         User user = userMapper.selectById(userId);
+        relatedData.setUser(user);
         //按需加载其他表
-        return null;
+        if(needLoadTables.contains(UserUpdateStrategy.RelatedTableType.USER_DETAIL)){
+            UserDetail userDetail = userDetailMapper.selectByUserId(userId);
+            relatedData.setUserDetail(userDetail);
+        }
+        if(needLoadTables.contains(UserUpdateStrategy.RelatedTableType.MERCHANT_SUPPLEMENT)){
+            MerchantSupplement merchantSupplement = merchantSupplementMapper.selectByUserId(userId);
+            relatedData.setMerchantSupplement(merchantSupplement);
+        }
+        if(needLoadTables.contains(UserUpdateStrategy.RelatedTableType.USER_ROLE)){
+            List<UserRole> userRoles = userRoleMapper.selectByUserId(userId);
+            relatedData.setUserRoles(userRoles);
+        }
+
+
+
+        return relatedData;
     }
 
     private <T extends BaseUserUpdateDTO> void postProcess(T dto, UserRelatedData relatedData,UserUpdateStrategy<T> strategy){

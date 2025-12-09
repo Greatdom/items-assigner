@@ -4,6 +4,7 @@ package com.wddyxd.userservice.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
 
 /**
  * @program: items-assigner
@@ -14,5 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MerchantSupplementMapper extends BaseMapper<MerchantSupplement> {
 
+    @Select("select * from merchant_supplement where user_id = #{userId}")
+    public MerchantSupplement selectByUserId(Long userId);
 
 }

@@ -4,6 +4,7 @@ package com.wddyxd.userservice.service;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.userservice.pojo.DTO.CustomUserRegisterDTO;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateEmailDTO;
+import com.wddyxd.userservice.pojo.DTO.update.UpdateGenderDTO;
 import com.wddyxd.userservice.pojo.DTO.update.UpdatePasswordDTO;
 import com.wddyxd.userservice.pojo.DTO.update.UpdatePhoneDTO;
 import com.wddyxd.userservice.service.Interface.IUserService;
@@ -76,5 +77,49 @@ public class UserServiceTests {
         UpdateEmailDTO updateEmailDTO = new UpdateEmailDTO();
         userService.updateEmail(updateEmailDTO);
     }
+
+    @Test
+    public void updateAvatar(){
+        userService.updateAvatar(null);
+    }
+
+    @Test
+    public void updateNickname(){
+        userService.updateNickname(null);
+    }
+
+    @Test
+    public void updateGender(){
+        UpdateGenderDTO updateGenderDTO = new UpdateGenderDTO();
+        updateGenderDTO.setGender(1);
+        updateGenderDTO.setId(1996953140859625474L);
+        userService.updateGender(updateGenderDTO);
+    }
+
+    @Test
+    public void updateBirthday(){
+        userService.updateBirthday(null);
+    }
+
+    @Test
+    public void updateRegion(){
+        userService.updateRegion(null);
+    }
+
+    @Test
+    public void updateCard(){
+        userService.updateCard(null);
+    }
+
+    @Test
+    public void status(){
+        userService.status(-1L);
+    }
+
+    @Test
+    public void delete(){
+        userService.delete(-1L);
+    }
+
 
 }

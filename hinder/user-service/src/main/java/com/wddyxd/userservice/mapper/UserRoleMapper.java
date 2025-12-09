@@ -4,6 +4,9 @@ package com.wddyxd.userservice.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wddyxd.userservice.pojo.entity.UserRole;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * @program: items-assigner
@@ -13,4 +16,8 @@ import org.apache.ibatis.annotations.Mapper;
  **/
 @Mapper
 public interface UserRoleMapper extends BaseMapper<UserRole> {
+
+    @Select("select * from user_role where user_id = #{userId}")
+    public List<UserRole> selectByUserId(Long userId);
+
 }

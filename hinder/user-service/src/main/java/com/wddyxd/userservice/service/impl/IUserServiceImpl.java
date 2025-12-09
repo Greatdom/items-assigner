@@ -17,6 +17,9 @@ import com.wddyxd.userservice.pojo.VO.UserProfileVO;
 import com.wddyxd.userservice.pojo.VO.UserVisitVO;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.service.Interface.IUserService;
+import com.wddyxd.userservice.update.UserUpdateStrategy;
+import com.wddyxd.userservice.update.UserUpdateStrategyFactory;
+import com.wddyxd.userservice.update.UserUpdateTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -35,6 +38,12 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Autowired
     private GetCurrentUserInfoService getCurrentUserInfoService;
+
+    @Autowired
+    private UserUpdateStrategyFactory userUpdateStrategyFactory;
+
+    @Autowired
+    private UserUpdateTemplate updateTemplate;
 
     @Override
     public Page<User> List(SearchDTO searchDTO) {
@@ -106,7 +115,8 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public void updateGender(UpdateGenderDTO updateGenderDTO) {
-
+        UserUpdateStrategy<UpdateGenderDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdateGenderDTO.class);
+        updateTemplate.update(updateGenderDTO, strategy);
     }
 
     @Override

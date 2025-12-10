@@ -20,9 +20,7 @@ import com.wddyxd.common.utils.encoder.EmailCodeGetter;
 import com.wddyxd.common.utils.encoder.PasswordEncoder;
 import com.wddyxd.common.utils.encoder.PhoneCodeGetter;
 import com.wddyxd.userservice.mapper.AuthMapper;
-import com.wddyxd.userservice.pojo.VO.EmailCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.VO.PasswordSecurityGetterVO;
-import com.wddyxd.userservice.pojo.VO.PhoneCodeSecurityGetterVO;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.pojo.entity.UserDetail;
 import org.slf4j.Logger;
@@ -223,7 +221,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         if(!RegexValidator.validateUsername(rebuildPasswordDTO.getUsername())
                 || !RegexValidator.validatePhone(rebuildPasswordDTO.getPhone())
         ) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(!RegexValidator.validatePhone(rebuildPasswordDTO.getPhoneCode()))
+        if(flexibleCodeCheckerService.checkPhoneCodeWrong(rebuildPasswordDTO.getPhone(), rebuildPasswordDTO.getPhoneCode()))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //获取用户
         User user = baseMapper.selectOne(new LambdaQueryWrapper<User>()

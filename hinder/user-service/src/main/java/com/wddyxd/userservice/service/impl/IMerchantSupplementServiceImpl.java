@@ -2,6 +2,9 @@ package com.wddyxd.userservice.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.security.service.GetCurrentUserInfoService;
 import com.wddyxd.userservice.mapper.MerchantSupplementMapper;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantCustomDTO;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantLicenseDTO;
@@ -31,6 +34,8 @@ public class IMerchantSupplementServiceImpl extends ServiceImpl<MerchantSuppleme
     @Autowired
     private UserUpdateTemplate updateTemplate;
 
+    @Autowired
+    private GetCurrentUserInfoService getCurrentUserInfoService;
 
     @Override
     @Transactional
@@ -57,6 +62,11 @@ public class IMerchantSupplementServiceImpl extends ServiceImpl<MerchantSuppleme
 
     @Override
     public void status(Long id) {
-
+        MerchantSupplement merchantSupplement = baseMapper.selectByUserId(id);
+        if(merchantSupplement == null)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        Integer shopStatus = merchantSupplement.getShopStatus();
+        merchantSupplement.setShopStatus(shopStatus == 1 ? 0 : 1);
+        baseMapper.updateById(merchantSupplement);
     }
 }

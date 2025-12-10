@@ -36,7 +36,7 @@ public class PhoneUpdateStrategy implements UserUpdateStrategy<UpdatePhoneDTO>{
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         if(!Objects.equals(dto.getOldPhone(), userRelatedData.getUser().getPhone()))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(flexibleCodeCheckerService.checkPhoneCode(dto.getNewPhone(), dto.getPhoneCode()))
+        if(flexibleCodeCheckerService.checkPhoneCodeWrong(dto.getNewPhone(), dto.getPhoneCode()))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
     }
 

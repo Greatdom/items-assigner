@@ -7,7 +7,6 @@ import com.wddyxd.common.utils.FlexibleCodeCheckerService;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateEmailDTO;
-import com.wddyxd.userservice.pojo.DTO.update.UpdatePhoneDTO;
 import com.wddyxd.userservice.pojo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,7 +35,7 @@ public class EmailUpdateStrategy implements UserUpdateStrategy<UpdateEmailDTO>{
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         if(!Objects.equals(dto.getOldEmail(), userRelatedData.getUser().getEmail()))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(flexibleCodeCheckerService.checkEmailCode(dto.getNewEmail(), dto.getEmailCode()))
+        if(flexibleCodeCheckerService.checkEmailCodeWrong(dto.getNewEmail(), dto.getEmailCode()))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
     }
 

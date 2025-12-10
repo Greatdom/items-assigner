@@ -41,19 +41,19 @@ public class FlexibleCodeCheckerService {
 
     // ====================== 单校验方法 ======================
     // 单校验：手机验证码
-    public boolean checkPhoneCode(String phone, String phoneCode) {
+    public boolean checkPhoneCodeWrong(String phone, String phoneCode) {
         return singleCheck(RedisKeyConstant.USER_LOGIN_PHONE_CODE.key, phone, phoneCode);
     }
 
     // 单校验：邮箱验证码
-    public boolean checkEmailCode(String email, String emailCode) {
+    public boolean checkEmailCodeWrong(String email, String emailCode) {
         return singleCheck(RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key, email, emailCode);
     }
 
     // 单校验通用逻辑
     private boolean singleCheck(String keyPrefix, String account, String inputCode) {
         if (account == null || inputCode == null) {
-            return false;
+            return true;
         }
         try {
             // 执行单校验：KEYS=[前缀], ARGV=[账号, 验证码, "single"]
@@ -64,7 +64,7 @@ public class FlexibleCodeCheckerService {
                     Collections.singletonList(keyPrefix),
                     account, inputCode, operationType[0]
             );
-            return Boolean.TRUE.equals(result);
+            return !Boolean.TRUE.equals(result);
         } catch (Exception e) {
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);
         }

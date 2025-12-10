@@ -1,6 +1,8 @@
 package com.wddyxd.userservice.pojo.DTO;
 
 
+import com.wddyxd.userservice.pojo.DTO.update.BaseUserUpdateDTO;
+
 /**
  * @program: items-assigner
  * @description: 根据验证码找回密码接口的请求体
@@ -8,7 +10,7 @@ package com.wddyxd.userservice.pojo.DTO;
  * @create: 2025-12-01 12:34
  **/
 
-public class RebuildPasswordDTO {
+public class RebuildPasswordDTO extends BaseUserUpdateDTO {
     private String username;
     private String phone;
     private String phoneCode;

@@ -12,9 +12,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -51,7 +49,7 @@ public class PhoneCodeAuthenticationProvider implements AuthenticationProvider {
         // 加载用户信息
         SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(phone);
         // 校验手机验证码
-        if (!flexibleCodeCheckerService.checkPhoneCode(phone, phoneCode))
+        if (flexibleCodeCheckerService.checkPhoneCodeWrong(phone, phoneCode))
             throw new SecurityAuthException(ResultCodeEnum.CODE_ERROR);
         return new UsernamePasswordAuthenticationToken(securityUser, null, null);
     }

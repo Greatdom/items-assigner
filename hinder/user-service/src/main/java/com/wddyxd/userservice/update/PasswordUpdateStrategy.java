@@ -11,7 +11,6 @@ import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
 import com.wddyxd.userservice.pojo.DTO.update.UpdatePasswordDTO;
 import com.wddyxd.userservice.pojo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -43,7 +42,7 @@ public class PasswordUpdateStrategy implements UserUpdateStrategy<UpdatePassword
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         if(!RegexValidator.validatePhone(dto.getPhone()))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(flexibleCodeCheckerService.checkPhoneCode(dto.getPhone(), dto.getPhoneCode()))
+        if(flexibleCodeCheckerService.checkPhoneCodeWrong(dto.getPhone(), dto.getPhoneCode()))
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
     }
 

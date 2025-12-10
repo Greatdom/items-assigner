@@ -12,9 +12,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -52,7 +50,7 @@ public class EmailCodeAuthenticationProvider implements AuthenticationProvider {
         // 加载用户信息
         SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(email);
         // 校验邮箱验证码
-        if(!flexibleCodeCheckerService.checkEmailCode(email, emailCode))
+        if(flexibleCodeCheckerService.checkEmailCodeWrong(email, emailCode))
             throw new SecurityAuthException(ResultCodeEnum.CODE_ERROR);
         return new UsernamePasswordAuthenticationToken(securityUser, null, null);
     }

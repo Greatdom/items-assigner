@@ -66,12 +66,21 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public UserDetailVO detail(Long id) {
+
+        //获取客户端
+
+        //获取用户详细信息
+
         return null;
     }
 
     @Override
     public UserProfileVO profile(Long id) {
-        return null;
+        //因为其他用户也会调用这个方法,所以保留id参数
+        if(id== null||id<=0)
+             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        User user = this.getById(id);
+        return BeanUtil.copyProperties(user, UserProfileVO.class);
     }
 
 
@@ -150,7 +159,12 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public void status(Long id) {
-
+        //TODO 用策略类重构代码
+        User user = this.getById(id);
+        if(user==null||user.getIsDeleted()==true)
+            throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
+        user.setStatus(user.getStatus()==1?0:1);
+        baseMapper.updateById(user);
     }
 
     @Override

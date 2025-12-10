@@ -52,10 +52,10 @@ public class MerchantSupplementController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-    @PutMapping("/status/{id}")
+    @PutMapping("/status")
     //更新者的id等于参数id
     @Operation(summary = "开张/关店接口", description = "开张/关店")
-    public Result<Void> status(@PathVariable Long id){
+    public Result<Void> status(){
 //        传入用户id,开张/关店,此时用户无法在这家店发起订单并强制取消或退货还没有完成的订单
 //- 查询不到用户或用户被逻辑删除则跳过
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

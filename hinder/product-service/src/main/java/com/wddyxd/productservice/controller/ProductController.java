@@ -6,6 +6,7 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.productservice.pojo.DTO.ProductAddDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductBasicUpdateDTO;
+import com.wddyxd.productservice.pojo.DTO.ProductFeedDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
 import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
@@ -43,7 +44,7 @@ public class ProductController {
     @GetMapping("/feed")
     //任何用户无需登录可访问
     @Operation(summary = "在用户端推送商品接口", description = "在用户端首页推送商品")
-    public Result<ProductProfileVO> feed(@RequestBody ProductListDTO productListDTO){
+    public Result<ProductProfileVO> feed(@RequestBody ProductFeedDTO productFeedDTO){
 
 //       传入ProductFeedDTO,返回List<ProductProfileVO>
 //- 商品推送可用用机器学习实现也可用基于规则的算法实现,但这里不实现个性化推荐,采用简单推送.
@@ -78,7 +79,7 @@ public class ProductController {
     @PostMapping("/add")
     //需要product.add权限而且访问者的id等于参数的userId
     @Operation(summary = "添加商品接口", description = "商户上架一件商品")
-    public Result<?> add(@RequestBody ProductAddDTO productAddDTO){
+    public Result<Void> add(@RequestBody ProductAddDTO productAddDTO){
 //        传入ProductAddDTO,先查询商品指向的商品分类是否存在,如果存在且没被逻辑删除则进入下一步,
 //- 在事务中，商品和规格需要互相引用 ID，但它们的 ID 在插入数据库前才能生成，这造成了依赖循环,
 //- 所以需要在操作数据库前手动生成ID的工作(这里采用mybatis_plus的雪花算法),
@@ -92,14 +93,14 @@ public class ProductController {
     @PutMapping("/update")
     //需要product.update权限而且访问者的id等于参数的userId
     @Operation(summary = "修改商品内容接口", description = "在商品管理界面更新商品内容,但不同时更新规格的内容")
-    public Result<?> update(@RequestBody ProductBasicUpdateDTO productBasicUpdateDTO){
+    public Result<Void> update(@RequestBody ProductBasicUpdateDTO productBasicUpdateDTO){
 //        传入ProductBasicUpdateDTO,商品被逻辑删除则拒绝更新,查询到的商品存在不合法,不匹配的情况则拒绝更新
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PutMapping("/status/{id}")
     //需要product.update权限而且(访问者的id等于参数的userId或者访问者是管理员)
     @Operation(summary = "下架/上架商品接口", description = "下架/上架商品")
-    public Result<?> status(@PathVariable Long id){
+    public Result<Void> status(@PathVariable Long id){
 //        下架/上架商品,商品被逻辑删除则拒绝更新
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
@@ -107,7 +108,7 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     //需要product.delete权限而且(访问者的id等于参数的userId或者访问者是管理员)
     @Operation(summary = "删除商品接口", description = "只有超级管理员有权限删除角色,删除角色按钮在角色管理界面")
-    public Result<?> delete(@PathVariable Long id){
+    public Result<Void> delete(@PathVariable Long id){
 //        查询商品,如果商品的id和userId合法吻合则进入下一步,
 //- 查找商品和规格并进行逻辑删除,先删除商品,再删除商品的规格,回收用户持有的优惠券,并回收该商品的所有优惠券
 //- 商品或规格被逻辑删除则跳过

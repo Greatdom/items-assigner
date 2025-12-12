@@ -1,6 +1,9 @@
 package com.wddyxd.productservice.pojo.DTO;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
+
 import java.math.BigDecimal;
 
 /**
@@ -19,6 +22,28 @@ public class ProductSkuDTO {
     private Integer stock;
     private Boolean isDefault;
     private String logo;
+
+    public static void addValidations(ProductSkuDTO productSkuDTO){
+        if(productSkuDTO==null)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productSkuDTO.getSpecs()==null||productSkuDTO.getSpecs().isEmpty())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productSkuDTO.getPrice()==null||productSkuDTO.getPrice().compareTo(BigDecimal.ZERO) <= 0)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productSkuDTO.getStock()==null||productSkuDTO.getStock() < 0)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productSkuDTO.getIsDefault()==null)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+    }
+
+    public static void updateValidations(ProductSkuDTO productSkuDTO){
+        if(productSkuDTO==null)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productSkuDTO.getId()==null)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productSkuDTO.getSpecs()==null||productSkuDTO.getSpecs().isEmpty())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+    }
 
     @Override
     public String toString() {
@@ -73,11 +98,11 @@ public class ProductSkuDTO {
         this.stock = stock;
     }
 
-    public Boolean getDefault() {
+    public Boolean getIsDefault() {
         return isDefault;
     }
 
-    public void setDefault(Boolean aDefault) {
+    public void setIsDefault(Boolean aDefault) {
         isDefault = aDefault;
     }
 

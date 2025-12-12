@@ -18,12 +18,14 @@ import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.pojo.entity.ProductCategory;
 import com.wddyxd.productservice.pojo.entity.ProductSku;
 import com.wddyxd.productservice.service.Interface.IProductService;
+import com.wddyxd.productservice.service.Interface.IProductSkuService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +43,9 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
     @Autowired
     private GetCurrentUserInfoService getCurrentUserInfoService;
+
+    @Autowired
+    private IProductSkuService productSkuService;
 
     @Override
     public Page<ProductProfileVO> List(ProductListDTO productListDTO) {
@@ -78,41 +83,45 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Transactional
     public void add(ProductAddDTO productAddDTO) {
 
-        if(productAddDTO==null||productAddDTO.getCategoryId() == null)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        ProductCategory productCategory = productCategoryMapper.selectById(productAddDTO.getCategoryId());
-        if(productCategory==null||productCategory.getIsDeleted())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        ProductAddDTO.validate(productAddDTO);
         Product product = new Product();
         List<ProductSku> productSkus = new ArrayList<>();
         BeanUtil.copyProperties(productAddDTO, product);
         product.setId(IdWorker.getId());
+        product.setUserId(getCurrentUserInfoService.getCurrentUserId());
         product.setStock(0);
-        product.setSales(0);
-        product.setPositiveComment(0);
-        product.setNegativeComment(0);
+        boolean isSetDefault = false;
         for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS()){
             ProductSku productSku = new ProductSku();
             BeanUtil.copyProperties(productSkuDTO, productSku);
             productSku.setId(IdWorker.getId());
             productSku.setProductId(product.getId());
             product.setStock(productSku.getStock()+product.getStock());
-            if(productSkuDTO.getDefault())
+            if(productSkuDTO.getIsDefault() && !isSetDefault){
                 product.setProductSkuId(productSku.getId());
+                isSetDefault = true;
+            }
+            productSkus.add(productSku);
         }
+        if(!isSetDefault)
+            product.setProductSkuId(productSkus.getFirst().getId());
+        baseMapper.insert(product);
+        productSkuService.saveBatch(productSkus);
 
-//        传入ProductAddDTO,先查询商品指向的商品分类是否存在,如果存在且没被逻辑删除则进入下一步,
-//- 在事务中，商品和规格需要互相引用 ID，但它们的 ID 在插入数据库前才能生成，这造成了依赖循环,
-//- 所以需要在操作数据库前手动生成ID的工作(这里采用mybatis_plus的雪花算法),
-//- 然后遍历规格,为每个规格设置productId,检查价格和规格的合法性,计算规格的总库存然后加到商品的总库存字段,
-//- 然后查看商品规格中第一个isDefault=true的规格,将这个规格的id赋给商品的productSkuId字段,
-//- 在插入前在redis插入添加商品的时间戳,过期时间5秒,下次访问接口时如果查询到该redis记录则直接返回
-//- 然后将商品和规格插入到数据库,数据库对没有处理的字段默认处理
+//        TODO在插入前在redis插入添加商品的时间戳,过期时间5秒,下次访问接口时如果查询到该redis记录则直接返回
     }
 
     @Override
     public void update(ProductBasicUpdateDTO productBasicUpdateDTO) {
-
+        ProductBasicUpdateDTO.validate(productBasicUpdateDTO);
+        Product product = baseMapper.selectById(productBasicUpdateDTO.getId());
+        if(product==null||product.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        product.setName(productBasicUpdateDTO.getName());
+        product.setDescription(productBasicUpdateDTO.getDescription());
+        product.setCategoryId(productBasicUpdateDTO.getCategoryId());
+        product.setProductSkuId(productBasicUpdateDTO.getProductSkuId());
+        baseMapper.updateById(product);
     }
 
     @Override

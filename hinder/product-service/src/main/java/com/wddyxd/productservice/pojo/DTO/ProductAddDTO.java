@@ -1,6 +1,9 @@
 package com.wddyxd.productservice.pojo.DTO;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
+
 import java.util.List;
 
 /**
@@ -17,6 +20,21 @@ public class ProductAddDTO {
     private Long categoryId;
     private String description;
     private List<ProductSkuDTO> productSkuDTOS;
+
+    public static void validate(ProductAddDTO productAddDTO){
+        if(productAddDTO==null||productAddDTO.getCategoryId() == null)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productAddDTO.getProductSkuDTOS()==null|| productAddDTO.getProductSkuDTOS().isEmpty())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productAddDTO.getName()==null||productAddDTO.getName().isEmpty())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productAddDTO.getDescription()==null||productAddDTO.getDescription().isEmpty())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(productAddDTO.getDescription().length()>60)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS())
+            ProductSkuDTO.addValidations(productSkuDTO);
+    }
 
     @Override
     public String toString() {

@@ -18,6 +18,7 @@ import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.pojo.entity.ProductCategory;
 import com.wddyxd.productservice.pojo.entity.ProductSku;
 import com.wddyxd.productservice.service.Interface.IProductService;
+import com.wddyxd.security.service.GetCurrentUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +39,8 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Autowired
     private ProductCategoryMapper productCategoryMapper;
 
-
+    @Autowired
+    private GetCurrentUserInfoService getCurrentUserInfoService;
 
     @Override
     public Page<ProductProfileVO> List(ProductListDTO productListDTO) {

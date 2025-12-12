@@ -17,6 +17,7 @@ import java.util.Date;
 
 @TableName("product")
 public class Product extends BaseEntity implements Serializable {
+    private Long productSkuId;
     private String name;//基础商品名
     private Integer sales;//总销量
     private Integer stock;//总库存
@@ -31,6 +32,7 @@ public class Product extends BaseEntity implements Serializable {
     public String toString() {
         return "Product{" +
                 super.toString() +
+                ", productSkuId=" + productSkuId +
                 ", name='" + name + '\'' +
                 ", sales=" + sales +
                 ", stock=" + stock +
@@ -41,6 +43,14 @@ public class Product extends BaseEntity implements Serializable {
                 ", userId=" + userId +
                 ", status=" + status +
                 '}';
+    }
+
+    public Long getProductSkuId() {
+        return productSkuId;
+    }
+
+    public void setProductSkuId(Long productSkuId) {
+        this.productSkuId = productSkuId;
     }
 
     public String getName() {

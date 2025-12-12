@@ -7,6 +7,7 @@ import com.wddyxd.productservice.pojo.DTO.ProductAddDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductBasicUpdateDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductFeedDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
+import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Product;
 
@@ -21,11 +22,11 @@ public interface IProductService extends IService<Product> {
 
     public Page<ProductProfileVO> List(ProductListDTO productListDTO);
 
-    public ProductProfileVO feed(ProductFeedDTO productFeedDTO);
+    public Page<ProductProfileVO> feed(ProductFeedDTO productFeedDTO);
 
-    public ProductProfileVO visit(Long id);
+    public ProductDetailVO visit(Long id);
 
-    public ProductProfileVO detail(Long id);
+    public ProductDetailVO detail(Long id);
 
     public void add(ProductAddDTO productAddDTO);
 

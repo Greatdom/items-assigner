@@ -21,31 +21,52 @@
         <result column="is_deleted" property="isDeleted"/>
     </resultMap>
 
-    <select id="getPageProductProfileVO" resultMap="ProductProfileMap">
+    <!-- 2. 抽离通用 SQL 片段（多表关联+基础字段） -->
+    <sql id="BaseProductProfileSQL">
         SELECT
-        p.id,
-        pc.name AS product_category_name,
-        ps.specs AS product_sku_name,
-        p.user_id,
-        u.username,
-        p.name AS product_name,
-        ps.price,
-        p.stock,
-        p.sales,
-        p.positiveComment AS positive_comment,
-        p.negativeComment AS negative_comment,
-        ps.logo,
-        p.status,
-        p.create_time,
-        p.update_time,
-        p.is_deleted
+            p.id,
+            pc.name AS product_category_name,
+            ps.specs AS product_sku_name,
+            p.user_id,
+            u.username,
+            p.name AS product_name,
+            ps.price,
+            p.stock,
+            p.sales,
+            p.positiveComment AS positive_comment,
+            p.negativeComment AS negative_comment,
+            ps.logo,
+            p.status,
+            p.create_time,
+            p.update_time,
+            p.is_deleted
         FROM
-        product p
-        LEFT JOIN product_category pc ON p.category_id = pc.id AND pc.is_deleted = 0
-        LEFT JOIN product_sku ps ON p.product_sku_id = ps.id AND ps.is_deleted = 0
-        LEFT JOIN user u ON p.user_id = u.id AND u.is_deleted = 0 AND u.status = 0
+            product p
+                LEFT JOIN product_category pc ON p.category_id = pc.id AND pc.is_deleted = 0
+                LEFT JOIN product_sku ps ON p.product_sku_id = ps.id AND ps.is_deleted = 0
+                LEFT JOIN user u ON p.user_id = u.id AND u.is_deleted = 0 AND u.status = 0
+        WHERE
+            p.is_deleted = 0
+    </sql>
+
+    <select id="getPageProductProfileVOManager" resultMap="ProductProfileMap">
+        <include refid="BaseProductProfileSQL"/>
         <if test="search != null and search != ''">
             AND p.name LIKE CONCAT('%', #{search}, '%')
+        </if>
+        ORDER BY p.create_time DESC
+    </select>
+
+    <select id="getPageProductProfileVOFeed" resultMap="ProductProfileMap">
+        <include refid="BaseProductProfileSQL"/>
+        <if test="categoryId != null">
+            AND p.category_id = #{categoryId}
+        </if>
+        <if test="sortColumn != null and sortOrder != null">
+            ORDER BY ${sortColumn} ${sortOrder}
+        </if>
+        <if test="sortColumn == null or sortOrder == null">
+            ORDER BY p.create_time DESC
         </if>
     </select>
 

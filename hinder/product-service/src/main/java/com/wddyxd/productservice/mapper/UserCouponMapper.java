@@ -3,6 +3,7 @@ package com.wddyxd.productservice.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wddyxd.productservice.pojo.entity.UserCoupon;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +12,6 @@ import org.springframework.stereotype.Service;
  * @author: wddyxd
  * @create: 2025-12-12 08:52
  **/
-@Service
+@Mapper
 public interface UserCouponMapper extends BaseMapper<UserCoupon> {
 }

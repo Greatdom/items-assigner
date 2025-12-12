@@ -10,6 +10,7 @@ import com.wddyxd.productservice.pojo.DTO.ProductAddDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductBasicUpdateDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductFeedDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
+import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.service.Interface.IProductService;
@@ -31,21 +32,23 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
         Page<ProductProfileVO> page = new Page<>(productListDTO.getPageNum(), productListDTO.getPageSize());
 
-        return baseMapper.getPageProductProfileVO(page, productListDTO.getSearch());
+        return baseMapper.getPageProductProfileVOManager(page, productListDTO.getSearch());
     }
 
     @Override
-    public ProductProfileVO feed(ProductFeedDTO productFeedDTO) {
+    public Page<ProductProfileVO> feed(ProductFeedDTO productFeedDTO) {
+        productFeedDTO.validatePageParams(productFeedDTO);
+        Page<ProductProfileVO> page = new Page<>(productFeedDTO.getPageNum(), productFeedDTO.getPageSize());
+        return baseMapper.getPageProductProfileVOFeed(page, productFeedDTO.getCategoryId(), productFeedDTO.getSortColumn().getColumn(), productFeedDTO.getSortOrder().getOrder());
+    }
+
+    @Override
+    public ProductDetailVO visit(Long id) {
         return null;
     }
 
     @Override
-    public ProductProfileVO visit(Long id) {
-        return null;
-    }
-
-    @Override
-    public ProductProfileVO detail(Long id) {
+    public ProductDetailVO detail(Long id) {
         return null;
     }
 

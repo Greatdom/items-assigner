@@ -14,16 +14,16 @@ public class ProductFeedDTO extends SearchDTO {
 
     private Long categoryId;
 
-    private String region;
+    private SortColumn sortColumn;
 
-    private String sort;
+    private SortOrder sortOrder;
 
     @Override
     public String toString() {
         return "ProductFeedDTO{" +
                 "categoryId=" + categoryId +
-                ", region='" + region + '\'' +
-                ", sort='" + sort + '\'' +
+                ", sortColumn='" + sortColumn + '\'' +
+                ", sortOrder='" + sortOrder + '\'' +
                 '}';
     }
 
@@ -35,19 +35,46 @@ public class ProductFeedDTO extends SearchDTO {
         this.categoryId = categoryId;
     }
 
-    public String getRegion() {
-        return region;
+    public SortColumn getSortColumn() {
+        return sortColumn;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setSortColumn(SortColumn sortColumn) {
+        this.sortColumn = sortColumn;
     }
 
-    public String getSort() {
-        return sort;
+    public SortOrder getSortOrder() {
+        return sortOrder;
     }
 
-    public void setSort(String sort) {
-        this.sort = sort;
+    public void setSortOrder(SortOrder sortOrder) {
+        this.sortOrder = sortOrder;
     }
+
+    public enum SortColumn {
+        sales("p.sales"),
+        price("ps.price");
+
+        private final String column;
+        SortColumn(String column) {
+            this.column = column;
+        }
+        public String getColumn() {
+            return column;
+        }
+    }
+
+    public enum SortOrder {
+        ASC("asc"),
+        DESC("desc");
+        private final String order;
+        SortOrder(String order) {
+            this.order = order;
+        }
+        public String getOrder() {
+            return order;
+        }
+    }
+
+
 }

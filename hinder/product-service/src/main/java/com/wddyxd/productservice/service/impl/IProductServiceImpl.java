@@ -1,6 +1,9 @@
 package com.wddyxd.productservice.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.productservice.mapper.ProductMapper;
 import com.wddyxd.productservice.pojo.DTO.ProductAddDTO;
@@ -11,6 +14,7 @@ import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.service.Interface.IProductService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  * @program: items-assigner
@@ -22,8 +26,12 @@ import org.springframework.stereotype.Service;
 public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements IProductService {
 
     @Override
-    public ProductProfileVO List(ProductListDTO productListDTO) {
-        return null;
+    public Page<ProductProfileVO> List(ProductListDTO productListDTO) {
+        productListDTO.validatePageParams(productListDTO);
+
+        Page<ProductProfileVO> page = new Page<>(productListDTO.getPageNum(), productListDTO.getPageSize());
+
+        return baseMapper.getPageProductProfileVO(page, productListDTO.getSearch());
     }
 
     @Override

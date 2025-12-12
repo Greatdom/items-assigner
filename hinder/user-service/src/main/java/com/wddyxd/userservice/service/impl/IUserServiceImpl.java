@@ -11,7 +11,6 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.constant.RoleConstant;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
-import com.wddyxd.common.utils.encoder.PasswordEncoder;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.mapper.UserRoleMapper;

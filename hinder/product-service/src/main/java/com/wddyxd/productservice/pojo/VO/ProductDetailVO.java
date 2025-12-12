@@ -1,6 +1,8 @@
 package com.wddyxd.productservice.pojo.VO;
 
 
+import java.util.List;
+
 /**
  * @program: items-assigner
  * @description: 访问商品接口的响应体,携带ProductProfileVO,UserProfileVO,List<CouponVO>,List<ProductSkuVO>
@@ -9,4 +11,13 @@ package com.wddyxd.productservice.pojo.VO;
  **/
 
 public class ProductDetailVO {
+
+    private ProductProfileVO productProfileVO;
+
+    private UserProfileVO userProfileVO;
+
+    private List<CouponVO> couponVO;
+
+    private List<ProductSkuVO> productSkuVO;
+
 }

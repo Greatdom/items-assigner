@@ -1,6 +1,7 @@
 package com.wddyxd.productservice.service.Interface;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.productservice.pojo.DTO.ProductAddDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductBasicUpdateDTO;
@@ -18,7 +19,7 @@ import com.wddyxd.productservice.pojo.entity.Product;
 
 public interface IProductService extends IService<Product> {
 
-    public ProductProfileVO List(ProductListDTO productListDTO);
+    public Page<ProductProfileVO> List(ProductListDTO productListDTO);
 
     public ProductProfileVO feed(ProductFeedDTO productFeedDTO);
 

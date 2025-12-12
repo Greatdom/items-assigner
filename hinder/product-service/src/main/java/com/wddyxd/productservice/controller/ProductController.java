@@ -1,6 +1,7 @@
 package com.wddyxd.productservice.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -28,7 +29,7 @@ public class ProductController {
     @GetMapping("/list")
     //需要product.list权限而且(参数userId等于访问者的id或访问者是管理员)
     @Operation(summary = "分页获取商品列表接口", description = "在后台和商户端的商品管理界面查看所有商品")
-    public Result<ProductProfileVO> list(@RequestBody ProductListDTO productListDTO){
+    public Result<Page<ProductProfileVO>> list(@RequestBody ProductListDTO productListDTO){
 
 //       传入ProductListDTO,在后台和商户端的商品管理界面查看所有存在的商品或当前商户的商品,
 //- 支持根据商品名搜索,支持根据创建时间或更新时间检索,支持根据商品分类检索,

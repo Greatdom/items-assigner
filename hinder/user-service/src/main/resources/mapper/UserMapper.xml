@@ -2,18 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wddyxd.userservice.mapper.UserMapper"> <!-- 替换为你的实际包路径 -->
 
-    <!-- 根据用户ID查询角色名称列表 -->
-    <select id="selectRoleNamesByUserId" resultType="java.lang.String">
-        SELECT
-            r.role_name
-        FROM
-            role r
-                INNER JOIN
-            user_role ur ON r.id = ur.role_id  -- 关联用户-角色中间表
-        WHERE
-            ur.user_id = #{userId}  -- 传入用户ID
-          AND r.is_deleted = 0    -- 角色未删除
-          AND ur.is_deleted = 0   -- 用户-角色关联关系未删除
-    </select>
+
 
 </mapper>

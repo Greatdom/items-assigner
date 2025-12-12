@@ -2,6 +2,8 @@ package com.wddyxd.productservice.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,4 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
  **/
 @Mapper
 public interface ProductMapper extends BaseMapper<Product> {
+
+    public Page<ProductProfileVO> getPageProductProfileVO(Page<ProductProfileVO> page, String search);
+
 }

@@ -27,7 +27,7 @@ public class Coupon extends BaseEntity implements Serializable {
     private Date startTime;//生效时间
     private Date endTime;//失效时间
     private Integer stock;//发放总量
-    private Integer sendingStock;//剩余数量
+    private Integer sendingStock;//领取数量
     private Integer status;//0-未生效 1-生效中 2-已过期
 
     @Override

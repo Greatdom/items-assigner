@@ -2,8 +2,11 @@ package com.wddyxd.productservice.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.wddyxd.productservice.pojo.VO.ProductSkuVO;
 import com.wddyxd.productservice.pojo.entity.ProductSku;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @program: items-assigner
@@ -13,4 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
  **/
 @Mapper
 public interface ProductSkuMapper extends BaseMapper<ProductSku> {
+
+    List<ProductSkuVO> selectProductSkuVOByProductId(Long productId);
+
 }

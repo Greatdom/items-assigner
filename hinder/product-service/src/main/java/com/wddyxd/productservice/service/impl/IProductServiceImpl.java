@@ -126,7 +126,11 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
     @Override
     public void status(Long id) {
-
+        Product product = baseMapper.selectById(id);
+        if(product==null||product.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        product.setStatus(product.getStatus()==1?0:1);
+        baseMapper.updateById(product);
     }
 
     @Override

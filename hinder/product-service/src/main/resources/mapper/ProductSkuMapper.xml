@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wddyxd.productservice.mapper.ProductSkuMapper"> <!-- 替换为你的实际包路径 -->
+
+    <resultMap id="ProductSkuVOMap" type="com.wddyxd.productservice.pojo.VO.ProductSkuVO">
+        <id column="id" property="id"/>
+        <result column="product_id" property="productId"/>
+        <result column="specs" property="specs"/>
+        <result column="price" property="price"/>
+        <result column="stock" property="stock"/>
+        <result column="sales" property="sales"/>
+        <result column="logo" property="logo"/>
+    </resultMap>
+
+    <select id="selectProductSkuVOByProductId" resultType="com.wddyxd.productservice.pojo.VO.ProductSkuVO">
+        select
+            id,
+            product_id,
+            specs,
+            price,
+            stock,
+            sales,
+            logo
+        from product_sku
+        where product_id = #{productId}
+        and deleted = 0
+    </select>
+
+
+</mapper>

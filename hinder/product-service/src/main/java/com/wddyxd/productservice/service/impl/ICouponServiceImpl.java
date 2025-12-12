@@ -1,15 +1,19 @@
 package com.wddyxd.productservice.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.productservice.mapper.CouponMapper;
 import com.wddyxd.productservice.pojo.DTO.CouponDTO;
 import com.wddyxd.productservice.pojo.VO.CouponVO;
+import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
 import com.wddyxd.productservice.service.Interface.ICouponService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -24,7 +28,11 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
 
     @Override
     public Page<CouponVO> List(SearchDTO searchDTO) {
-        return null;
+        searchDTO.validatePageParams(searchDTO);
+
+        Page<ProductProfileVO> page = new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize());
+
+        return baseMapper.getPageCouponVO(page, searchDTO.getSearch());
     }
 
     @Override

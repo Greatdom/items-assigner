@@ -10,6 +10,7 @@ import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.service.Interface.IProductService;
+import org.springframework.stereotype.Service;
 
 /**
  * @program: items-assigner
@@ -17,7 +18,7 @@ import com.wddyxd.productservice.service.Interface.IProductService;
  * @author: wddyxd
  * @create: 2025-12-10 12:05
  **/
-
+@Service
 public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements IProductService {
 
     @Override

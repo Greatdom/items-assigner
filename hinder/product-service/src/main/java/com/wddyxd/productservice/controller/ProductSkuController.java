@@ -35,7 +35,7 @@ public class ProductSkuController {
     @PostMapping("/add")
     //需要product.add权限而且访问者的id等于参数的userId
     @Operation(summary = "添加商品规格接口", description = "在创建商品后编辑商品时可用")
-    public Result<?> add(@RequestBody ProductSkuDTO productSkuDTO){
+    public Result<Void> add(@RequestBody ProductSkuDTO productSkuDTO){
 //        传入ProductSkuDTO,添加商品规格后,要刷新商品的库存,注意商品规格要指向合法的商品
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
@@ -43,7 +43,7 @@ public class ProductSkuController {
     @PutMapping("/update")
     //需要product.update权限而且访问者的id等于参数的userId
     @Operation(summary = "修改商品规格接口", description = "在创建商品后编辑商品时可用")
-    public Result<?> update(@RequestBody ProductSkuDTO productSkuDTO){
+    public Result<Void> update(@RequestBody ProductSkuDTO productSkuDTO){
 //        传入ProductSkuDTO,更新商品规格后,要刷新商品的库存,注意商品规格要指向合法的商品
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
@@ -51,7 +51,7 @@ public class ProductSkuController {
     @DeleteMapping("/delete/{id}")
     //需要product.delete权限而且(访问者的id等于参数的userId或者访问者是管理员)
     @Operation(summary = "删除商品规格接口", description = "删除商品的规格")
-    public Result<?> delete(@PathVariable Long id){
+    public Result<Void> delete(@PathVariable Long id){
 //       删除商品的规格,但不能删除该商品的最后一个商品规格,
 //- 也不能删除商品的默认规格,如果规格无法指向具体商品则在删除后跳过,删除后修改商品库存
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

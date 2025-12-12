@@ -34,7 +34,7 @@ public class UserCouponController {
     @PostMapping("/add/{id}")
     //需要userCoupon.add权限且访问者的id等于参数的userId
     @Operation(summary = "领取优惠券接口", description = "用户进行领取优惠券操作")
-    public Result<?> add(@PathVariable Long id){
+    public Result<Void> add(@PathVariable Long id){
 //        领取优惠券,只有在优惠券没被删除,在生效的时候才可执行操作,
 //- 要注意一人一券,就要试图解决高并发问题,然后要将优惠券的库存减少
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
@@ -43,7 +43,7 @@ public class UserCouponController {
     @PutMapping("/consume/{id}/{orderId}")
     //需要userCoupon.update权限且访问者的id等于参数的userId
     @Operation(summary = "修改商品分类接口", description = "管理员可以在商品分类管理界面更新商品分类信息")
-    public Result<?> consume(@PathVariable Long id,@PathVariable Long orderId){
+    public Result<Void> consume(@PathVariable Long id,@PathVariable Long orderId){
 //        用户在下单时进行优惠券的消费,传入orderId后生成useTime,status代表该优惠券被消费
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
@@ -51,7 +51,7 @@ public class UserCouponController {
     @DeleteMapping("/destroy/{id}")
     //需要userCoupon.delete权限
     @Operation(summary = "删除商品分类接口", description = "由于一些原因,触发优惠券的删除,这时会回收用户领取的优惠券,在优惠券被删除时调用接口")
-    public Result<?> destroy(@PathVariable Long id){
+    public Result<Void> destroy(@PathVariable Long id){
 //       传入优惠券的id,批量逻辑删除该couponId指向的所有用户领取的优惠券,然后减去优惠券的库存
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }

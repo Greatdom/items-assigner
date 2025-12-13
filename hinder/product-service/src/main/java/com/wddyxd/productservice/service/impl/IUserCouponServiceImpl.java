@@ -1,12 +1,23 @@
 package com.wddyxd.productservice.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.productservice.mapper.UserCouponMapper;
 import com.wddyxd.productservice.pojo.VO.UserCouponVO;
+import com.wddyxd.productservice.pojo.entity.Coupon;
 import com.wddyxd.productservice.pojo.entity.UserCoupon;
+import com.wddyxd.productservice.service.Interface.ICouponService;
 import com.wddyxd.productservice.service.Interface.IUserCouponService;
+import com.wddyxd.security.service.GetCurrentUserInfoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @program: items-assigner
@@ -18,19 +29,66 @@ import org.springframework.stereotype.Service;
 @Service
 public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCoupon> implements IUserCouponService {
 
+    @Autowired
+    private GetCurrentUserInfoService getCurrentUserInfoService;
+
+    @Autowired
+    private ICouponService couponService;
+
     @Override
-    public UserCouponVO List() {
-        return null;
+    public List<UserCouponVO> List() {
+        long userId = getCurrentUserInfoService.getCurrentUserId();
+        return baseMapper.listUserCouponVO(userId);
     }
 
     @Override
+    @Transactional
     public void add(Long id) {
+
+        //TODO一人一券,上悲观锁
+        Coupon coupon = couponService.getById(id);
+        if(coupon== null||coupon.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        Date now = new Date();
+        if(coupon.getStatus()!=1||coupon.getStartTime().after(now)||coupon.getEndTime().before(now))
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(coupon.getStock()-coupon.getSendingStock()<=0)
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        UserCoupon userCoupon = new UserCoupon();
+        userCoupon.setUserId(getCurrentUserInfoService.getCurrentUserId());
+        userCoupon.setCouponId(id);
+        userCoupon.setStatus(0);
+        userCoupon.setGetTime(new Date());
+        //TODO防止超拿,上乐观锁
+        baseMapper.insert(userCoupon);
+        coupon.setSendingStock(coupon.getSendingStock()+1);
+        couponService.updateById(coupon);
+
+
 
     }
 
     @Override
     public void consume(Long id, Long orderId) {
-
+//        用户在下单时进行优惠券的消费,传入orderId后生成useTime,status代表该优惠券被消费
+        Coupon coupon = couponService.getById(id);
+        if(coupon== null||coupon.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        Date now = new Date();
+        if(coupon.getStatus()!=1||coupon.getStartTime().after(now)||coupon.getEndTime().before(now))
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        UserCoupon userCoupon = baseMapper.selectOne(
+                new LambdaQueryWrapper<UserCoupon>()
+                        .eq(UserCoupon::getCouponId, id)
+        );
+        if(userCoupon==null||userCoupon.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(userCoupon.getStatus()!=0)
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        userCoupon.setUseTime(new Date());
+        userCoupon.setStatus(1);
+        userCoupon.setOrderId(orderId);
+        baseMapper.updateById(userCoupon);
     }
 
     @Override

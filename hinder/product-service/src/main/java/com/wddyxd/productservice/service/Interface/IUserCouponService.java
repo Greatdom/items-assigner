@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.productservice.pojo.VO.UserCouponVO;
 import com.wddyxd.productservice.pojo.entity.UserCoupon;
 
+import java.util.List;
+
 /**
  * @program: items-assigner
  * @description: description
@@ -14,7 +16,7 @@ import com.wddyxd.productservice.pojo.entity.UserCoupon;
 
 public interface IUserCouponService extends IService<UserCoupon> {
 
-    public UserCouponVO List();
+    public List<UserCouponVO> List();
 
     public void add(Long id);
 

@@ -25,7 +25,7 @@ public interface ICouponService extends IService<Coupon> {
 
     public List<CouponVO> visit(Long id);
 
-    public void add(Coupon coupon);
+    public void add(CouponDTO couponDTO);
 
     public void update(CouponDTO couponDTO);
 

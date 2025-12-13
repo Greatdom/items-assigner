@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @program: items-assigner
  * @description: description
@@ -24,7 +26,7 @@ public class UserCouponController {
     @GetMapping("/list")
     //需要userCoupon.list权限且访问者的id等于参数的userId
     @Operation(summary = "查询某用户领取的可用优惠券列表接口", description = "在用户端的个人中心的优惠券界面查看自己领取的优惠券")
-    public Result<UserCouponVO> list(){
+    public Result<List<UserCouponVO>> list(){
 
 //        返回List<UserCouponVO>,查看自己所有的已领取的未过期未被删除且未被使用的优惠券,
 //- 要保证用户领取的优惠券指向的优惠券合法

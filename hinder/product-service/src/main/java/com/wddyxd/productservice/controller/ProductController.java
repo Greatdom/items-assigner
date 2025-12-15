@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/product/product")
 @Tag(name = "商品控制器", description = "商品相关接口")
+@Validated
 public class ProductController {
 
     @Autowired
@@ -96,7 +97,6 @@ public class ProductController {
 //- 然后查看商品规格中第一个isDefault=true的规格,将这个规格的id赋给商品的productSkuId字段,
 //- 在插入前在redis插入添加商品的时间戳,过期时间5秒,下次访问接口时如果查询到该redis记录则直接返回
 //- 然后将商品和规格插入到数据库,数据库对没有处理的字段默认处理
-        System.out.println(productAddDTO);
         productService.add(productAddDTO);
         return Result.success();
     }

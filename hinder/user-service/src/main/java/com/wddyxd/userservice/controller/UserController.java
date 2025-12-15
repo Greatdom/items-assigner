@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user/user")
 @Tag(name = "用户控制器", description = "用户管理相关接口")
+@Validated
 public class UserController {
 
     @Autowired
@@ -39,7 +40,7 @@ public class UserController {
     @GetMapping("/getUsername/{id}")
 //   product.add的远程调用接口
     @Operation(summary = "分页获取用户列表接口", description = "在管理员的用户管理主界面查看所有用户")
-    public Result<String> getUsername(@PathVariable Long id){
+    public Result<String> getUsername(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id){
         System.out.println("getUsername---"+id);
         return Result.success(userService.getUsername(id));
     }

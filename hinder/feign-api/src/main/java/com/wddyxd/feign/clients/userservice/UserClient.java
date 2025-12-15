@@ -34,7 +34,7 @@ public interface UserClient {
     Result<UserProfileVO> profile(@PathVariable Long id);
 
     @GetMapping("/user/user/getUsername/{id}")
-    Result<String> getUsername(@PathVariable Long id);
+    Result<String> getUsername(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id);
 
 
 

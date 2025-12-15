@@ -96,7 +96,7 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
         Product product = new Product();
         List<ProductSku> productSkus = new ArrayList<>();
         BeanUtil.copyProperties(productAddDTO, product);
-        //TODO 判断商品分类是否合法
+        //TODO 判断商品分类是否合法,在此之前要添加商品分类
         //远程调用获得用户名
         long userId = getCurrentUserInfoService.getCurrentUserId();
         Result<String> getUsername = userClient.getUsername(userId);

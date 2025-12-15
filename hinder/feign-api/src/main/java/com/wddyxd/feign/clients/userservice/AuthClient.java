@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author: wddyxd
  * @create: 2025-12-03 16:48
  **/
-@FeignClient(value = "user-service",fallbackFactory = AuthClientFallbackFactory.class)
+@FeignClient(value = "user-service",
+        contextId = "authClient",
+        fallbackFactory = AuthClientFallbackFactory.class)
 public interface AuthClient {
 
     @GetMapping("/user/auth/passwordSecurityGetter/{username}")

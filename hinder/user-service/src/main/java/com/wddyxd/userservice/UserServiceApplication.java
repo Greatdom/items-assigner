@@ -10,7 +10,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication
 @ComponentScan("com.wddyxd")
 @MapperScan("com.wddyxd.userservice.mapper")
-@EnableFeignClients(basePackages = "com.wddyxd.feign.clients.userservice")
+@EnableFeignClients(basePackages = "com.wddyxd.feign.clients")
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class UserServiceApplication {
 

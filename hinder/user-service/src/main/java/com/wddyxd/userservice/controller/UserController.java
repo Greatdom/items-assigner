@@ -15,7 +15,9 @@ import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.service.Interface.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -33,6 +35,14 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @GetMapping("/getUsername/{id}")
+//   product.add的远程调用接口
+    @Operation(summary = "分页获取用户列表接口", description = "在管理员的用户管理主界面查看所有用户")
+    public Result<String> getUsername(@PathVariable Long id){
+        System.out.println("getUsername---"+id);
+        return Result.success(userService.getUsername(id));
+    }
 
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('user.list')")

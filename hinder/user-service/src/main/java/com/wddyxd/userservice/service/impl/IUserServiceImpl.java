@@ -54,6 +54,11 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     private UserRoleMapper userRoleMapper;
 
     @Override
+    public String getUsername(Long id) {
+        return baseMapper.selectById(id).getUsername();
+    }
+
+    @Override
     public Page<User> List(SearchDTO searchDTO) {
         searchDTO.validatePageParams(searchDTO);
 

@@ -2,6 +2,7 @@ package com.wddyxd.feign.config;
 
 
 import com.wddyxd.feign.fallback.AuthClientFallbackFactory;
+import com.wddyxd.feign.fallback.UserClientFallbackFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,6 +19,11 @@ public class DefaultFeignConfiguration {
     @Bean
     public AuthClientFallbackFactory authClientFallbackFactory(){
         return new AuthClientFallbackFactory();
+    }
+
+    @Bean
+    public UserClientFallbackFactory userClientFallbackFactory(){
+        return new UserClientFallbackFactory();
     }
 
 }

@@ -11,6 +11,7 @@ import com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 
 /**
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author: wddyxd
  * @create: 2025-12-13 16:36
  **/
-
 public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
 
     static final Logger log = LoggerFactory.getLogger(com.wddyxd.feign.fallback.UserClientFallbackFactory.class);
@@ -29,6 +29,12 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
         return new UserClient() {
             @Override
             public Result<UserProfileVO> profile(@PathVariable Long id){
+                log.error(LogPrompt.FEIGN_ERROR.msg);
+                return Result.error();
+            }
+
+            @Override
+            public Result<String> getUsername(@PathVariable Long id) {
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }

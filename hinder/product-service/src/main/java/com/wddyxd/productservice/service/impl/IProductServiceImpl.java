@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.utils.Result;
+import com.wddyxd.feign.clients.userservice.UserClient;
 import com.wddyxd.productservice.mapper.ProductCategoryMapper;
 import com.wddyxd.productservice.mapper.ProductMapper;
 import com.wddyxd.productservice.pojo.DTO.*;
@@ -46,6 +48,10 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
     @Autowired
     private IProductSkuService productSkuService;
+
+    @Autowired
+    private UserClient userClient;
+
 
     @Override
     public Page<ProductProfileVO> List(ProductListDTO productListDTO) {
@@ -86,52 +92,46 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Transactional
     public void add(ProductAddDTO productAddDTO) {
 
-//        public static void validate(ProductAddDTO productAddDTO){
-//            if(productAddDTO==null||productAddDTO.getCategoryId() == null)
-//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-//            if(productAddDTO.getProductSkuDTOS()==null|| productAddDTO.getProductSkuDTOS().isEmpty())
-//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-//            if(productAddDTO.getName()==null||productAddDTO.getName().isEmpty())
-//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-//            if(productAddDTO.getDescription()==null||productAddDTO.getDescription().isEmpty())
-//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-//            if(productAddDTO.getDescription().length()>60)
-//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-//            for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS())
-//                ProductSkuDTO.addValidations(productSkuDTO);
-//        }
-
-//        ProductAddDTO.validate(productAddDTO);
-//        Product product = new Product();
-//        List<ProductSku> productSkus = new ArrayList<>();
-//        BeanUtil.copyProperties(productAddDTO, product);
-//        product.setId(IdWorker.getId());
-//        product.setUserId(getCurrentUserInfoService.getCurrentUserId());
-//        product.setStock(0);
-//        boolean isSetDefault = false;
-//        for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS()){
-//            ProductSku productSku = new ProductSku();
-//            BeanUtil.copyProperties(productSkuDTO, productSku);
-//            productSku.setId(IdWorker.getId());
-//            productSku.setProductId(product.getId());
-//            product.setStock(productSku.getStock()+product.getStock());
-//            if(productSkuDTO.getIsDefault() && !isSetDefault){
-//                product.setProductSkuId(productSku.getId());
-//                isSetDefault = true;
-//            }
-//            productSkus.add(productSku);
-//        }
-//        if(!isSetDefault)
-//            product.setProductSkuId(productSkus.getFirst().getId());
-//        baseMapper.insert(product);
-//        productSkuService.saveBatch(productSkus);
+        //生成一个商品
+        Product product = new Product();
+        List<ProductSku> productSkus = new ArrayList<>();
+        BeanUtil.copyProperties(productAddDTO, product);
+        //TODO 判断商品分类是否合法
+        //远程调用获得用户名
+        long userId = getCurrentUserInfoService.getCurrentUserId();
+        Result<String> getUsername = userClient.getUsername(userId);
+        System.out.println(getUsername);
+        if(getUsername.getCode()!=200||getUsername.getData()==null)
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        product.setUsername(getUsername.getData());
+        product.setId(IdWorker.getId());
+        product.setUserId(userId);
+        product.setStock(0);
+        boolean isSetDefault = false;
+        //处理商品规格
+        for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS()){
+            ProductSku productSku = new ProductSku();
+            BeanUtil.copyProperties(productSkuDTO, productSku);
+            productSku.setId(IdWorker.getId());
+            productSku.setProductId(product.getId());
+            productSku.setSales(0);
+            product.setStock(productSku.getStock()+product.getStock());
+            if(productSkuDTO.getIsDefault() && !isSetDefault){
+                product.setProductSkuId(productSku.getId());
+                isSetDefault = true;
+            }
+            productSkus.add(productSku);
+        }
+        if(!isSetDefault)
+            product.setProductSkuId(productSkus.getFirst().getId());
+        baseMapper.insert(product);
+        productSkuService.saveBatch(productSkus);
 
 //        TODO在插入前在redis插入添加商品的时间戳,过期时间5秒,下次访问接口时如果查询到该redis记录则直接返回
     }
 
     @Override
     public void update(ProductBasicUpdateDTO productBasicUpdateDTO) {
-//        ProductBasicUpdateDTO.validate(productBasicUpdateDTO);
         Product product = baseMapper.selectById(productBasicUpdateDTO.getId());
         if(product==null||product.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);

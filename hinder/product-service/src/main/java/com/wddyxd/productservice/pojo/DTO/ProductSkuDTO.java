@@ -21,8 +21,9 @@ public class ProductSkuDTO {
     @NotNull(message = "更新商品SKU时ID不能为空", groups = UpdateGroup.class)
     @Min(value = 1, message = "SKU ID必须大于0", groups = UpdateGroup.class)
     private Long id;
-    @NotNull(message = "商品ID不能为空", groups = {AddGroup.class, UpdateGroup.class})
-    @Min(value = 1, message = "商品ID必须大于0", groups = {AddGroup.class, UpdateGroup.class})
+    @Null(message = "新增商品SKU时ID必须为空", groups = AddGroup.class)
+    @NotNull(message = "商品ID不能为空", groups = {UpdateGroup.class})
+    @Min(value = 1, message = "商品ID必须大于0", groups = {UpdateGroup.class})
     private Long productId;
     @NotBlank(message = "SKU规格不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String specs;

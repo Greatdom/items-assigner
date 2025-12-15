@@ -54,4 +54,5 @@ public interface IUserService extends IService<User> {
 
     public void delete(Long id);
 
+    String getUsername(Long id);
 }

@@ -1,6 +1,8 @@
 package com.wddyxd.productservice.pojo.VO;
 
 
+import com.wddyxd.productservice.pojo.entity.Coupon;
+
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ public class ProductDetailVO {
 
     private UserProfileVO userProfileVO;
 
-    private List<CouponVO> couponVO;
+    private List<Coupon> couponVO;
 
     private List<ProductSkuVO> productSkuVO;
 

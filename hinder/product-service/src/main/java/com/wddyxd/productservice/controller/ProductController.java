@@ -12,9 +12,11 @@ import com.wddyxd.productservice.pojo.DTO.ProductFeedDTO;
 import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
 import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
+import com.wddyxd.productservice.service.Interface.IProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/product/product")
 @Tag(name = "商品控制器", description = "商品相关接口")
 public class ProductController {
+
+    @Autowired
+    private IProductService productService;
 
     @GetMapping("/list")
     //需要product.list权限而且(参数userId等于访问者的id或访问者是管理员)
@@ -91,7 +96,9 @@ public class ProductController {
 //- 然后查看商品规格中第一个isDefault=true的规格,将这个规格的id赋给商品的productSkuId字段,
 //- 在插入前在redis插入添加商品的时间戳,过期时间5秒,下次访问接口时如果查询到该redis记录则直接返回
 //- 然后将商品和规格插入到数据库,数据库对没有处理的字段默认处理
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        System.out.println(productAddDTO);
+        productService.add(productAddDTO);
+        return Result.success();
     }
 
     @PutMapping("/update")

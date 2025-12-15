@@ -37,32 +37,33 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
 
     @Override
     public List<UserCouponVO> List() {
-        long userId = getCurrentUserInfoService.getCurrentUserId();
-        return baseMapper.listUserCouponVO(userId);
+//        long userId = getCurrentUserInfoService.getCurrentUserId();
+//        return baseMapper.listUserCouponVO(userId);
+        return null;
     }
 
     @Override
     @Transactional
     public void add(Long id) {
 
-        //TODO一人一券,上悲观锁
-        Coupon coupon = couponService.getById(id);
-        if(coupon== null||coupon.getIsDeleted())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        Date now = new Date();
-        if(coupon.getStatus()!=1||coupon.getStartTime().after(now)||coupon.getEndTime().before(now))
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(coupon.getStock()-coupon.getSendingStock()<=0)
-            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
-        UserCoupon userCoupon = new UserCoupon();
-        userCoupon.setUserId(getCurrentUserInfoService.getCurrentUserId());
-        userCoupon.setCouponId(id);
-        userCoupon.setStatus(0);
-        userCoupon.setGetTime(new Date());
-        //TODO防止超拿,上乐观锁
-        baseMapper.insert(userCoupon);
-        coupon.setSendingStock(coupon.getSendingStock()+1);
-        couponService.updateById(coupon);
+//        //TODO一人一券,上悲观锁
+//        Coupon coupon = couponService.getById(id);
+//        if(coupon== null||coupon.getIsDeleted())
+//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        Date now = new Date();
+//        if(coupon.getStatus()!=1||coupon.getStartTime().after(now)||coupon.getEndTime().before(now))
+//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        if(coupon.getStock()-coupon.getSendingStock()<=0)
+//            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+//        UserCoupon userCoupon = new UserCoupon();
+//        userCoupon.setUserId(getCurrentUserInfoService.getCurrentUserId());
+//        userCoupon.setCouponId(id);
+//        userCoupon.setStatus(0);
+//        userCoupon.setGetTime(new Date());
+//        //TODO防止超拿,上乐观锁
+//        baseMapper.insert(userCoupon);
+//        coupon.setSendingStock(coupon.getSendingStock()+1);
+//        couponService.updateById(coupon);
 
 
 
@@ -70,25 +71,25 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
 
     @Override
     public void consume(Long id, Long orderId) {
-//        用户在下单时进行优惠券的消费,传入orderId后生成useTime,status代表该优惠券被消费
-        Coupon coupon = couponService.getById(id);
-        if(coupon== null||coupon.getIsDeleted())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        Date now = new Date();
-        if(coupon.getStatus()!=1||coupon.getStartTime().after(now)||coupon.getEndTime().before(now))
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        UserCoupon userCoupon = baseMapper.selectOne(
-                new LambdaQueryWrapper<UserCoupon>()
-                        .eq(UserCoupon::getCouponId, id)
-        );
-        if(userCoupon==null||userCoupon.getIsDeleted())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(userCoupon.getStatus()!=0)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        userCoupon.setUseTime(new Date());
-        userCoupon.setStatus(1);
-        userCoupon.setOrderId(orderId);
-        baseMapper.updateById(userCoupon);
+////        用户在下单时进行优惠券的消费,传入orderId后生成useTime,status代表该优惠券被消费
+//        Coupon coupon = couponService.getById(id);
+//        if(coupon== null||coupon.getIsDeleted())
+//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        Date now = new Date();
+//        if(coupon.getStatus()!=1||coupon.getStartTime().after(now)||coupon.getEndTime().before(now))
+//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        UserCoupon userCoupon = baseMapper.selectOne(
+//                new LambdaQueryWrapper<UserCoupon>()
+//                        .eq(UserCoupon::getCouponId, id)
+//        );
+//        if(userCoupon==null||userCoupon.getIsDeleted())
+//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        if(userCoupon.getStatus()!=0)
+//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        userCoupon.setUseTime(new Date());
+//        userCoupon.setStatus(1);
+//        userCoupon.setOrderId(orderId);
+//        baseMapper.updateById(userCoupon);
     }
 
     @Override

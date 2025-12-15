@@ -29,6 +29,7 @@ public class Coupon extends BaseEntity implements Serializable {
     private Integer stock;//发放总量
     private Integer sendingStock;//领取数量
     private Integer status;//0-未生效 1-生效中 2-已过期
+    private String pointer;
 
     @Override
     public String toString() {
@@ -46,7 +47,15 @@ public class Coupon extends BaseEntity implements Serializable {
                 ", stock=" + stock +
                 ", sendingStock=" + sendingStock +
                 ", status=" + status +
+                ", pointer='" + pointer + '\'' +
                 '}';
+    }
+    public String getPointer() {
+        return pointer;
+    }
+
+    public void setPointer(String pointer) {
+        this.pointer = pointer;
     }
 
     public String getName() {

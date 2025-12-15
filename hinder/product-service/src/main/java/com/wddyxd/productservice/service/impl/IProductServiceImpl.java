@@ -131,7 +131,7 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
     @Override
     public void update(ProductBasicUpdateDTO productBasicUpdateDTO) {
-        ProductBasicUpdateDTO.validate(productBasicUpdateDTO);
+//        ProductBasicUpdateDTO.validate(productBasicUpdateDTO);
         Product product = baseMapper.selectById(productBasicUpdateDTO.getId());
         if(product==null||product.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);

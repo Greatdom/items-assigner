@@ -1,6 +1,8 @@
 package com.wddyxd.productservice.pojo.VO;
 
 
+import com.wddyxd.productservice.pojo.entity.Coupon;
+
 import java.util.Date;
 
 /**
@@ -10,7 +12,7 @@ import java.util.Date;
  * @create: 2025-12-02 14:58
  **/
 
-public class UserCouponVO extends CouponVO{
+public class UserCouponVO extends Coupon {
 
     private Date getTime;//领取时间
     private Date useTime;//使用时间

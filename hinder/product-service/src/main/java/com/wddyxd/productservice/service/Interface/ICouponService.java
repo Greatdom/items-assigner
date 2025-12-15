@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.productservice.pojo.DTO.CouponDTO;
-import com.wddyxd.productservice.pojo.VO.CouponVO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
 
 import java.util.List;
@@ -19,11 +18,11 @@ import java.util.List;
 
 public interface ICouponService extends IService<Coupon> {
 
-    public Page<CouponVO> List(SearchDTO searchDTO);
+    public Page<Coupon> List(SearchDTO searchDTO);
 
-    public List<CouponVO> detail(Long id);
+    public List<Coupon> detail(Long id);
 
-    public List<CouponVO> visit(Long id);
+    public List<Coupon> visit(Long id);
 
     public void add(CouponDTO couponDTO);
 

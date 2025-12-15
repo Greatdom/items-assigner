@@ -1,6 +1,10 @@
 package com.wddyxd.productservice.pojo.DTO;
 
 
+import com.wddyxd.common.Interface.AddGroup;
+import com.wddyxd.common.Interface.UpdateGroup;
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -12,16 +16,70 @@ import java.util.Date;
  **/
 
 public class CouponDTO {
+
+    @Null(message = "新增优惠券时ID必须为空", groups = AddGroup.class)
+    @NotNull(message = "更新优惠券时ID不能为空", groups = UpdateGroup.class)
+    @Min(value = 1, message = "优惠券ID必须大于0", groups = UpdateGroup.class)
     private Long id;
+
+    @NotBlank(message = "优惠券名称不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String name;
+
+    @NotNull(message = "获取类型不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Min(value = 0, message = "获取类型不能小于0", groups = {AddGroup.class, UpdateGroup.class})
+    @Max(value = 1, message = "获取类型不能大于1", groups = {AddGroup.class, UpdateGroup.class})
     private Integer getType;
+
+    @NotNull(message = "目标类型不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Min(value = 0, message = "目标类型不能小于0", groups = {AddGroup.class, UpdateGroup.class})
+    @Max(value = 2, message = "目标类型不能大于2", groups = {AddGroup.class, UpdateGroup.class})
     private Integer targetType;
+
+    @NotNull(message = "是否折扣标识不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Min(value = 0, message = "是否折扣标识不能小于0", groups = {AddGroup.class, UpdateGroup.class})
+    @Max(value = 1, message = "是否折扣标识不能大于1", groups = {AddGroup.class, UpdateGroup.class})
     private Integer isDiscount;
+
+    @AssertTrue(message = "目标类型为0时目标ID必须为空", groups = {AddGroup.class, UpdateGroup.class})
+    public boolean isTargetIdValid() {
+        // targetType为0时，targetId必须为空（默认值0）
+        if (targetType != null && targetType == 0) {
+            return targetId == null || targetId == 0;
+        }
+        // targetType不为0时，targetId必须大于0
+        return targetId != null && targetId > 0;
+    }
     private Integer targetId = 0;
+
+    @NotNull(message = "使用门槛不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @DecimalMin(value = "0.01", inclusive = true, message = "使用门槛必须大于0", groups = {AddGroup.class, UpdateGroup.class})
     private BigDecimal threshold;
+
+    @AssertTrue(message = "获取类型为1时优惠券值必须在0.01~100之间，其他类型必须大于0", groups = {AddGroup.class, UpdateGroup.class})
+    public boolean isValueValid() {
+        if (value == null || getType == null) return false;
+        if (getType == 1) {
+            return value.compareTo(new BigDecimal("0.01")) >= 0
+                    && value.compareTo(new BigDecimal("100")) <= 0;
+        }
+        return value.compareTo(BigDecimal.ZERO) > 0;
+    }
+    @NotNull(message = "优惠券值不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private BigDecimal value;
+
+    @AssertTrue(message = "开始时间必须早于结束时间", groups = {AddGroup.class, UpdateGroup.class})
+    public boolean isStartTimeBeforeEndTime() {
+        if (startTime == null || endTime == null) return false;
+        return startTime.before(endTime);
+    }
+    @NotNull(message = "开始时间不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private Date startTime;
+
+    @NotNull(message = "结束时间不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private Date endTime;
+
+    @NotNull(message = "库存不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Min(value = 1, message = "库存必须大于0", groups = {AddGroup.class, UpdateGroup.class})
     private Integer stock;
 
     @Override

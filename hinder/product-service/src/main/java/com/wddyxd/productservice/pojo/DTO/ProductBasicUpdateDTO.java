@@ -1,8 +1,14 @@
 package com.wddyxd.productservice.pojo.DTO;
 
 
+import com.wddyxd.common.Interface.AddGroup;
+import com.wddyxd.common.Interface.UpdateGroup;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 
 /**
  * @program: items-assigner
@@ -12,29 +18,19 @@ import com.wddyxd.common.exceptionhandler.CustomException;
  **/
 
 public class ProductBasicUpdateDTO {
-
+    @NotNull(message = "更新商品时ID不能为空", groups = UpdateGroup.class)
+    @Min(value = 1, message = "ID必须大于0", groups = UpdateGroup.class)
     private Long id;
-
+    @NotBlank(message = "商品名称不能为空", groups = { UpdateGroup.class})
     private String name;
-
+    @NotNull(message = "分类ID不能为空", groups = {UpdateGroup.class})
+    @Min(value = 1, message = "分类ID必须大于0", groups = {UpdateGroup.class})
     private Long categoryId;
-
+    @NotBlank(message = "商品描述不能为空", groups = {UpdateGroup.class})
     private String description;
-
+    @NotNull(message = "更新商品SKU时ID不能为空", groups = UpdateGroup.class)
+    @Min(value = 1, message = "SKU ID必须大于0", groups = UpdateGroup.class)
     private Long productSkuId;
-
-    public static void validate(ProductBasicUpdateDTO productBasicUpdateDTO){
-        if(productBasicUpdateDTO==null||productBasicUpdateDTO.getId()==null||productBasicUpdateDTO.getId()<=0)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(productBasicUpdateDTO.getName()==null||productBasicUpdateDTO.getName().isEmpty())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(productBasicUpdateDTO.getCategoryId()==null||productBasicUpdateDTO.getCategoryId()<=0)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(productBasicUpdateDTO.getDescription()==null||productBasicUpdateDTO.getDescription().isEmpty())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(productBasicUpdateDTO.getProductSkuId()==null||productBasicUpdateDTO.getProductSkuId()<=0)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-    }
 
     @Override
     public String toString() {

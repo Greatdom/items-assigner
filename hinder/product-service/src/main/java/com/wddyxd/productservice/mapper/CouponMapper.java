@@ -3,7 +3,6 @@ package com.wddyxd.productservice.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wddyxd.productservice.pojo.VO.CouponVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,10 +18,10 @@ import java.util.List;
 @Mapper
 public interface CouponMapper extends BaseMapper<Coupon> {
 
-    Page<CouponVO> getPageCouponVO(Page<ProductProfileVO> page, String search);
+    Page<Coupon> getPageCouponVO(Page<ProductProfileVO> page, String search);
 
-    List<CouponVO> detailCouponVO(Long id);
+    List<Coupon> detailCouponVO(Long id);
 
-    List<CouponVO> visitCouponVO(Long id);
+    List<Coupon> visitCouponVO(Long id);
 
 }

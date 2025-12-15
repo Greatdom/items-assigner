@@ -10,6 +10,10 @@ import com.wddyxd.userservice.pojo.entity.Permission;
 import com.wddyxd.userservice.service.Interface.IPermissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,14 +40,17 @@ public class PermissionController {
         return Result.success(permissionService.List(searchDTO));
     }
 
-    @PostMapping("/assign")
-    //需要role.update权限
-    @Operation(summary = "手动为角色分配权限接口", description = "管理员可以在角色管理界面查看角色详细信息的时候为某角色分配权限")
-    public Result<Void> assign(@RequestParam Long roleId, @RequestParam Long[] permissionIds){
-//        permissionIds都指向存在的正常运作的权限才可继续执行接口,
-//- 根据参数查询角色和角色的权限,然后删除角色拥有的权限,然后重新增加权限
-//- 只有超级管理员才可以给角色分配权限
-//- 如果角色被删除则拒绝执行接口
+    public Result<Void> assign(
+            @RequestParam
+            @Min(value = 1, message = "角色ID必须大于0") // 校验roleId > 0
+            Long roleId,
+
+            @RequestParam
+            @NotNull(message = "权限ID数组不能为空") // 校验数组非空
+            @Valid // 触发数组内元素的校验（需配合自定义注解或Spring 6+的数组元素校验）
+            @Min(value = 1, message = "权限ID必须大于0") // 校验数组中每个元素 > 0
+            Long[] permissionIds) {
+
         permissionService.assign(roleId, permissionIds);
         return Result.success();
     }

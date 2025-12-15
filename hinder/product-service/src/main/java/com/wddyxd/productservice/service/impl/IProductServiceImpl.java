@@ -86,30 +86,45 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Transactional
     public void add(ProductAddDTO productAddDTO) {
 
-        ProductAddDTO.validate(productAddDTO);
-        Product product = new Product();
-        List<ProductSku> productSkus = new ArrayList<>();
-        BeanUtil.copyProperties(productAddDTO, product);
-        product.setId(IdWorker.getId());
-        product.setUserId(getCurrentUserInfoService.getCurrentUserId());
-        product.setStock(0);
-        boolean isSetDefault = false;
-        for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS()){
-            ProductSku productSku = new ProductSku();
-            BeanUtil.copyProperties(productSkuDTO, productSku);
-            productSku.setId(IdWorker.getId());
-            productSku.setProductId(product.getId());
-            product.setStock(productSku.getStock()+product.getStock());
-            if(productSkuDTO.getIsDefault() && !isSetDefault){
-                product.setProductSkuId(productSku.getId());
-                isSetDefault = true;
-            }
-            productSkus.add(productSku);
-        }
-        if(!isSetDefault)
-            product.setProductSkuId(productSkus.getFirst().getId());
-        baseMapper.insert(product);
-        productSkuService.saveBatch(productSkus);
+//        public static void validate(ProductAddDTO productAddDTO){
+//            if(productAddDTO==null||productAddDTO.getCategoryId() == null)
+//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//            if(productAddDTO.getProductSkuDTOS()==null|| productAddDTO.getProductSkuDTOS().isEmpty())
+//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//            if(productAddDTO.getName()==null||productAddDTO.getName().isEmpty())
+//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//            if(productAddDTO.getDescription()==null||productAddDTO.getDescription().isEmpty())
+//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//            if(productAddDTO.getDescription().length()>60)
+//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//            for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS())
+//                ProductSkuDTO.addValidations(productSkuDTO);
+//        }
+
+//        ProductAddDTO.validate(productAddDTO);
+//        Product product = new Product();
+//        List<ProductSku> productSkus = new ArrayList<>();
+//        BeanUtil.copyProperties(productAddDTO, product);
+//        product.setId(IdWorker.getId());
+//        product.setUserId(getCurrentUserInfoService.getCurrentUserId());
+//        product.setStock(0);
+//        boolean isSetDefault = false;
+//        for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS()){
+//            ProductSku productSku = new ProductSku();
+//            BeanUtil.copyProperties(productSkuDTO, productSku);
+//            productSku.setId(IdWorker.getId());
+//            productSku.setProductId(product.getId());
+//            product.setStock(productSku.getStock()+product.getStock());
+//            if(productSkuDTO.getIsDefault() && !isSetDefault){
+//                product.setProductSkuId(productSku.getId());
+//                isSetDefault = true;
+//            }
+//            productSkus.add(productSku);
+//        }
+//        if(!isSetDefault)
+//            product.setProductSkuId(productSkus.getFirst().getId());
+//        baseMapper.insert(product);
+//        productSkuService.saveBatch(productSkus);
 
 //        TODO在插入前在redis插入添加商品的时间戳,过期时间5秒,下次访问接口时如果查询到该redis记录则直接返回
     }

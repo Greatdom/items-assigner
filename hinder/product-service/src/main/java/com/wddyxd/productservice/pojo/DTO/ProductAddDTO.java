@@ -1,8 +1,15 @@
 package com.wddyxd.productservice.pojo.DTO;
 
 
+import com.wddyxd.common.Interface.AddGroup;
+import com.wddyxd.common.Interface.UpdateGroup;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
@@ -16,25 +23,19 @@ import java.util.List;
 public class ProductAddDTO {
 
     private Long id;
+    @NotBlank(message = "商品名称不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String name;
+    @NotNull(message = "商品分类ID不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Min(value = 1, message = "商品分类ID必须大于0", groups = {AddGroup.class, UpdateGroup.class})
     private Long categoryId;
+    @NotBlank(message = "商品描述不能为空", groups = {AddGroup.class, UpdateGroup.class})
     private String description;
+    @NotNull(message = "SKU列表不能为空", groups = {AddGroup.class, UpdateGroup.class})
+    @Size(min = 1, message = "SKU列表至少包含一个SKU", groups = {AddGroup.class, UpdateGroup.class})
+    @Valid
     private List<ProductSkuDTO> productSkuDTOS;
 
-    public static void validate(ProductAddDTO productAddDTO){
-        if(productAddDTO==null||productAddDTO.getCategoryId() == null)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(productAddDTO.getProductSkuDTOS()==null|| productAddDTO.getProductSkuDTOS().isEmpty())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(productAddDTO.getName()==null||productAddDTO.getName().isEmpty())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(productAddDTO.getDescription()==null||productAddDTO.getDescription().isEmpty())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(productAddDTO.getDescription().length()>60)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        for(ProductSkuDTO productSkuDTO : productAddDTO.getProductSkuDTOS())
-            ProductSkuDTO.addValidations(productSkuDTO);
-    }
+
 
     @Override
     public String toString() {

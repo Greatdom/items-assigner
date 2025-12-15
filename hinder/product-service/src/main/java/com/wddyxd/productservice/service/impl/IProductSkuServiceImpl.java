@@ -39,7 +39,7 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
     @Override
     @Transactional
     public void add(ProductSkuDTO productSkuDTO) {
-        ProductSkuDTO.addValidations(productSkuDTO);
+//        ProductSkuDTO.addValidations(productSkuDTO);
         ProductSku productSku = new ProductSku();
         //TODO 同个商品不能超过30个规格
         BeanUtil.copyProperties(productSkuDTO, productSku);
@@ -54,7 +54,7 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
     @Override
     @Transactional
     public void update(ProductSkuDTO productSkuDTO) {
-        ProductSkuDTO.updateValidations(productSkuDTO);
+//        ProductSkuDTO.updateValidations(productSkuDTO);
         ProductSku productSku = new ProductSku();
         BeanUtil.copyProperties(productSkuDTO, productSku);
         Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>().eq(Product::getId, productSkuDTO.getProductId()));

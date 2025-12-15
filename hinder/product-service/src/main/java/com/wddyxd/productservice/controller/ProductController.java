@@ -2,6 +2,7 @@ package com.wddyxd.productservice.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wddyxd.common.Interface.AddGroup;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -13,6 +14,8 @@ import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -58,7 +61,7 @@ public class ProductController {
     @GetMapping("/visit/{id}")
     //任何用户登录后可访问
     @Operation(summary = "在用户端访问商品接口", description = "在用户端点击被推送的商品可以访问该商品")
-    public Result<ProductDetailVO> visit(@PathVariable Long id){
+    public Result<ProductDetailVO> visit(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 
 //       返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
 //- 用户概要指向商户UserProfileVO,优惠券指向用户领取的生效的可用优惠券CouponVO,商品规格是该商品的所有规格ProductSkuVO,
@@ -69,7 +72,7 @@ public class ProductController {
     @GetMapping("/detail/{id}")
     //需要product.list权限而且(访问者的id等于参数的userId或者访问者是管理员)
     @Operation(summary = "查看商品详情接口", description = "查看商品的详细信息,商户端和管理端查看商品时访问该接口")
-    public Result<ProductDetailVO> detail(@PathVariable Long id){
+    public Result<ProductDetailVO> detail(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 
 //        返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
 //- 用户概要指向商户UserProfileVO,优惠券指向商品的所有可用优惠券List<CouponVO>,商品规格是该商品的所有规格List<ProductSkuVO>,
@@ -80,7 +83,7 @@ public class ProductController {
     @PostMapping("/add")
     //需要product.add权限而且访问者的id等于参数的userId
     @Operation(summary = "添加商品接口", description = "商户上架一件商品")
-    public Result<Void> add(@RequestBody ProductAddDTO productAddDTO){
+    public Result<Void> add(@Validated(AddGroup.class) @RequestBody ProductAddDTO productAddDTO){
 //        传入ProductAddDTO,先查询商品指向的商品分类是否存在,如果存在且没被逻辑删除则进入下一步,
 //- 在事务中，商品和规格需要互相引用 ID，但它们的 ID 在插入数据库前才能生成，这造成了依赖循环,
 //- 所以需要在操作数据库前手动生成ID的工作(这里采用mybatis_plus的雪花算法),
@@ -101,7 +104,7 @@ public class ProductController {
     @PutMapping("/status/{id}")
     //需要product.update权限而且(访问者的id等于参数的userId或者访问者是管理员)
     @Operation(summary = "下架/上架商品接口", description = "下架/上架商品")
-    public Result<Void> status(@PathVariable Long id){
+    public Result<Void> status(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 //        下架/上架商品,商品被逻辑删除则拒绝更新
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
@@ -109,7 +112,7 @@ public class ProductController {
     @DeleteMapping("/delete/{id}")
     //需要product.delete权限而且(访问者的id等于参数的userId或者访问者是管理员)
     @Operation(summary = "删除商品接口", description = "只有超级管理员有权限删除角色,删除角色按钮在角色管理界面")
-    public Result<Void> delete(@PathVariable Long id){
+    public Result<Void> delete(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 //        查询商品,如果商品的id和userId合法吻合则进入下一步,
 //- 查找商品和规格并进行逻辑删除,先删除商品,再删除商品的规格,回收用户持有的优惠券,并回收该商品的所有优惠券
 //- 商品或规格被逻辑删除则跳过

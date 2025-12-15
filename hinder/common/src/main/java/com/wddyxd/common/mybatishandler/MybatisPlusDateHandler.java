@@ -21,13 +21,26 @@ public class MybatisPlusDateHandler implements MetaObjectHandler {
     @Override
     public void insertFill(MetaObject metaObject) {
         //属性名称，不是字段名称
-        this.setFieldValByName("createTime", new Date(), metaObject);
-        this.setFieldValByName("updateTime", new Date(), metaObject);
+        this.setFieldValByName(Types.INSERT.getValue(), new Date(), metaObject);
+        this.setFieldValByName(Types.UPDATE.getValue(), new Date(), metaObject);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.setFieldValByName("updateTime", new Date(), metaObject);
+        this.setFieldValByName(Types.UPDATE.getValue(), new Date(), metaObject);
+    }
+
+    private enum Types{
+        INSERT("createTime"),
+        UPDATE("updateTime");
+        private final String value;
+        Types(String value){
+            this.value = value;
+        }
+        public String getValue(){
+            return value;
+        }
+
     }
 
 }

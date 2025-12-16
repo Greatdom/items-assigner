@@ -4,6 +4,7 @@ package com.wddyxd.productservice.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.productservice.mapper.ProductMapper;
@@ -39,13 +40,16 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
     @Override
     @Transactional
     public void add(ProductSkuDTO productSkuDTO) {
-//        ProductSkuDTO.addValidations(productSkuDTO);
+        //TODO 只查 COUNT，不查全量
+        List<ProductSkuVO> productSkuVOList = baseMapper.selectProductSkuVOByProductId(productSkuDTO.getProductId());
+        if(productSkuVOList.size()> CommonConstant.MAX_PRODUCT_SKU_NUM)
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         ProductSku productSku = new ProductSku();
-        //TODO 同个商品不能超过30个规格
         BeanUtil.copyProperties(productSkuDTO, productSku);
         Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>().eq(Product::getId, productSkuDTO.getProductId()));
         if(product == null||product.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        //TODO 库存累加非原子操作，高并发下数据错乱
         product.setStock(product.getStock()+productSku.getStock());
         productMapper.updateById(product);
         baseMapper.insert(productSku);
@@ -54,15 +58,14 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
     @Override
     @Transactional
     public void update(ProductSkuDTO productSkuDTO) {
-//        ProductSkuDTO.updateValidations(productSkuDTO);
-        ProductSku productSku = new ProductSku();
-        BeanUtil.copyProperties(productSkuDTO, productSku);
-        Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>().eq(Product::getId, productSkuDTO.getProductId()));
-        if(product == null||product.getIsDeleted())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        product.setStock(product.getStock()-productSku.getStock());
-        productMapper.updateById(product);
-        baseMapper.updateById(productSku);
+//        ProductSku productSku = new ProductSku();
+//        BeanUtil.copyProperties(productSkuDTO, productSku);
+//        Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>().eq(Product::getId, productSkuDTO.getProductId()));
+//        if(product == null||product.getIsDeleted())
+//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        product.setStock(product.getStock()-productSku.getStock());
+//        productMapper.updateById(product);
+//        baseMapper.updateById(productSku);
     }
 
     @Override
@@ -78,6 +81,7 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
         long count = baseMapper.selectCount(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productSku.getProductId()));
         if(count == 1)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        //TODO 库存累减非原子操作，高并发下数据错乱
         product.setStock(product.getStock()-productSku.getStock());
         productMapper.updateById(product);
         productSku.setIsDeleted(true);

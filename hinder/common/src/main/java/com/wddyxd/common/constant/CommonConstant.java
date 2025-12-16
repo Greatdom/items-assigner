@@ -21,5 +21,6 @@ public class CommonConstant {
 
     public static final Integer ROLE_GROUP_NUM = 3;
 
+    public static final Integer MAX_PRODUCT_SKU_NUM = 20;
 
 }

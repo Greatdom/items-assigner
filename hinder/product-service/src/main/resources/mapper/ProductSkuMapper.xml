@@ -23,7 +23,7 @@
             logo
         from product_sku
         where product_id = #{productId}
-        and deleted = 0
+        and is_deleted = 0
     </select>
 
 

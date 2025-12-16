@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -90,7 +91,9 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Override
     @Transactional
     public void add(ProductAddDTO productAddDTO) {
-
+        //如果规格过量则取消添加商品
+        if(productAddDTO.getProductSkuDTOS().size()> CommonConstant.MAX_PRODUCT_SKU_NUM)
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         //生成一个商品
         Product product = new Product();
         List<ProductSku> productSkus = new ArrayList<>();

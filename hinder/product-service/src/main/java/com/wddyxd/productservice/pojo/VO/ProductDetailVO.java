@@ -18,7 +18,7 @@ public class ProductDetailVO {
 
     private UserProfileVO userProfileVO;
 
-    private List<Coupon> couponVO;
+    private List<Coupon> coupon;
 
     private List<ProductSkuVO> productSkuVO;
 

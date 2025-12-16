@@ -93,43 +93,42 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
     @Transactional
     public void update(CouponDTO couponDTO) {
         //查询旧优惠券
-        Coupon oldCoupon = baseMapper.selectById(couponDTO.getId());
-        if(oldCoupon==null||oldCoupon.getIsDeleted())
+        Coupon coupon = baseMapper.selectById(couponDTO.getId());
+        if(coupon==null||coupon.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(couponDTO.getStock()<=oldCoupon.getSendingStock())
+        if(couponDTO.getStock()<=coupon.getSendingStock())
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         //判断是否需要修改pointer
-        boolean isPointerUpdate = !Objects.equals(couponDTO.getTargetType(), oldCoupon.getTargetType())
-                || !Objects.equals(couponDTO.getTargetId(), oldCoupon.getTargetId());
+        boolean isPointerUpdate = !Objects.equals(couponDTO.getTargetType(), coupon.getTargetType())
+                || !Objects.equals(couponDTO.getTargetId(), coupon.getTargetId());
         //新的优惠券
-        Coupon newCoupon = new Coupon();
-        BeanUtil.copyProperties(oldCoupon, newCoupon);
-        BeanUtil.copyProperties(couponDTO, newCoupon);
+        int couponStock = coupon.getStock();
+        BeanUtil.copyProperties(couponDTO, coupon);
         //pointer设置
         if(isPointerUpdate){
             if(couponDTO.getTargetType() == 1){
                 Result<String> getShopName = merchantSupplementClient.getShopName(couponDTO.getTargetId());
                 if(getShopName.getCode()!=200||getShopName.getData()==null)
                     throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-                newCoupon.setPointer(getShopName.getData());
+                coupon.setPointer(getShopName.getData());
             }else if(couponDTO.getTargetType() == 2){
                 Product product = productService.getById(couponDTO.getTargetId());
                 if(product==null||product.getIsDeleted())
                     throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-                newCoupon.setPointer(product.getName());
+                coupon.setPointer(product.getName());
             }else if(couponDTO.getTargetType() == 0){
-                newCoupon.setPointer("全场通用");
+                coupon.setPointer("全场通用");
             }else{
                 throw new CustomException(ResultCodeEnum.PARAM_ERROR);
             }
         }
         // 执行乐观锁更新
         LambdaUpdateWrapper<Coupon> updateWrapper = Wrappers.lambdaUpdate(Coupon.class)
-                .eq(Coupon::getId, couponDTO.getId())
-                .eq(Coupon::getStock, oldCoupon.getStock())
+                .eq(Coupon::getId, coupon.getId())
+                .eq(Coupon::getStock, couponStock)
                 .eq(Coupon::getIsDeleted, false);
 
-        int updateCount = baseMapper.update(newCoupon, updateWrapper);
+        int updateCount = baseMapper.update(coupon, updateWrapper);
         //TODO 可用异步通信技术添加重试机制
         if (updateCount == 0)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);

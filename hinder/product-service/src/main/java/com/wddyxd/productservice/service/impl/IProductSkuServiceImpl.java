@@ -55,21 +55,20 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
         ProductSku productSku = new ProductSku();
         BeanUtil.copyProperties(productSkuDTO, productSku);
         // 获取商品
-        Product oldProduct = productMapper.selectOne(new LambdaQueryWrapper<Product>()
+        Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
                 .eq(Product::getId, productSkuDTO.getProductId()));
-        if(oldProduct == null||oldProduct.getIsDeleted())
+        if(product == null||product.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        Product newProduct = new Product();
-        BeanUtil.copyProperties(oldProduct, newProduct);
+        int productStock = product.getStock();
         //计算库存
-        newProduct.setStock(newProduct.getStock()+productSku.getStock());
+        product.setStock(product.getStock()+productSku.getStock());
         // 执行乐观锁更新
         LambdaUpdateWrapper<Product> updateWrapper = Wrappers.lambdaUpdate(Product.class)
-                .eq(Product::getId, newProduct.getId())
-                .eq(Product::getStock, oldProduct.getStock())
+                .eq(Product::getId, product.getId())
+                .eq(Product::getStock, productStock)
                 .eq(Product::getIsDeleted, false);
 
-        int updateCount = productMapper.update(newProduct, updateWrapper);
+        int updateCount = productMapper.update(product, updateWrapper);
         //TODO 可用异步通信技术添加重试机制
         if (updateCount == 0)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
@@ -80,35 +79,34 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
     @Override
     @Transactional
     public void update(ProductSkuDTO productSkuDTO) {
-        ProductSku oldProductSku = baseMapper.selectById(productSkuDTO.getId());
-        if(oldProductSku == null||oldProductSku.getIsDeleted())
+        ProductSku productSku = baseMapper.selectById(productSkuDTO.getId());
+        if(productSku == null||productSku.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        ProductSku newProductSku = new ProductSku();
-        BeanUtil.copyProperties(productSkuDTO, newProductSku);
-        boolean isUpdateStock = !Objects.equals(oldProductSku.getStock(), newProductSku.getStock());
+        int productSkuStock = productSku.getStock();
+        boolean isUpdateStock = !Objects.equals(productSku.getStock(), productSkuDTO.getStock());
+        BeanUtil.copyProperties(productSkuDTO, productSku);
         if(isUpdateStock){
-            Product oldProduct = productMapper.selectOne(new LambdaQueryWrapper<Product>()
+            Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
                     .eq(Product::getId, productSkuDTO.getProductId()));
-            if(oldProduct == null||oldProduct.getIsDeleted())
+            if(product == null||product.getIsDeleted())
                 throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-            Product newProduct = new Product();
-            BeanUtil.copyProperties(oldProduct, newProduct);
-            newProduct.setStock(newProduct.getStock()-oldProductSku.getStock()+newProductSku.getStock());
+            int productStock = product.getStock();
+            product.setStock(product.getStock()-productSkuStock+productSku.getStock());
             // 执行乐观锁更新
             LambdaUpdateWrapper<Product> updateWrapper = Wrappers.lambdaUpdate(Product.class)
-                    .eq(Product::getId, newProduct.getId())
-                    .eq(Product::getStock, oldProduct.getStock())
+                    .eq(Product::getId, product.getId())
+                    .eq(Product::getStock, productStock)
                     .eq(Product::getIsDeleted, false);
-            int updateCount = productMapper.update(newProduct, updateWrapper);
+            int updateCount = productMapper.update(product, updateWrapper);
             //TODO 可用异步通信技术添加重试机制
             if (updateCount == 0)
                 throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
         LambdaUpdateWrapper<ProductSku> updateWrapper = Wrappers.lambdaUpdate(ProductSku.class)
-                .eq(ProductSku::getId, newProductSku.getId())
-                .eq(ProductSku::getStock, oldProductSku.getStock())
+                .eq(ProductSku::getId, productSku.getId())
+                .eq(ProductSku::getStock, productSkuStock)
                 .eq(ProductSku::getIsDeleted, false);
-        int updateCount = baseMapper.update(newProductSku, updateWrapper);
+        int updateCount = baseMapper.update(productSku, updateWrapper);
         if (updateCount == 0)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
     }
@@ -129,7 +127,6 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         if(Objects.equals(productSku.getId(), product.getProductSkuId()))
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
-        //TODO 库存累减非原子操作，高并发下数据错乱
         int productStock = product.getStock();
         product.setStock(product.getStock()-productSku.getStock());
         LambdaUpdateWrapper<Product> updateWrapper = Wrappers.lambdaUpdate(Product.class)

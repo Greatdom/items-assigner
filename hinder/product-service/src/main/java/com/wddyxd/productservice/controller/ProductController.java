@@ -49,20 +49,21 @@ public class ProductController {
 //- 这里是展示类而不是实体类,因为返回的商品不是商品本身,而是商品+商品分类+默认商品样式的整合
 //- 返回的商品的名字是商品名字和默认样式的名字的拼接,库存是总库存,价格是默认样式的价格,销量是总销量
 //- 注意无论商品是否被下架或逻辑删除都应该被被查到
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(productService.List(productListDTO));
     }
 
     @GetMapping("/feed")
     //任何用户无需登录可访问
     @Operation(summary = "在用户端推送商品接口", description = "在用户端首页推送商品")
-    public Result<ProductProfileVO> feed(@RequestBody ProductFeedDTO productFeedDTO){
+    public Result<Page<ProductProfileVO>> feed(@RequestBody ProductFeedDTO productFeedDTO){
 
 //       传入ProductFeedDTO,返回List<ProductProfileVO>
 //- 商品推送可用用机器学习实现也可用基于规则的算法实现,但这里不实现个性化推荐,采用简单推送.
 //- 每次触发都会推送的分类标识的最新商品,其中分类标识包括推荐商品和最新商品以及具体分类,
 //- 在高级搜索有筛选器,根据地区和排序进行筛选,每次触发该接口,前一次的返回结果不会丢失.
 //- 后续接入Elasticsearch
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        System.out.println(productFeedDTO);
+        return Result.success(productService.feed(productFeedDTO));
     }
 
     @GetMapping("/visit/{id}")
@@ -107,13 +108,14 @@ public class ProductController {
     @Operation(summary = "修改商品内容接口", description = "在商品管理界面更新商品内容,但不同时更新规格的内容")
     public Result<Void> update(@Validated(UpdateGroup.class) @RequestBody ProductBasicUpdateDTO productBasicUpdateDTO){
 //        传入ProductBasicUpdateDTO,商品被逻辑删除则拒绝更新,查询到的商品存在不合法,不匹配的情况则拒绝更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        productService.update(productBasicUpdateDTO);
+        return Result.success();
     }
     @PutMapping("/status/{id}")
     //需要product.update权限而且(访问者的id等于参数的userId或者访问者是管理员)
     @Operation(summary = "下架/上架商品接口", description = "下架/上架商品")
     public Result<Void> status(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
-//        下架/上架商品,商品被逻辑删除则拒绝更新
+//        下架/上架商品,如果未付款则强制取消订单,商品被逻辑删除则拒绝更新
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 

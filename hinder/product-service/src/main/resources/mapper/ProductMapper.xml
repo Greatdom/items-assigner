@@ -28,7 +28,7 @@
             pc.name AS product_category_name,
             ps.specs AS product_sku_name,
             p.user_id,
-            u.username,
+            p.username,
             p.name AS product_name,
             ps.price,
             p.stock,
@@ -44,7 +44,6 @@
             product p
                 LEFT JOIN product_category pc ON p.category_id = pc.id AND pc.is_deleted = 0
                 LEFT JOIN product_sku ps ON p.product_sku_id = ps.id AND ps.is_deleted = 0
-                LEFT JOIN user u ON p.user_id = u.id AND u.is_deleted = 0 AND u.status = 0
         WHERE
             p.is_deleted = 0
     </sql>

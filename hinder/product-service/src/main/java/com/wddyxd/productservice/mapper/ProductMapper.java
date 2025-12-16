@@ -18,7 +18,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface ProductMapper extends BaseMapper<Product> {
 
-    public Page<ProductProfileVO> getPageProductProfileVOManager(Page<ProductProfileVO> page, String search);
+    public Page<ProductProfileVO> getPageProductProfileVOManager(Page<ProductProfileVO> page,
+                                                                 String search);
 
     Page<ProductProfileVO> getPageProductProfileVOFeed(
             IPage<ProductProfileVO> page,          // 分页对象（复用）

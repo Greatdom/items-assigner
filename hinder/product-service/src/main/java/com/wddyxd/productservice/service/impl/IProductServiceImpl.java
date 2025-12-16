@@ -158,6 +158,7 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         product.setStatus(product.getStatus()==1?0:1);
         baseMapper.updateById(product);
+        //TODO 异步强制取消订单
     }
 
     @Override

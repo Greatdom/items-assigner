@@ -1,7 +1,10 @@
 package com.wddyxd.productservice.pojo.DTO;
 
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.wddyxd.common.pojo.SearchDTO;
+import com.wddyxd.productservice.pojo.DTO.enumDeserializer.SortColumnDeserializer;
+import com.wddyxd.productservice.pojo.DTO.enumDeserializer.SortOrderDeserializer;
 
 /**
  * @program: items-assigner
@@ -13,9 +16,9 @@ import com.wddyxd.common.pojo.SearchDTO;
 public class ProductFeedDTO extends SearchDTO {
 
     private Long categoryId;
-
+    @JsonDeserialize(using = SortColumnDeserializer.class)
     private SortColumn sortColumn;
-
+    @JsonDeserialize(using = SortOrderDeserializer.class)
     private SortOrder sortOrder;
 
     @Override

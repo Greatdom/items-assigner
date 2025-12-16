@@ -28,7 +28,7 @@ public class UserCouponController {
     @Operation(summary = "查询某用户领取的可用优惠券列表接口", description = "在用户端的个人中心的优惠券界面查看自己领取的优惠券")
     public Result<List<UserCouponVO>> list(){
 
-//        返回List<UserCouponVO>,查看自己所有的已领取的未过期未被删除且未被使用的优惠券,
+//        返回List<UserCouponVO>,查看自己所有的已领取未被删除的优惠券,
 //- 要保证用户领取的优惠券指向的优惠券合法
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }

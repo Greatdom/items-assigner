@@ -22,6 +22,7 @@ public class ProductSku extends BaseEntity implements Serializable {
     private Integer sales;//该规格的销量
     private Integer stock;//该规格的库存
     private String logo;
+    private Long version;
 
     @Override
     public String toString() {
@@ -33,6 +34,7 @@ public class ProductSku extends BaseEntity implements Serializable {
                 ", sales=" + sales +
                 ", stock=" + stock +
                 ", logo='" + logo + '\'' +
+                ", version=" + version +
                 '}';
     }
 
@@ -82,6 +84,14 @@ public class ProductSku extends BaseEntity implements Serializable {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
 }

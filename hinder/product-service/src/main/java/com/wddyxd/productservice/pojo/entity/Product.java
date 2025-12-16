@@ -27,6 +27,7 @@ public class Product extends BaseEntity implements Serializable {
     private Integer negativeComment;
     private String description;//描述
     private Long userId;//用户id
+    private Long version;//版本号
     private Integer status;//状态
 
     @Override
@@ -43,6 +44,7 @@ public class Product extends BaseEntity implements Serializable {
                 ", negativeComment=" + negativeComment +
                 ", description='" + description + '\'' +
                 ", userId=" + userId +
+                ", version=" + version +
                 ", status=" + status +
                 '}';
     }
@@ -133,6 +135,14 @@ public class Product extends BaseEntity implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
 }

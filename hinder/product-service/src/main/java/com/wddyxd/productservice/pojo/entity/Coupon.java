@@ -29,7 +29,8 @@ public class Coupon extends BaseEntity implements Serializable {
     private Integer stock;//发放总量
     private Integer sendingStock;//领取数量
     private Integer status;//0-不可用 1-可用
-    private String pointer;
+    private Long version;//版本号
+    private String pointer;//指向通用/商户名/商品名
 
     @Override
     public String toString() {
@@ -47,6 +48,7 @@ public class Coupon extends BaseEntity implements Serializable {
                 ", stock=" + stock +
                 ", sendingStock=" + sendingStock +
                 ", status=" + status +
+                ", version=" + version +
                 ", pointer='" + pointer + '\'' +
                 '}';
     }
@@ -152,6 +154,14 @@ public class Coupon extends BaseEntity implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
 }

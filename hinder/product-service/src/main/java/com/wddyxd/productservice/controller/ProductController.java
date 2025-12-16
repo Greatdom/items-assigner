@@ -3,6 +3,7 @@ package com.wddyxd.productservice.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.common.Interface.AddGroup;
+import com.wddyxd.common.Interface.UpdateGroup;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -104,7 +105,7 @@ public class ProductController {
     @PutMapping("/update")
     //需要product.update权限而且访问者的id等于参数的userId
     @Operation(summary = "修改商品内容接口", description = "在商品管理界面更新商品内容,但不同时更新规格的内容")
-    public Result<Void> update(@RequestBody ProductBasicUpdateDTO productBasicUpdateDTO){
+    public Result<Void> update(@Validated(UpdateGroup.class) @RequestBody ProductBasicUpdateDTO productBasicUpdateDTO){
 //        传入ProductBasicUpdateDTO,商品被逻辑删除则拒绝更新,查询到的商品存在不合法,不匹配的情况则拒绝更新
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }

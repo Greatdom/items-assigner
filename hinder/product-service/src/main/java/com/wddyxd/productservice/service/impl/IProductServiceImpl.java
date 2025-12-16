@@ -19,6 +19,7 @@ import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.pojo.entity.ProductCategory;
 import com.wddyxd.productservice.pojo.entity.ProductSku;
+import com.wddyxd.productservice.service.Interface.IProductCategoryService;
 import com.wddyxd.productservice.service.Interface.IProductService;
 import com.wddyxd.productservice.service.Interface.IProductSkuService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
@@ -96,11 +97,13 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
         Product product = new Product();
         List<ProductSku> productSkus = new ArrayList<>();
         BeanUtil.copyProperties(productAddDTO, product);
-        //TODO 判断商品分类是否合法,在此之前要添加商品分类
+        //判断商品分类是否合法
+        ProductCategory productCategory = productCategoryMapper.selectById(productAddDTO.getCategoryId());
+        if(productCategory==null||productCategory.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //远程调用获得用户名
         long userId = getCurrentUserInfoService.getCurrentUserId();
         Result<String> getUsername = userClient.getUsername(userId);
-        System.out.println(getUsername);
         if(getUsername.getCode()!=200||getUsername.getData()==null)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         product.setUsername(getUsername.getData());
@@ -134,6 +137,12 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     public void update(ProductBasicUpdateDTO productBasicUpdateDTO) {
         Product product = baseMapper.selectById(productBasicUpdateDTO.getId());
         if(product==null||product.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        ProductSku productSku = productSkuService.getById(productBasicUpdateDTO.getProductSkuId());
+        if(productSku==null||productSku.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        ProductCategory productCategory = productCategoryMapper.selectById(productBasicUpdateDTO.getCategoryId());
+        if(productCategory==null||productCategory.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         product.setName(productBasicUpdateDTO.getName());
         product.setDescription(productBasicUpdateDTO.getDescription());

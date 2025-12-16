@@ -1,10 +1,8 @@
 package com.wddyxd.productservice.pojo.DTO;
 
 
-import com.wddyxd.common.Interface.AddGroup;
-import com.wddyxd.common.Interface.UpdateGroup;
-import com.wddyxd.common.constant.ResultCodeEnum;
-import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

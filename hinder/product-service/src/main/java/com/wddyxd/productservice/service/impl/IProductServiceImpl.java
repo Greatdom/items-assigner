@@ -57,9 +57,7 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Override
     public Page<ProductProfileVO> List(ProductListDTO productListDTO) {
         productListDTO.validatePageParams(productListDTO);
-
         Page<ProductProfileVO> page = new Page<>(productListDTO.getPageNum(), productListDTO.getPageSize());
-
         return baseMapper.getPageProductProfileVOManager(page, productListDTO.getSearch());
     }
 

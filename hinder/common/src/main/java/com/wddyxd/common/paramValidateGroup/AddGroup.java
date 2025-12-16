@@ -1,4 +1,4 @@
-package com.wddyxd.common.Interface;
+package com.wddyxd.common.paramValidateGroup;
 
 
 /**

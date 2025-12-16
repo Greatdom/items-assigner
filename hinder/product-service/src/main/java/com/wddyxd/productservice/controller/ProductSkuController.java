@@ -1,10 +1,8 @@
 package com.wddyxd.productservice.controller;
 
 
-import com.wddyxd.common.Interface.AddGroup;
-import com.wddyxd.common.Interface.UpdateGroup;
-import com.wddyxd.common.constant.ResultCodeEnum;
-import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.productservice.pojo.DTO.ProductSkuDTO;
 import com.wddyxd.productservice.pojo.VO.ProductSkuVO;

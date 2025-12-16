@@ -1,8 +1,8 @@
 package com.wddyxd.productservice.pojo.DTO;
 
 
-import com.wddyxd.common.Interface.AddGroup;
-import com.wddyxd.common.Interface.UpdateGroup;
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;

@@ -2,9 +2,14 @@ package com.wddyxd.productservice.pojo.DTO;
 
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.wddyxd.common.paramValidateGroup.SelectGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.productservice.pojo.DTO.enumDeserializer.SortColumnDeserializer;
 import com.wddyxd.productservice.pojo.DTO.enumDeserializer.SortOrderDeserializer;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * @program: items-assigner
@@ -14,7 +19,7 @@ import com.wddyxd.productservice.pojo.DTO.enumDeserializer.SortOrderDeserializer
  **/
 
 public class ProductFeedDTO extends SearchDTO {
-
+    @Min(value = 1, message = "商品分类必须大于0", groups = SelectGroup.class)
     private Long categoryId;
     @JsonDeserialize(using = SortColumnDeserializer.class)
     private SortColumn sortColumn;

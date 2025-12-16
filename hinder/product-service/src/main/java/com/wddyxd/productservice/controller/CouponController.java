@@ -2,8 +2,8 @@ package com.wddyxd.productservice.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wddyxd.common.Interface.AddGroup;
-import com.wddyxd.common.Interface.UpdateGroup;
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;

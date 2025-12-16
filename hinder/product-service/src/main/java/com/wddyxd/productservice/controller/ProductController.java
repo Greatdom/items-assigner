@@ -2,8 +2,9 @@ package com.wddyxd.productservice.controller;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.wddyxd.common.Interface.AddGroup;
-import com.wddyxd.common.Interface.UpdateGroup;
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.SelectGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -39,7 +40,7 @@ public class ProductController {
     @GetMapping("/list")
     //需要product.list权限而且(参数userId等于访问者的id或访问者是管理员)
     @Operation(summary = "分页获取商品列表接口", description = "在后台和商户端的商品管理界面查看所有商品")
-    public Result<Page<ProductProfileVO>> list(@RequestBody ProductListDTO productListDTO){
+    public Result<Page<ProductProfileVO>> list(@Validated(SelectGroup.class) @RequestBody ProductListDTO productListDTO){
 
 //       传入ProductListDTO,在后台和商户端的商品管理界面查看所有存在的商品或当前商户的商品,
 //- 支持根据商品名搜索,支持根据创建时间或更新时间检索,支持根据商品分类检索,
@@ -55,7 +56,7 @@ public class ProductController {
     @GetMapping("/feed")
     //任何用户无需登录可访问
     @Operation(summary = "在用户端推送商品接口", description = "在用户端首页推送商品")
-    public Result<Page<ProductProfileVO>> feed(@RequestBody ProductFeedDTO productFeedDTO){
+    public Result<Page<ProductProfileVO>> feed(@Validated(SelectGroup.class) @RequestBody ProductFeedDTO productFeedDTO){
 
 //       传入ProductFeedDTO,返回List<ProductProfileVO>
 //- 商品推送可用用机器学习实现也可用基于规则的算法实现,但这里不实现个性化推荐,采用简单推送.

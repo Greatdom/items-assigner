@@ -38,8 +38,8 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping("/getUsername/{id}")
-//   product.add的远程调用接口
-    @Operation(summary = "分页获取用户列表接口", description = "在管理员的用户管理主界面查看所有用户")
+//   远程调用接口
+    @Operation(summary = "获取用户名接口", description = "远程调用接口")
     public Result<String> getUsername(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id){
         return Result.success(userService.getUsername(id));
     }

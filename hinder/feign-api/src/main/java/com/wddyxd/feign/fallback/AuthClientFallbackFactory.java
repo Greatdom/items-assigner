@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
  * @author: wddyxd
  * @create: 2025-12-03 17:04
  **/
+@Component
 public class AuthClientFallbackFactory implements FallbackFactory<AuthClient> {
 
     static final Logger log = LoggerFactory.getLogger(com.wddyxd.feign.fallback.AuthClientFallbackFactory.class);

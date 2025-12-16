@@ -1,9 +1,11 @@
 package com.wddyxd.userservice.service.impl;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.utils.Result;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import com.wddyxd.userservice.mapper.MerchantSupplementMapper;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantCustomDTO;
@@ -36,6 +38,16 @@ public class IMerchantSupplementServiceImpl extends ServiceImpl<MerchantSuppleme
 
     @Autowired
     private GetCurrentUserInfoService getCurrentUserInfoService;
+
+    @Override
+    public String getShopName(Long id) {
+        MerchantSupplement merchantSupplement = baseMapper.selectOne(
+                new LambdaQueryWrapper<>(MerchantSupplement.class)
+                .eq(MerchantSupplement::getUserId, id));
+        if(merchantSupplement == null||merchantSupplement.getIsDeleted())
+            return null;
+        return merchantSupplement.getName();
+    }
 
     @Override
     @Transactional

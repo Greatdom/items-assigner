@@ -55,7 +55,10 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public String getUsername(Long id) {
-        return baseMapper.selectById(id).getUsername();
+        User user = baseMapper.selectById(id);
+        if(user == null||user.getIsDeleted())
+            return null;
+        return user.getUsername();
     }
 
     @Override

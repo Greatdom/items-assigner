@@ -44,12 +44,12 @@ public class CouponDTO {
     public boolean isTargetIdValid() {
         // targetType为0时，targetId必须为空（默认值0）
         if (targetType != null && targetType == 0) {
-            return targetId == null || targetId == 0;
+            return targetId == null || targetId == 0L;
         }
         // targetType不为0时，targetId必须大于0
-        return targetId != null && targetId > 0;
+        return targetId != null && targetId > 0L;
     }
-    private Integer targetId = 0;
+    private Long targetId = 0L;
 
     @NotNull(message = "使用门槛不能为空", groups = {AddGroup.class, UpdateGroup.class})
     @DecimalMin(value = "0.01", inclusive = true, message = "使用门槛必须大于0", groups = {AddGroup.class, UpdateGroup.class})
@@ -139,11 +139,11 @@ public class CouponDTO {
         this.isDiscount = isDiscount;
     }
 
-    public Integer getTargetId() {
+    public Long getTargetId() {
         return targetId;
     }
 
-    public void setTargetId(Integer targetId) {
+    public void setTargetId(Long targetId) {
         this.targetId = targetId;
     }
 

@@ -12,6 +12,7 @@ import com.wddyxd.productservice.pojo.DTO.CouponDTO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,7 +45,7 @@ public class CouponController {
     @GetMapping("/detail/{id}")
     //需要coupon.list权限而且(访问者的id等于参数的userId或访问者是管理员)
     @Operation(summary = "查看某商户的某商品可用的优惠券列表接口", description = "查看商品详情接口调用该接口")
-    public Result<List<Coupon>> detail(@PathVariable Long id){
+    public Result<List<Coupon>> detail(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 
 //        传入商品的id,返回List<CouponVO>,查看某商户的某商品的所有未过期未被删除的优惠券,
 //- 另外的,对于全场通用优惠券没有筛选条件,对于指定商户的优惠券返回该商户的优惠券,对于指定商品的优惠券返回该商品的优惠券
@@ -53,7 +54,7 @@ public class CouponController {
     @GetMapping("/visit/{id}")
     //需要coupon.list权限而且(访问者的id等于参数的userId或访问者是管理员)
     @Operation(summary = "查看某用户在某商品可用的优惠券列表接口", description = "由访问商品接口调用该接口")
-    public Result<List<Coupon>> visit(@PathVariable Long id){
+    public Result<List<Coupon>> visit(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 
 //        传入商品的id,返回List<CouponVO>,查看自己所有的已领取的未过期未被删除且未被使用的优惠券,
 //- 另外的,对于全场通用优惠券没有筛选条件,对于指定商户的优惠券返回该商户的优惠券,对于指定商品的优惠券返回该商品的优惠券
@@ -79,7 +80,7 @@ public class CouponController {
     @DeleteMapping("/delete/{id}")
     //需要coupon.delete权限而且(访问者的id等于参数的userId或访问者是管理员)
     @Operation(summary = "删除优惠券接口", description = "删除优惠券")
-    public Result<Void> delete(@PathVariable Long id){
+    public Result<Void> delete(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 //       删除优惠券,删除时先回收用户领取的优惠券,如果优惠券不是全场通用却没有绑定合法的商户或商品则删除后打日志
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }

@@ -6,8 +6,11 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantCustomDTO;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantLicenseDTO;
+import com.wddyxd.userservice.service.Interface.IMerchantSupplementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,6 +23,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user/merchantSupplement")
 @Tag(name = "商户补丁控制器", description = "商户补丁相关接口")
 public class MerchantSupplementController {
+
+    @Autowired
+    private IMerchantSupplementService merchantSupplementService;
+
+    @GetMapping("/getShopName/{id}")
+    @Operation(summary = "查看商户名接口", description = "远程调用接口")
+    public Result<String> getShopName(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id){
+        return Result.success(merchantSupplementService.getShopName(id));
+    }
 
     @DeleteMapping("/delete/{id}")
     //需要user.delete权限
@@ -39,7 +51,8 @@ public class MerchantSupplementController {
     @Operation(summary = "更新基础商户信息接口", description = "更新基础商户信息")
     public Result<Void> updateCustom(@RequestBody UpdateMerchantCustomDTO updateMerchantCustomDTO){
 //        传入UpdateMerchantCustomDTO,更新基础商户信息,查询不到用户或用户被逻辑删除则不应该执行更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        merchantSupplementService.updateCustom(updateMerchantCustomDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/license")
@@ -49,16 +62,18 @@ public class MerchantSupplementController {
 //        传入UpdateMerchantLicenseDTO,提供许可证后异步通知管理员审核,应该审核后管理员手动为其升级角色,
 //- 但这里实现为直接为该用户升级角色
 //- 查询不到用户或用户被逻辑删除则不应该执行更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        merchantSupplementService.updateLicense(updateMerchantLicenseDTO);
+        return Result.success();
     }
 
-    @PutMapping("/status")
+    @PutMapping("/status/{id}")
     //更新者的id等于参数id
     @Operation(summary = "开张/关店接口", description = "开张/关店")
-    public Result<Void> status(){
+    public Result<Void> status(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id){
 //        传入用户id,开张/关店,此时用户无法在这家店发起订单并强制取消或退货还没有完成的订单
 //- 查询不到用户或用户被逻辑删除则跳过
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        merchantSupplementService.status(id);
+        return Result.success();
     }
 
 }

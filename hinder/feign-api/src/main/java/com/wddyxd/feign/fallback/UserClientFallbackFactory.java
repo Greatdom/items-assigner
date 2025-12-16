@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author: wddyxd
  * @create: 2025-12-13 16:36
  **/
+@Component
 public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
 
     static final Logger log = LoggerFactory.getLogger(com.wddyxd.feign.fallback.UserClientFallbackFactory.class);

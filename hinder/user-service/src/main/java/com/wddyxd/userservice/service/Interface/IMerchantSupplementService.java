@@ -2,9 +2,12 @@ package com.wddyxd.userservice.service.Interface;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantCustomDTO;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantLicenseDTO;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
+import jakarta.validation.constraints.Min;
+import org.springframework.web.bind.annotation.PathVariable;
 
 /**
  * @program: items-assigner
@@ -14,6 +17,8 @@ import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
  **/
 
 public interface IMerchantSupplementService extends IService<MerchantSupplement> {
+
+    public String getShopName(Long id);
 
     public void add(MerchantSupplement merchantSupplement);
 

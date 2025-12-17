@@ -102,7 +102,8 @@ public class UserController {
 //        传入CustomUserRegisterDTO,然后判断用户的用户名,手机或邮箱是否被其他用户占用,
 //                - 如果都没被占用则直接添加用户,为这个用户赋予ROLE_NEW_ADMIN和ROLE_NEW_USER角色,然后在user_detail中添加默认的用户详细信息
 //                - 否则返回错误
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.addAdmin(customUserRegisterDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/password")
@@ -114,7 +115,8 @@ public class UserController {
 //- 接下来比较手机验证码是否和手机吻合,然后才更新密码
 //- 最后在在redis记录上次修改密码的时间戳,有效期5秒,有效期内禁止修改
 //- 查询不到用户或用户被逻辑删除则不应该执行更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updatePassword(updatePasswordDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/phone")
@@ -126,7 +128,8 @@ public class UserController {
 //- 接下来比较手机验证码是否和新手机号吻合,然后才更新手机号
 //- 在mysql设置手机号唯一性约束
 //- 查询不到用户或用户被逻辑删除则不应该执行更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updatePhone(updatePhoneDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/email")
@@ -138,7 +141,8 @@ public class UserController {
 //- 接下来比较邮箱验证码是否和新邮箱吻合,然后才更新邮箱
 //- 在mysql设置邮箱唯一性约束
 //- 查询不到用户或用户被逻辑删除则不应该执行更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updateEmail(updateEmailDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/avatar")
@@ -146,7 +150,8 @@ public class UserController {
     @Operation(summary = "更新头像接口", description = "更新头像")
     public Result<Void> updateAvatar(@RequestBody UpdateAvatarDTO updateAvatarDTO){
 //        传入UpdateAvatarDTO更换头像,查询不到用户或用户被逻辑删除则不应该执行更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updateAvatar(updateAvatarDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/nickName")
@@ -154,7 +159,8 @@ public class UserController {
     @Operation(summary = "更新昵称接口", description = "更新昵称")
     public Result<Void> updateNickName(@RequestBody UpdateNickNameDTO updateNickNameDTO){
 //        传入UpdateNickNameDTO来更新昵称,查询不到用户或用户被逻辑删除则不应该执行更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updateNickname(updateNickNameDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/gender")
@@ -162,7 +168,8 @@ public class UserController {
     @Operation(summary = "更新性别接口", description = "更新性别")
     public Result<Void> updateGender(@RequestBody UpdateGenderDTO updateGenderDTO){
 //        传入UpdateGenderDTO来更新昵称,查询不到用户或用户被逻辑删除则不应该执行更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updateGender(updateGenderDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/birthday")
@@ -172,7 +179,8 @@ public class UserController {
 //        传入UpdateBirthdayDTO,查询不到用户或用户被逻辑删除则不应该执行更新,
 //- 更新后在redis进行记录,过期时间是1年,
 //- 访问接口时存在redis记录则拒绝更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updateBirthday(updateBirthdayDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/region")
@@ -182,7 +190,8 @@ public class UserController {
 //       传入UpdateRegionDTO,查询不到用户或用户被逻辑删除则不应该执行更新,
 //- 更新后在redis进行记录,过期时间是90天,
 //- 访问接口时存在redis记录则拒绝更新
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updateRegion(updateRegionDTO);
+        return Result.success();
     }
 
     @PutMapping("/update/card")
@@ -193,7 +202,8 @@ public class UserController {
 //- 检验IdCard格式正确后并且没有已使用的realName和IdCard则直接设置用户是已经完成实名认证的,并为用户升级角色,
 //- 查询不到用户或用户被逻辑删除则不应该执行更新,
 //- 在mysql为real_name和id_card添加唯一约束
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.updateCard(updateCardDTO);
+        return Result.success();
     }
 
     @PutMapping("/status/{id}")
@@ -202,7 +212,8 @@ public class UserController {
     public Result<Void> status(@PathVariable Long id){
 //       封禁/解封用户,封禁用户时让用户强制下线,废除用户的token,同时给用户发短信或邮箱,
 //- 查询不到用户或用户被逻辑删除则跳过
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userService.status(id);
+        return Result.success();
     }
 
     @DeleteMapping("/delete/{id}")

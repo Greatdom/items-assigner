@@ -44,7 +44,8 @@ public class UserAddressController {
 //        传入UserAddressDTO,一个用户最多添加5个正常状态的地址簿,
 //- 如果将地址设为默认地址,则将之前默认地址设为非默认地址
 //- 用redis存储添加的时间戳,过期5秒,redis数据存在期间不能添加数据
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userAddressService.add(userAddressDTO);
+        return Result.success();
     }
 
     @PutMapping("/update")
@@ -52,7 +53,8 @@ public class UserAddressController {
     @Operation(summary = "修改地址簿接口", description = "修改地址簿")
     public Result<Void> update(@RequestBody List<UserAddressDTO> updatePasswordDTOS){
 //        传入List<UserAddressDTO>,注意只将第一个默认地址设为默认地址
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userAddressService.update(updatePasswordDTOS);
+        return Result.success();
     }
 
     @DeleteMapping("/delete/{id}")
@@ -60,7 +62,8 @@ public class UserAddressController {
     @Operation(summary = "删除地址簿接口", description = "删除地址簿")
     public Result<Void> delete(@PathVariable Long id){
 //       逻辑删除地址簿
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        userAddressService.delete(id);
+         return Result.success();
     }
 
 }

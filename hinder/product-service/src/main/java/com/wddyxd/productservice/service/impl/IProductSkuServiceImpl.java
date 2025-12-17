@@ -59,21 +59,21 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
                 .eq(Product::getId, productSkuDTO.getProductId()));
         if(product == null||product.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        //计算库存和版本号
-        baseMapper.insert(productSku);
+        int productStock = product.getStock();
+        //计算库存
+        product.setStock(product.getStock()+productSku.getStock());
         // 执行乐观锁更新
         LambdaUpdateWrapper<Product> updateWrapper = Wrappers.lambdaUpdate(Product.class)
                 .eq(Product::getId, product.getId())
-                .eq(Product::getVersion, product.getVersion())
-                .eq(Product::getIsDeleted, false)
-                .set(Product::getStock, product.getStock()+productSku.getStock())
-                .set(Product::getVersion, product.getVersion() + 1);
-
+                .eq(Product::getStock, productStock)
+                .eq(Product::getIsDeleted, false);
 
         int updateCount = productMapper.update(product, updateWrapper);
         //TODO 可用异步通信技术添加重试机制
         if (updateCount == 0)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+
+        baseMapper.insert(productSku);
 
     }
 

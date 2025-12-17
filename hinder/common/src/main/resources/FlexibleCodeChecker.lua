@@ -6,7 +6,7 @@
 -- ARGV[1]：账号（手机号/邮箱）
 -- ARGV[2]：用户输入的验证码
 -- ARGV[3]：校验模式（"single"）
--- 返回值：boolean（true=成功，false=失败）
+-- 返回值：字符串（"1"=成功，"0"=失败）
 
 -- ========== 双校验场景 ==========
 -- KEYS[1]：手机号前缀（"verify:phone:"）
@@ -16,7 +16,7 @@
 -- ARGV[3]：邮箱
 -- ARGV[4]：邮箱验证码
 -- ARGV[5]：校验模式（"double"）
--- 返回值：table {phoneResult, emailResult}（true/false）
+-- 返回值：table {"1"/"0", "1"/"0"}（手机/邮箱校验结果）
 
 -- 私有函数：读取存储的验证码（通用逻辑）
 local function getStoredCode(keyPrefix, account)
@@ -32,14 +32,14 @@ local function singleCheck()
 
     local storedCode, key = getStoredCode(prefix, account)
     if not storedCode then
-        return false
+        return "0"  -- 无验证码，返回失败
     end
     -- 单校验匹配成功则立即删Key
     if storedCode == inputCode then
         redis.call('DEL', key)
-        return true
+        return "1"  -- 成功返回"1"
     end
-    return false
+    return "0"  -- 验证码不匹配，返回失败
 end
 
 -- 私有函数：双校验逻辑（全部成功才删Key）
@@ -65,8 +65,8 @@ local function doubleCheck()
         redis.call('DEL', emailKey)
     end
 
-    -- 4. 返回各自的校验结果
-    return {phoneMatch, emailMatch}
+    -- 4. 返回各自的校验结果（字符串）
+    return {phoneMatch and "1" or "0", emailMatch and "1" or "0"}
 end
 
 -- 主逻辑：根据模式分发
@@ -76,5 +76,5 @@ if checkMode == "single" then
 elseif checkMode == "double" then
     return doubleCheck()
 else
-    return false -- 非法模式返回失败
+    return "0" -- 非法模式返回失败
 end

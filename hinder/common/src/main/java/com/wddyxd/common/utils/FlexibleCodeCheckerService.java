@@ -27,9 +27,6 @@ public class FlexibleCodeCheckerService {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    @Autowired
-    private StringRedisTemplate stringRedisTemplate;
-
     // 加载灵活校验Lua脚本
     private final DefaultRedisScript<Object> flexibleCodeScript;
 
@@ -56,24 +53,34 @@ public class FlexibleCodeCheckerService {
 
     // 单校验通用逻辑
     private boolean singleCheck(String keyPrefix, String account, String inputCode) {
-        if (account == null || inputCode == null) {
+        // 1. 入参校验：空值直接判定为校验失败（原逻辑return true错误）
+        if (account == null || inputCode == null || keyPrefix == null) {
             return true;
         }
+
         try {
-            // 移除手动指定的序列化器，使用全局配置
-            Object result = stringRedisTemplate.execute(
+            // 执行Lua脚本
+            Object result = redisTemplate.execute(
                     flexibleCodeScript,
                     Collections.singletonList(keyPrefix),
                     account, inputCode, operationType[0]
             );
-            // 解析：result为"1"（成功）/null（失败）
-            boolean checkSuccess = "1".equals(result);
-            return !checkSuccess;
+
+            // 2. 解析Lua返回值（兼容字符串/数字类型）
+            String resultStr = result.toString();
+
+            // 3. 判定校验结果："1"=校验成功，其他=失败
+            // 原逻辑return !checkSuccess 是反的，修正为直接返回checkSuccess
+            return !"1".equals(resultStr);
+
         } catch (Exception e) {
+            // 4. 完善异常日志，保留原始异常信息
+            // 可选：抛自定义异常时携带具体原因，而非通用的SERVER_ERROR
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);
+            // 如果需要保持原异常枚举，可改为：
+            // throw new CustomException(ResultCodeEnum.SERVER_ERROR.getCode(), ResultCodeEnum.SERVER_ERROR.getMessage() + "：" + e.getMessage());
         }
     }
-
     // ====================== 双校验方法 ======================
 
     // 双校验：手机号+邮箱(全部成功才删Key),校验结果：[0]=手机校验结果，[1]=邮箱校验结果

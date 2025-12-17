@@ -22,4 +22,45 @@ public class ProductDetailVO {
 
     private List<ProductSkuVO> productSkuVO;
 
+    @Override
+    public String toString() {
+        return "ProductDetailVO{" +
+                "productProfileVO=" + productProfileVO +
+                ", userProfileVO=" + userProfileVO +
+                ", coupon=" + coupon +
+                ", productSkuVO=" + productSkuVO +
+                '}';
+    }
+
+    public ProductProfileVO getProductProfileVO() {
+        return productProfileVO;
+    }
+
+    public void setProductProfileVO(ProductProfileVO productProfileVO) {
+        this.productProfileVO = productProfileVO;
+    }
+
+    public UserProfileVO getUserProfileVO() {
+        return userProfileVO;
+    }
+
+    public void setUserProfileVO(UserProfileVO userProfileVO) {
+        this.userProfileVO = userProfileVO;
+    }
+
+    public List<Coupon> getCoupon() {
+        return coupon;
+    }
+
+    public void setCoupon(List<Coupon> coupon) {
+        this.coupon = coupon;
+    }
+
+    public List<ProductSkuVO> getProductSkuVO() {
+        return productSkuVO;
+    }
+
+    public void setProductSkuVO(List<ProductSkuVO> productSkuVO) {
+        this.productSkuVO = productSkuVO;
+    }
 }

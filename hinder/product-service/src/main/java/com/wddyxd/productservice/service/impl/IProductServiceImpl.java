@@ -17,9 +17,13 @@ import com.wddyxd.productservice.mapper.ProductMapper;
 import com.wddyxd.productservice.pojo.DTO.*;
 import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
+import com.wddyxd.productservice.pojo.VO.ProductSkuVO;
+import com.wddyxd.productservice.pojo.VO.UserProfileVO;
+import com.wddyxd.productservice.pojo.entity.Coupon;
 import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.pojo.entity.ProductCategory;
 import com.wddyxd.productservice.pojo.entity.ProductSku;
+import com.wddyxd.productservice.service.Interface.ICouponService;
 import com.wddyxd.productservice.service.Interface.IProductCategoryService;
 import com.wddyxd.productservice.service.Interface.IProductService;
 import com.wddyxd.productservice.service.Interface.IProductSkuService;
@@ -54,6 +58,8 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Autowired
     private UserClient userClient;
 
+    @Autowired
+    private ICouponService couponService;
 
     @Override
     public Page<ProductProfileVO> List(ProductListDTO productListDTO) {
@@ -72,26 +78,47 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Override
     public ProductDetailVO visit(Long id) {
         ProductProfileVO productProfileVO = baseMapper.getProductProfileVOById(id);
-        if(productProfileVO==null||productProfileVO.getIsDeleted())
+        if(productProfileVO==null||productProfileVO.getIsDeleted()||productProfileVO.getStatus()!=1)
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        Result<com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO> getUserProfileVO
+                = userClient.profile(productProfileVO.getUserId());
+        if(getUserProfileVO.getCode()!=200||getUserProfileVO.getData()==null)
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        UserProfileVO userProfileVO = new UserProfileVO();
+        BeanUtil.copyProperties(getUserProfileVO.getData(),userProfileVO);
+        List<Coupon> coupons =  couponService.visit(id);
+        List<ProductSkuVO> productSkus = productSkuService.List(id);
+        ProductDetailVO productDetailVO = new ProductDetailVO();
+        productDetailVO.setProductProfileVO(productProfileVO);
+        productDetailVO.setCoupon(coupons);
+        productDetailVO.setProductSkuVO(productSkus);
+        productDetailVO.setUserProfileVO(userProfileVO);
+        return productDetailVO;
+
         //       返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
 //- 用户概要指向商户UserProfileVO,优惠券指向用户领取的生效的可用优惠券CouponVO,商品规格是该商品的所有规格ProductSkuVO,
 //- 用户端不应该访问被下架或删除的商品
-
-
-
-        return null;
     }
 
     @Override
     public ProductDetailVO detail(Long id) {
         ProductProfileVO productProfileVO = baseMapper.getProductProfileVOById(id);
-        if(productProfileVO==null||productProfileVO.getIsDeleted())
+        if(productProfileVO==null)
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        //        返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
-//- 用户概要指向商户UserProfileVO,优惠券指向商品的所有可用优惠券List<CouponVO>,商品规格是该商品的所有规格List<ProductSkuVO>,
-//- 在商户端和后台可以访问被下架或删除的商品
-        return null;
+        Result<com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO> getUserProfileVO
+                = userClient.profile(productProfileVO.getUserId());
+        if(getUserProfileVO.getCode()!=200||getUserProfileVO.getData()==null)
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        UserProfileVO userProfileVO = new UserProfileVO();
+        BeanUtil.copyProperties(getUserProfileVO.getData(),userProfileVO);
+        List<Coupon> coupons =  couponService.detail(id);
+        List<ProductSkuVO> productSkus = productSkuService.List(id);
+        ProductDetailVO productDetailVO = new ProductDetailVO();
+        productDetailVO.setProductProfileVO(productProfileVO);
+        productDetailVO.setCoupon(coupons);
+        productDetailVO.setProductSkuVO(productSkus);
+        productDetailVO.setUserProfileVO(userProfileVO);
+        return productDetailVO;
     }
 
     @Override

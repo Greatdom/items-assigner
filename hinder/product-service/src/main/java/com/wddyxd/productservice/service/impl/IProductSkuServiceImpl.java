@@ -80,13 +80,19 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
     @Override
     @Transactional
     public void update(ProductSkuDTO productSkuDTO) {
+        //得到旧的商品规格
         ProductSku productSku = baseMapper.selectById(productSkuDTO.getId());
         if(productSku == null||productSku.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        //得到旧商品规格库存
         int productSkuStock = productSku.getStock();
+        //判断是否需要更新商品规格库存和商品库存
         boolean isUpdateStock = !Objects.equals(productSku.getStock(), productSkuDTO.getStock());
+        //拷贝
         BeanUtil.copyProperties(productSkuDTO, productSku);
+        //更新商品库存
         if(isUpdateStock){
+            //得到旧商品
             Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
                     .eq(Product::getId, productSkuDTO.getProductId()));
             if(product == null||product.getIsDeleted())
@@ -103,6 +109,7 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
             if (updateCount == 0)
                 throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
+        //乐观锁更新商品规格
         LambdaUpdateWrapper<ProductSku> updateWrapper = Wrappers.lambdaUpdate(ProductSku.class)
                 .eq(ProductSku::getId, productSku.getId())
                 .eq(ProductSku::getStock, productSkuStock)

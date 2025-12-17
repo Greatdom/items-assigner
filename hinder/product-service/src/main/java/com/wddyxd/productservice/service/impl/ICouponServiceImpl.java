@@ -54,19 +54,31 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
 
     @Override
     public List<Coupon> detail(Long id) {
+
+        //得到商品id查询商品和商品所属的用户id
+
+        //查询没有被删除的可用生效优惠券,其中
+        //targetType==0则返回所有,targetType==1则关联用户id查询,targetType==2则关联商品id查询
+
         return null;
     }
 
     @Override
     public List<Coupon> visit(Long id) {
+        //得到商品id查询商品和商品所属的用户id
+
+        //查询没有被删除的可用生效优惠券,联合自己领取的可用的未使用的用户领取的优惠券,其中
+        //targetType==0则返回所有,targetType==1则关联用户id查询,targetType==2则关联商品id查询
+
         return null;
     }
 
     @Override
     public void add(CouponDTO couponDTO) {
+        //生成新优惠券
         Coupon coupon = new Coupon();
         BeanUtil.copyProperties(couponDTO, coupon);
-        //pointer设置
+        //设置pointer字段
         if(couponDTO.getTargetType() == 1){
             Result<String> getShopName = merchantSupplementClient.getShopName(couponDTO.getTargetId());
             if(getShopName.getCode()!=200||getShopName.getData()==null)

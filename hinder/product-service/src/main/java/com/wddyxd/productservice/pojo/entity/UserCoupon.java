@@ -20,7 +20,7 @@ public class UserCoupon extends BaseEntity implements Serializable {
     private Date getTime;//领取时间
     private Date useTime;//使用时间
     private Long orderId;//使用订单id
-    private Integer status;//0-未使用 1-已使用 2-已过期
+    private Integer status;//0-未使用 1-已使用
 
     @Override
     public String toString() {

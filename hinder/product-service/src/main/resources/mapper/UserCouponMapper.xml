@@ -26,81 +26,20 @@
         <result column="use_status" property="useStatus"/>
     </resultMap>
 
-    <!-- 1. Coupon主表核心字段（排除冗余） -->
-    <sql id="couponCoreFields">
-        c.id,
-        c.name,
-        c.get_type,
-        c.get_type,
-        c.target_type,
-        c.is_discount,
-        c.target_id,
-        c.threshold,
-        c.value,
-        c.start_time,
-        c.end_time,
-        c.stock,
-        c.sending_stock,
-        c.status,
-        c.create_time,
-        c.update_time,
-        c.is_deleted
-    </sql>
-
-    <!-- 2. Pointer字段赋值逻辑（统一复用） -->
-    <sql id="pointerField">
-        CASE
-            WHEN c.target_type = 0 THEN '平台通用'
-            WHEN c.target_type = 1 THEN COALESCE(u.username, '无效商户')
-            WHEN c.target_type = 2 THEN COALESCE(p.name, '无效商品')
-            ELSE '未知类型'
-        END AS pointer
-    </sql>
-
-    <!-- 3. 用户/商品左连接逻辑（用于pointer字段） -->
-    <sql id="leftJoinUserProduct">
-        LEFT JOIN `user` u ON c.target_type = 1 AND c.target_id = u.id
-        LEFT JOIN product p ON c.target_type = 2 AND c.target_id = p.id
-    </sql>
-
-    <!-- 4. 优惠券合法基础过滤（未删除+生效中+有效期内） -->
-    <sql id="couponValidFilter">
-        c.is_deleted = 0
-        AND c.status = 1  -- 优惠券生效中
-        AND c.start_time &lt;= NOW()  -- 已到生效时间
-        AND c.end_time &gt;= NOW()    -- 未过有效期
-    </sql>
-
-    <!-- 5. 用户领取优惠券的有效过滤（未删除+未使用+未过期） -->
-    <sql id="userCouponValidFilter">
-        uc.is_deleted = 0
-        AND uc.use_status = 0  -- 未使用（根据业务定义，确保是未使用状态）
-        AND uc.get_time &lt;= NOW()  -- 领取时间合法
-        -- 冗余防护：用户领取的优惠券过期时间（如果有）
-        AND (uc.expire_time IS NULL OR uc.expire_time &gt;= NOW())
-    </sql>
-
-    <!-- 查询用户所有已领取的有效优惠券：未删除、未过期、未使用、优惠券本体合法 -->
     <select id="listUserCouponVO" resultMap="UserCouponVOMap">
         SELECT
-        <include refid="couponCoreFields"/>,
-        <include refid="pointerField"/>,
+        c.*,
         uc.get_time,
         uc.use_time,
         uc.order_id,
         uc.use_status
         FROM user_coupon uc
-        -- 内连接确保用户领取的优惠券一定存在且合法
         INNER JOIN coupon c
         ON uc.coupon_id = c.id
-        AND <include refid="couponValidFilter"/>
-        <include refid="leftJoinUserProduct"/>
+        AND c.is_deleted = 0
         WHERE
-        -- 目标用户
         uc.user_id = #{userId}
-        -- 用户领取优惠券的有效性过滤
-        AND <include refid="userCouponValidFilter"/>
-        -- 排序：快过期的优先，其次按领取时间倒序
+        AND uc.is_deleted = 0
         ORDER BY
         c.end_time ASC,
         uc.get_time DESC

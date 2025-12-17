@@ -52,8 +52,13 @@ public class SecurityUser implements UserDetails {
         this.currentUserInfo = currentUserDTO;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "SecurityUser{" +
+                "loginUserForm=" + loginUserForm +
+                ", currentUserInfo=" + currentUserInfo +
+                '}';
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

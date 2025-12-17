@@ -36,6 +36,7 @@ public class CustomUnAuthExceptionHandler implements AuthenticationEntryPoint {
             Result<Object> result = Result.error(code,msg);
             ResponseUtil.out(httpServletResponse,result);
         }else{
+            e.printStackTrace();
             Integer code = 401;
             String msg = "尚未认证: " + e.getMessage();
             Result<Object> result = Result.error(code,msg);

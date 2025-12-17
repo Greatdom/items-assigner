@@ -27,10 +27,6 @@ public class UserUpdateStrategyFactory {
         for(UserUpdateStrategy<? extends BaseUserUpdateDTO> strategy : strategies){
             strategyMap.put(strategy.getDTOClass(), strategy);
         }
-        System.out.println("strategyMap size:"+strategyMap.size());
-        for(Class<? extends BaseUserUpdateDTO> clazz : strategyMap.keySet()){
-            System.out.println(clazz.toString());
-        }
     }
 
     public <T extends BaseUserUpdateDTO> UserUpdateStrategy<T> getStrategy(Class<T> dtoClass){

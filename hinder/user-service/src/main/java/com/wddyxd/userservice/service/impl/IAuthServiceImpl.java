@@ -3,12 +3,14 @@ package com.wddyxd.userservice.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.wddyxd.userservice.controller.AuthController;
 import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.DTO.*;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.pojo.entity.ShopCategory;
 import com.wddyxd.userservice.service.Interface.*;
 import com.wddyxd.common.utils.FlexibleCodeCheckerService;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -49,6 +51,9 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     private static final Logger log = LoggerFactory.getLogger(IAuthServiceImpl.class);
 
@@ -135,14 +140,17 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         //在redis取到计数器,如果取到了直接返回提示
 
         //判断手机号合法性
-        if(!RegexValidator.validatePhone(phone))
+        if(!RegexValidator.validatePhone(phone)) {
+            log.error("{}---手机号格式错误{}", LogPrompt.PARAM_WRONG_ERROR.msg, phone);
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
         String phoneCode = phoneCodeGetter.encode(phone);
 
         //在redis中添加手机验证码,过期时间为15分钟
         try {
-            redisTemplate.opsForValue().set(redisKey,phoneCode, CommonConstant.REDIS_USER_LOGIN_PHONE_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set(redisKey,phoneCode, CommonConstant.REDIS_USER_LOGIN_PHONE_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
         } catch (Exception e) {
+            log.error("{}---Redis异常", LogPrompt.REDIS_SERVER_ERROR.msg);
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);
         }
 
@@ -164,7 +172,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 
         //在redis中添加邮箱验证码,过期时间为15分钟
         try {
-            redisTemplate.opsForValue().set(redisKey,emailCode, CommonConstant.REDIS_USER_LOGIN_EMAIL_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set(redisKey,emailCode, CommonConstant.REDIS_USER_LOGIN_EMAIL_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
         } catch (Exception e) {
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);
         }

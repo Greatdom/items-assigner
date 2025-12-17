@@ -1,6 +1,7 @@
 package com.wddyxd.security.config;
 
 
+import com.wddyxd.common.utils.FlexibleCodeCheckerService;
 import com.wddyxd.security.filter.TokenAuthFilter;
 import com.wddyxd.security.filter.TokenLoginFilter;
 import com.wddyxd.security.provider.EmailCodeAuthenticationProvider;
@@ -46,6 +47,7 @@ public class TokenWebSecurityConfig {
     private final AuthenticationEntryPoint unAuthEntryPoint;
     private final AuthenticationFailureHandler AuthFailureHandler;
     private final AccessDeniedHandler accessDeniedHandler;
+    private final FlexibleCodeCheckerService flexibleCodeCheckerService;
 
     public TokenWebSecurityConfig(
             @Qualifier("passwordUserDetailsService") UserDetailsService passwordUserDetailsService,
@@ -57,7 +59,9 @@ public class TokenWebSecurityConfig {
                                     UserInfoManager userInfoManager,
             AuthenticationEntryPoint unAuthEntryPoint,
             AuthenticationFailureHandler AuthFailureHandler,
-            AccessDeniedHandler accessDeniedHandler) {
+            AccessDeniedHandler accessDeniedHandler,
+            FlexibleCodeCheckerService flexibleCodeCheckerService
+            ) {
         this.passwordUserDetailsService = passwordUserDetailsService;
         this.phoneCodeUserDetailsService = phoneCodeUserDetailsService;
         this.emailCodeUserDetailsService = emailCodeUserDetailsService;
@@ -67,6 +71,7 @@ public class TokenWebSecurityConfig {
         this.unAuthEntryPoint = unAuthEntryPoint;
         this.AuthFailureHandler = AuthFailureHandler;
         this.accessDeniedHandler = accessDeniedHandler;
+        this.flexibleCodeCheckerService = flexibleCodeCheckerService;
     }
 
     /**
@@ -84,10 +89,9 @@ public class TokenWebSecurityConfig {
                         exception.authenticationEntryPoint(unAuthEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
                 )
-                // 授权配置
+                // tODO授权配置
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers(  "/user/auth/passwordSecurityGetter/**",
-                                "/user/auth/login",
+                        .requestMatchers(  "/user/auth/**",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**").permitAll() // 不进行认证的路径
                         .anyRequest().authenticated() // 其他所有请求都需要认证
@@ -118,7 +122,7 @@ public class TokenWebSecurityConfig {
         PasswordAuthenticationProvider passwordAuthenticationProvider =
                 new PasswordAuthenticationProvider(passwordUserDetailsService, defaultPasswordEncoder);
         PhoneCodeAuthenticationProvider phoneAuthenticationProvider =
-                new PhoneCodeAuthenticationProvider(phoneCodeUserDetailsService);
+                new PhoneCodeAuthenticationProvider(phoneCodeUserDetailsService,flexibleCodeCheckerService);
         EmailCodeAuthenticationProvider emailAuthenticationProvider =
                 new EmailCodeAuthenticationProvider(emailCodeUserDetailsService);
         return new ProviderManager(

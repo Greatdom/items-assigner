@@ -6,6 +6,7 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,9 @@ public class FlexibleCodeCheckerService {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     // 加载灵活校验Lua脚本
     private final DefaultRedisScript<Object> flexibleCodeScript;
@@ -56,15 +60,15 @@ public class FlexibleCodeCheckerService {
             return true;
         }
         try {
-            // 执行单校验：KEYS=[前缀], ARGV=[账号, 验证码, "single"]
-            Object result = redisTemplate.execute(
+            // 移除手动指定的序列化器，使用全局配置
+            Object result = stringRedisTemplate.execute(
                     flexibleCodeScript,
-                    RedisSerializer.string(),
-                    RedisSerializer.java(),
                     Collections.singletonList(keyPrefix),
                     account, inputCode, operationType[0]
             );
-            return !Boolean.TRUE.equals(result);
+            // 解析：result为"1"（成功）/null（失败）
+            boolean checkSuccess = "1".equals(result);
+            return !checkSuccess;
         } catch (Exception e) {
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);
         }

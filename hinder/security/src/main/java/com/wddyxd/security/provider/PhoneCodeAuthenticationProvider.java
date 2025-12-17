@@ -6,6 +6,7 @@ import com.wddyxd.common.utils.FlexibleCodeCheckerService;
 import com.wddyxd.security.exception.SecurityAuthException;
 import com.wddyxd.security.pojo.LoginAuthenticationToken;
 import com.wddyxd.security.pojo.SecurityUser;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,14 +27,16 @@ import org.springframework.stereotype.Component;
 public class PhoneCodeAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
-
-    @Autowired
-    private FlexibleCodeCheckerService flexibleCodeCheckerService;
+    private final FlexibleCodeCheckerService flexibleCodeCheckerService;
 
     // PhoneAuthenticationProvider
     public PhoneCodeAuthenticationProvider(
-            @Qualifier("phoneCodeUserDetailsService") UserDetailsService userDetailsService) {
+            @Qualifier("phoneCodeUserDetailsService") UserDetailsService userDetailsService,
+            FlexibleCodeCheckerService flexibleCodeCheckerService
+
+    ) {
         this.userDetailsService = userDetailsService;
+        this.flexibleCodeCheckerService = flexibleCodeCheckerService;
     }
 
     @Override
@@ -46,6 +49,7 @@ public class PhoneCodeAuthenticationProvider implements AuthenticationProvider {
         }
         String phone = (String) customToken.getPrincipal();
         String phoneCode = (String) customToken.getCredentials();
+
         // 加载用户信息
         SecurityUser securityUser = (SecurityUser) userDetailsService.loadUserByUsername(phone);
         // 校验手机验证码

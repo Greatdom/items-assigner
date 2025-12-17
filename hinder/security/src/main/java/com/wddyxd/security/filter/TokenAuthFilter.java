@@ -11,6 +11,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,6 +35,8 @@ import java.util.List;
 
 public class TokenAuthFilter extends BasicAuthenticationFilter {
 
+    private static final Logger log = LoggerFactory.getLogger(TokenAuthFilter.class);
+
     private final UserTokenManager userTokenManager;
     private final UserInfoManager userInfoManager;
     private final AuthenticationEntryPoint unAuthEntryPoint;
@@ -48,11 +52,11 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-
         String requestURI = request.getRequestURI();
-        if (requestURI.startsWith("/user/auth/passwordSecurityGetter")||
-             requestURI.startsWith("/swagger-ui")||
-            requestURI.startsWith("/v3/api-docs")) {
+        log.info("进入TokenAuthFilter---"+requestURI);
+
+        if (isURINotNeedLogin(requestURI)) {
+            log.info("不需要登录");
             chain.doFilter(request, response);
             return;
         }
@@ -93,6 +97,12 @@ public class TokenAuthFilter extends BasicAuthenticationFilter {
             }
             return new UsernamePasswordAuthenticationToken(redisUserInfo, token, authority);
         }else throw new SecurityAuthException(ResultCodeEnum.USER_INFO_ERROR);
+    }
+
+    private boolean isURINotNeedLogin(String requestURI){
+        return requestURI.startsWith("/user/auth") ||
+                requestURI.startsWith("/swagger-ui") ||
+                requestURI.startsWith("/v3/api-docs");
     }
 
 }

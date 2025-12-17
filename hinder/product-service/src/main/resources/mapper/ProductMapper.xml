@@ -68,5 +68,10 @@
             ORDER BY p.create_time DESC
         </if>
     </select>
+    <select id="getProductProfileVOById" resultMap="ProductProfileMap">
+        <include refid="BaseProductProfileSQL"/>
+        AND p.id = #{id}
+        ORDER BY p.create_time DESC
+    </select>
 
 </mapper>

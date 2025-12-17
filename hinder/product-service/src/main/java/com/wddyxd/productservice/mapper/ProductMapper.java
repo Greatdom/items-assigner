@@ -21,11 +21,13 @@ public interface ProductMapper extends BaseMapper<Product> {
     public Page<ProductProfileVO> getPageProductProfileVOManager(Page<ProductProfileVO> page,
                                                                  String search);
 
-    Page<ProductProfileVO> getPageProductProfileVOFeed(
+    public Page<ProductProfileVO> getPageProductProfileVOFeed(
             IPage<ProductProfileVO> page,          // 分页对象（复用）
             @Param("categoryId") Long categoryId, // 分类ID（新条件）
             @Param("sortColumn") String sortColumn, // 排序字段（如 "sales"、"price"）
             @Param("sortOrder") String sortOrder   // 排序方式（"ASC"/"DESC"）
     );
+
+    public ProductProfileVO getProductProfileVOById(Long id);
 
 }

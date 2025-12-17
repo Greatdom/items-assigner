@@ -10,9 +10,11 @@ import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.productservice.pojo.DTO.CouponDTO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
+import com.wddyxd.productservice.service.Interface.ICouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +31,9 @@ import java.util.List;
 @Tag(name = "优惠券控制器", description = "优惠券相关接口")
 public class CouponController {
 
+    @Autowired
+    private ICouponService couponService;
+
     @GetMapping("/list")
     //需要coupon.list权限而且(访问者的id等于参数的userId或访问者是管理员)
     @Operation(summary = "分页查询优惠券列表接口", description = "在后台和商户端的优惠券管理界面查看平台的所有优惠券或当前商户的优惠券," +
@@ -39,7 +44,7 @@ public class CouponController {
 //- 在mysql为优惠券名建立索引以支持关键字搜索
 //- 返回List<CouponVO>并由PageResult包装
 //- 注意无论优惠券是否被逻辑删除都应该被被查到
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(couponService.List(searchDTO));
     }
 
     @GetMapping("/detail/{id}")
@@ -49,7 +54,7 @@ public class CouponController {
 
 //        传入商品的id,返回List<CouponVO>,查看某商户的某商品的所有未过期未被删除的优惠券,
 //- 另外的,对于全场通用优惠券没有筛选条件,对于指定商户的优惠券返回该商户的优惠券,对于指定商品的优惠券返回该商品的优惠券
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(couponService.detail(id));
     }
     @GetMapping("/visit/{id}")
     //需要coupon.list权限而且(访问者的id等于参数的userId或访问者是管理员)
@@ -58,7 +63,7 @@ public class CouponController {
 
 //        传入商品的id,返回List<CouponVO>,查看自己所有的已领取的未过期未被删除且未被使用的优惠券,
 //- 另外的,对于全场通用优惠券没有筛选条件,对于指定商户的优惠券返回该商户的优惠券,对于指定商品的优惠券返回该商品的优惠券
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(couponService.visit(id));
     }
 
     @PostMapping("/add")
@@ -66,7 +71,8 @@ public class CouponController {
     @Operation(summary = "添加优惠券接口", description = "添加优惠券")
     public Result<Void> add(@Validated(AddGroup.class) @RequestBody CouponDTO couponDTO){
 //        传入CouponAddDTO,添加优惠券,注意相关数据是正数值,如果targetId有效须判断指向对象是否没有被删除
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        couponService.add(couponDTO);
+        return Result.success();
     }
 
     @PutMapping("/update")
@@ -74,7 +80,8 @@ public class CouponController {
     @Operation(summary = "修改优惠券接口", description = "修改优惠券")
     public Result<Void> update(@Validated(UpdateGroup.class) @RequestBody CouponDTO couponDTO){
 //        传入CouponDTO,修改优惠券,注意相关数据是正数值,如果targetId有效须判断指向对象是否没有被删除
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        couponService.update(couponDTO);
+        return Result.success();
     }
 
     @DeleteMapping("/delete/{id}")

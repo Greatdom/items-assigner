@@ -71,6 +71,9 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
     @Override
     public ProductDetailVO visit(Long id) {
+        ProductProfileVO productProfileVO = baseMapper.getProductProfileVOById(id);
+        if(productProfileVO==null||productProfileVO.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //       返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
 //- 用户概要指向商户UserProfileVO,优惠券指向用户领取的生效的可用优惠券CouponVO,商品规格是该商品的所有规格ProductSkuVO,
 //- 用户端不应该访问被下架或删除的商品
@@ -82,6 +85,9 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
     @Override
     public ProductDetailVO detail(Long id) {
+        ProductProfileVO productProfileVO = baseMapper.getProductProfileVOById(id);
+        if(productProfileVO==null||productProfileVO.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //        返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
 //- 用户概要指向商户UserProfileVO,优惠券指向商品的所有可用优惠券List<CouponVO>,商品规格是该商品的所有规格List<ProductSkuVO>,
 //- 在商户端和后台可以访问被下架或删除的商品

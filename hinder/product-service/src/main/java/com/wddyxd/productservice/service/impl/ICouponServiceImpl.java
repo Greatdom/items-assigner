@@ -19,6 +19,7 @@ import com.wddyxd.productservice.pojo.entity.Coupon;
 import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.service.Interface.ICouponService;
 import com.wddyxd.productservice.service.Interface.IProductService;
+import com.wddyxd.security.service.GetCurrentUserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,9 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
     @Autowired
     private MerchantSupplementClient merchantSupplementClient;
 
+    @Autowired
+    private GetCurrentUserInfoService getCurrentUserInfoService;
+
     @Override
     public Page<Coupon> List(SearchDTO searchDTO) {
         searchDTO.validatePageParams(searchDTO);
@@ -60,7 +64,7 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
         //查询没有被删除的可用生效优惠券,其中
         //targetType==0则返回所有,targetType==1则关联用户id查询,targetType==2则关联商品id查询
 
-        return null;
+        return baseMapper.detailCouponVO(id);
     }
 
     @Override
@@ -69,8 +73,9 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
 
         //查询没有被删除的可用生效优惠券,联合自己领取的可用的未使用的用户领取的优惠券,其中
         //targetType==0则返回所有,targetType==1则关联用户id查询,targetType==2则关联商品id查询
+        long userId = getCurrentUserInfoService.getCurrentUserId();
 
-        return null;
+        return baseMapper.visitCouponVO(id, userId);
     }
 
     @Override

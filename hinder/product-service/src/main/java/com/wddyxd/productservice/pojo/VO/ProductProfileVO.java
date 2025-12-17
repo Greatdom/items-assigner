@@ -2,6 +2,7 @@ package com.wddyxd.productservice.pojo.VO;
 
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @program: items-assigner
@@ -38,11 +39,11 @@ public class ProductProfileVO {
 
     private Integer status;
 
-    private String createTime;
+    private Date createTime;
 
-    private String updateTime;
+    private Date updateTime;
 
-    private String isDeleted;
+    private Boolean isDeleted;
 
     @Override
     public String toString() {
@@ -170,27 +171,27 @@ public class ProductProfileVO {
         this.status = status;
     }
 
-    public String getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(String createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public String getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public String getIsDeleted() {
+    public Boolean getIsDeleted() {
         return isDeleted;
     }
 
-    public void setIsDeleted(String isDeleted) {
-        this.isDeleted = isDeleted;
+    public void setIsDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
 @Mapper
 public interface CouponMapper extends BaseMapper<Coupon> {
 
-    Page<Coupon> getPageCouponVO(Page<ProductProfileVO> page, String search);
 
-    List<Coupon> detailCouponVO(Long id);
+    List<Coupon> detailCouponVO(@Param("id") Long id);
 
-    List<Coupon> visitCouponVO(Long id);
+
+    List<Coupon> visitCouponVO(@Param("id") Long id, @Param("userId") Long userId);
 
 }

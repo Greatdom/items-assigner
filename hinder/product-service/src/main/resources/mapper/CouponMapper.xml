@@ -2,4 +2,42 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wddyxd.productservice.mapper.CouponMapper">
 
+    <sql id="couponValidCondition">
+        c.is_deleted = 0
+    AND c.status = 1
+    AND c.start_time &lt;= NOW()
+    AND c.end_time &gt;= NOW()
+    </sql>
+
+    <sql id="productCouponRelation">
+        JOIN product p ON 1=1
+        AND (
+        (c.target_type = 0)
+        OR (c.target_type = 1 AND c.target_id = p.user_id)
+        OR (c.target_type = 2 AND c.target_id = p.id)
+        )
+        AND p.is_deleted = 0
+        AND p.id = #{id}
+    </sql>
+
+    <select id="detailCouponVO" resultType="com.wddyxd.productservice.pojo.entity.Coupon">
+        SELECT c.*
+        FROM coupon c
+        <include refid="productCouponRelation"/>
+        WHERE
+        <include refid="couponValidCondition"/>
+    </select>
+
+    <select id="visitCouponVO" resultType="com.wddyxd.productservice.pojo.entity.Coupon">
+        SELECT c.*
+        FROM coupon c
+        JOIN user_coupon uc ON c.id = uc.coupon_id
+        <include refid="productCouponRelation"/>
+        WHERE
+        <include refid="couponValidCondition"/>
+        AND uc.is_deleted = 0
+        AND uc.status = 0
+        AND uc.user_id = #{userId}
+    </select>
+
 </mapper>

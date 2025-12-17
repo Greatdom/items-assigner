@@ -93,7 +93,7 @@ public class AuthController {
         return Result.success(authService.passwordSecurityGetter(username));
     }
 
-    @GetMapping("/codePhone/{phone}")
+    @GetMapping("/phoneCode/{phone}")
     @Operation(summary = "获取手机验证码接口", description = "获取手机验证码接口,在手机登录,修改个人信息时调用")
     public Result<Void> phoneCode(@PathVariable String phone) {
 

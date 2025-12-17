@@ -8,6 +8,7 @@ public enum LogPrompt {
     PASSWORD_ENCODE_ERROR("密码编码错误"),
     PARAM_EMPTY_ERROR("不该为空的参数为空的错误"),
     PARAM_WRONG_ERROR("参数格式错误"),
+    LUA_ERROR("lua脚本异常"),
     REDIS_SERVER_ERROR("Redis异常"),
     REDIS_GET_DATA_ERROR("Redis获取数据异常"),
     TOKEN_EXPIRED_INFO("Token已过期"),

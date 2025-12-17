@@ -1,8 +1,11 @@
 package com.wddyxd.common.utils;
 
+import com.wddyxd.common.constant.LogPrompt;
 import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,6 +29,9 @@ public class FlexibleCodeCheckerService {
 
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
+
+    private static final Logger log = LoggerFactory.getLogger(FlexibleCodeCheckerService.class);
+
 
     // 加载灵活校验Lua脚本
     private final DefaultRedisScript<Object> flexibleCodeScript;
@@ -69,16 +75,15 @@ public class FlexibleCodeCheckerService {
             // 2. 解析Lua返回值（兼容字符串/数字类型）
             String resultStr = result.toString();
 
+            log.info("号码：{}，验证码：{}，验证结果：{}", account, inputCode, resultStr);
+
             // 3. 判定校验结果："1"=校验成功，其他=失败
             // 原逻辑return !checkSuccess 是反的，修正为直接返回checkSuccess
             return !"1".equals(resultStr);
 
         } catch (Exception e) {
-            // 4. 完善异常日志，保留原始异常信息
-            // 可选：抛自定义异常时携带具体原因，而非通用的SERVER_ERROR
+            log.error(LogPrompt.LUA_ERROR.msg);
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);
-            // 如果需要保持原异常枚举，可改为：
-            // throw new CustomException(ResultCodeEnum.SERVER_ERROR.getCode(), ResultCodeEnum.SERVER_ERROR.getMessage() + "：" + e.getMessage());
         }
     }
     // ====================== 双校验方法 ======================

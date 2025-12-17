@@ -28,13 +28,16 @@ public class EmailCodeAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
 
-    @Autowired
-    private FlexibleCodeCheckerService flexibleCodeCheckerService;
+
+    private final FlexibleCodeCheckerService flexibleCodeCheckerService;
 
     // EmailAuthenticationProvider
     public EmailCodeAuthenticationProvider(
-            @Qualifier("emailCodeUserDetailsService") UserDetailsService userDetailsService) {
+            @Qualifier("emailCodeUserDetailsService") UserDetailsService userDetailsService,
+            FlexibleCodeCheckerService flexibleCodeCheckerService
+    ) {
         this.userDetailsService = userDetailsService;
+        this.flexibleCodeCheckerService = flexibleCodeCheckerService;
     }
 
     @Override

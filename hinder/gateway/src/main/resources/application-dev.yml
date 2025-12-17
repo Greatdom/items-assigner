@@ -21,6 +21,22 @@ spring:
             - name: RequestRateLimiter
               args:
                 deny: true
+        - id: deny-phone-code-security-getter
+          uri: forward:/deny  # 指向一个无效的URI
+          predicates:
+            - Path=/api/user/auth/phoneCodeSecurityGetter/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                deny: true
+        - id: deny-email-code-security-getter
+          uri: forward:/deny  # 指向一个无效的URI
+          predicates:
+            - Path=/api/user/auth/emailCodeSecurityGetter/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                deny: true
 
         # 或者使用更简单的方式，直接不设置uri来拒绝请求
         # - id: deny-password-security-getter

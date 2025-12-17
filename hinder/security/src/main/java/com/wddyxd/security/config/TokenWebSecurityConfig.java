@@ -124,7 +124,7 @@ public class TokenWebSecurityConfig {
         PhoneCodeAuthenticationProvider phoneAuthenticationProvider =
                 new PhoneCodeAuthenticationProvider(phoneCodeUserDetailsService,flexibleCodeCheckerService);
         EmailCodeAuthenticationProvider emailAuthenticationProvider =
-                new EmailCodeAuthenticationProvider(emailCodeUserDetailsService);
+                new EmailCodeAuthenticationProvider(emailCodeUserDetailsService,flexibleCodeCheckerService);
         return new ProviderManager(
                 Arrays.asList(passwordAuthenticationProvider, phoneAuthenticationProvider, emailAuthenticationProvider)
         );

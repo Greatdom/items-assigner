@@ -166,14 +166,17 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         //在redis取到计数器,如果取到了直接返回提示
 
         //判断邮箱合法性
-        if(!RegexValidator.validateEmail(email))
+        if(!RegexValidator.validateEmail(email)){
+            log.error("{}---邮箱格式错误{}", LogPrompt.PARAM_WRONG_ERROR.msg, email);
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
         String emailCode = emailCodeGetter.encode(email);
 
         //在redis中添加邮箱验证码,过期时间为15分钟
         try {
             stringRedisTemplate.opsForValue().set(redisKey,emailCode, CommonConstant.REDIS_USER_LOGIN_EMAIL_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
         } catch (Exception e) {
+            log.error("{}---Redis异常", LogPrompt.REDIS_SERVER_ERROR.msg);
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);
         }
 

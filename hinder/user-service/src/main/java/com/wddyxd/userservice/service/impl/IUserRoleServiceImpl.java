@@ -49,7 +49,7 @@ public class IUserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> 
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class) // 事务保证原子性
+    @Transactional
     public void insertUserRoleWithDeleteSameGroup(Long userId, Long roleId) {
         if (userId == null || roleId == null) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);

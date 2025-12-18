@@ -26,7 +26,7 @@ public interface IRoleService extends IService<Role> {
 
     public RoleVO detail(Long id);
 
-    public void assign(Long userId, Long[] roleIds);
+    public void assign(Long userId, List<Long> roleIds);
 
     public void add(String name,Integer group);
 

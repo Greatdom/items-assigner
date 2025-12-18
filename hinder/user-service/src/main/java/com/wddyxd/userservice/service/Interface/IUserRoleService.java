@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.userservice.pojo.entity.UserRole;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @program: 微服务脚手架
  * @description: description
@@ -14,7 +16,7 @@ import org.apache.ibatis.annotations.Param;
 
 public interface IUserRoleService extends IService<UserRole> {
 
-    void assign(Long userId, Long[] roleIds);
+    void assign(Long userId, List<Long> roleIds);
 
     void insertUserRoleWithDeleteSameGroup(Long userId, Long roleId);
 

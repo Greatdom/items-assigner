@@ -13,6 +13,7 @@ import com.wddyxd.common.constant.ShopCategoryConstant;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.security.service.GetCurrentUserInfoService;
 import com.wddyxd.userservice.mapper.RoleMapper;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
@@ -24,6 +25,8 @@ import com.wddyxd.userservice.service.Interface.IMerchantSupplementService;
 import com.wddyxd.userservice.service.Interface.IRoleService;
 import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import com.wddyxd.userservice.service.Interface.IUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -54,6 +57,11 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
     @Autowired
     private IMerchantSupplementService merchantSupplementService;
 
+    @Autowired
+    private GetCurrentUserInfoService getCurrentUserInfoService;
+
+    private static final Logger log = LoggerFactory.getLogger(IRoleServiceImpl.class);
+
     @Override
     public Page<Role> List(SearchDTO searchDTO) {
         searchDTO.validatePageParams(searchDTO);
@@ -71,12 +79,8 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
     @Override
     @Transactional
-    public void assign(Long userId, Long[] roleIds) {
+    public void assign(Long userId, List<Long> roleIds) {
         //TODO幂等性问题
-        //校验参数是否合法
-        if (userId == null || roleIds == null) {
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        }
         Long[] groupRoleId = new Long[CommonConstant.ROLE_GROUP_NUM];//0-用户 1-商户 2-管理员
         //O(n)时间复杂度,来确定最终的角色分组
             for (Long roleId : roleIds) {
@@ -95,9 +99,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
                 //分组校验通过，记录该分组的角色ID
                 groupRoleId[group] = roleId;
             }
-        roleIds = Arrays.stream(roleIds)
-                .filter(Objects::nonNull)  // 滤掉null值
-                .toArray(Long[]::new);
+
         //根据userId得到一个没有被删除的用户
         User user = userService.getById(userId);
         if (user == null || user.getIsDeleted()==true) {
@@ -105,22 +107,35 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
         }
 
         //只有超级管理员才能分配管理员
+        List<String> currentUserRoles = getCurrentUserInfoService.getCurrentUserRoles();
+        if (!currentUserRoles.contains(RoleConstant.ROLE_SUPER_ADMIN.getName())&&groupRoleId[2]!=null) {
+            log.error("当前用户没有权限分配管理员角色");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
 
         //全局只能有一个超级管理员
-
+        if(Objects.equals(groupRoleId[2], RoleConstant.ROLE_SUPER_ADMIN.getId())) {
+            log.error("不能分配多余的超级管理员");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
         userRoleService.assign(userId, roleIds);
 
         //如果用户之前没有被分配商户但现在被分配商户了就直接创建商户表
-//        MerchantSupplement merchantSupplement = new MerchantSupplement();
-//        merchantSupplement.setUserId(userId);
-//        merchantSupplement.setShopStatus(1);//关店
-//        merchantSupplement.setShopCategoryId(ShopCategoryConstant.DEFAULT.getId());//默认分类
-//        merchantSupplement.setIsDeleted(false);
-//        merchantSupplementService.add(merchantSupplement);
+        if(groupRoleId[1]!=null){
+            MerchantSupplement merchantSupplement = merchantSupplementService.getOne(
+                    new LambdaQueryWrapper<>(MerchantSupplement.class)
+                            .eq(MerchantSupplement::getUserId, userId)
+            );
 
-        //(可选)如果用户没有许可证就不能给他分配非默认商户角色
-
-        //(可选)如果用户没有实名认证就不能给他分配非默认用户角色
+            if(merchantSupplement==null||merchantSupplement.getIsDeleted()){
+                merchantSupplement = new MerchantSupplement();
+                merchantSupplement.setUserId(userId);
+                merchantSupplement.setShopStatus(1);//关店
+                merchantSupplement.setShopCategoryId(ShopCategoryConstant.DEFAULT.getId());//默认分类
+                merchantSupplement.setIsDeleted(false);
+                merchantSupplementService.add(merchantSupplement);
+            }
+        }
     }
 
     @Override

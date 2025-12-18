@@ -27,7 +27,7 @@ public class IUserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> 
 
     @Override
     @Transactional
-    public void assign(Long userId, Long[] roleIds) {
+    public void assign(Long userId, List<Long> roleIds) {
         //已在rolesService作参数校验
         //删除该用户的所有关联角色
         LambdaUpdateWrapper<UserRole> updateWrapper = new LambdaUpdateWrapper<>();
@@ -35,7 +35,7 @@ public class IUserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> 
                 .set(UserRole::getIsDeleted, 1);
         baseMapper.update(null,updateWrapper);
         //用roleIds重新分配用户的角色
-        if(roleIds.length>0){
+        if(!roleIds.isEmpty()){
             List<UserRole> userRoles = new ArrayList<>();
             for (Long roleId : roleIds) {
                 UserRole userRole = new UserRole();

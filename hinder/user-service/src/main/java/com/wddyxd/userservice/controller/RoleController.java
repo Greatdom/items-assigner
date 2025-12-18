@@ -4,14 +4,19 @@ package com.wddyxd.userservice.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.userservice.pojo.DTO.RoleAssignDTO;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
 import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.service.Interface.IRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user/role")
 @Tag(name = "角色控制器", description = "角色相关接口")
+@Validated
 public class RoleController {
 
     @Autowired
@@ -39,21 +45,21 @@ public class RoleController {
     @GetMapping("/detail/{id}")
     //需要role.list权限
     @Operation(summary = "查看角色详细信息接口", description = "在管理员的角色管理主界面查看角色详情")
-    public Result<RoleVO> detail(@PathVariable Long id){
+    public Result<RoleVO> detail(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
         return Result.success(roleService.detail(id));
     }
 
     @PostMapping("/assign")
     //需要user.update权限
     @Operation(summary = "手动为特定用户分配角色接口", description = "管理员可以在用户管理界面查看用户详细信息的时候为某用户分配角色")
-    public Result<Void> assign(@RequestParam Long userId, @RequestParam Long[] roleIds){
+    public Result<Void> assign(@Validated(UpdateGroup.class) @RequestBody RoleAssignDTO roleAssignDTO){
 //        一个用户可以分配最多三个角色,分别是最多一个购物者角色,一个商户角色和一个管理员角色,
 //- 如果发现roleId不满足分配角色合法性则拒绝分配,
 //- 否则根据参数查询用户和用户的角色,然后删除用户拥有的角色,然后重新增加角色
 //- 如果原先没有商户角色但添加了商户则创建商户表,并插入默认商户信息(但如果给了最高级商户角色但没有许可证呢Void)
 //- 只有超级管理员才可以给用户分配管理员角色,管理员只能给用户分配除管理员外的角色
 //- 如果查询不到用户或用户被逻辑删除则拒绝分配
-        roleService.assign(userId, roleIds);
+        roleService.assign(roleAssignDTO.getUserId(), roleAssignDTO.getRoleIds());
         return Result.success();
     }
 

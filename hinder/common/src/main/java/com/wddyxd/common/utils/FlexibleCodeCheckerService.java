@@ -97,15 +97,14 @@ public class FlexibleCodeCheckerService {
             // 执行双校验：KEYS=[手机前缀, 邮箱前缀], ARGV=[手机号, 手机验证码, 邮箱, 邮箱验证码, "double"]
             Object result = redisTemplate.execute(
                     flexibleCodeScript,
-                    RedisSerializer.string(),
-                    RedisSerializer.java(),
                     Arrays.asList(RedisKeyConstant.USER_LOGIN_PHONE_CODE.key, RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key),
                     phone, phoneCode, email, emailCode, operationType[1]
             );
+            System.out.println("RESULT______------:"+result);
             // 转换为List<Boolean>，兜底返回双false
             if(result instanceof List){
-                List<Boolean> resultList = (List<Boolean>) result;
-                return resultList.size() != 2 || !resultList.get(0) || !resultList.get(1);
+                List<String> resultList = (List<String>) result;
+                return resultList.size() != 2 || !"1".equals(resultList.get(0)) || !"1".equals(resultList.get(1));
             }else return true;
         } catch (Exception e) {
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);

@@ -1,6 +1,11 @@
 package com.wddyxd.userservice.pojo.DTO;
 
 
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * @program: items-assigner
  * @description: 商户端商户注册接口的请求体
@@ -9,8 +14,12 @@ package com.wddyxd.userservice.pojo.DTO;
  **/
 
 public class MerchantRegisterDTO extends CustomUserRegisterDTO{
+    @NotBlank(message = "商户名称不能为空", groups = {AddGroup.class})
     private String shopName;
+    @NotBlank(message = "商户地址不能为空", groups = {AddGroup.class})
     private String shopAddress;
+    @NotNull(message = "商户类别不能为空", groups = {AddGroup.class})
+    @Min(value = 1, message = "商户类别不能小于1", groups = {AddGroup.class})
     private Long shopCategoryId;
 
     @Override

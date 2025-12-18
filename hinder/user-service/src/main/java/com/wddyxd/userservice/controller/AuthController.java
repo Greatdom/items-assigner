@@ -1,6 +1,8 @@
 package com.wddyxd.userservice.controller;
 
 
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.security.security.UserInfoManager;
 import com.wddyxd.userservice.pojo.DTO.*;
@@ -9,9 +11,11 @@ import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.service.Interface.IAuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user/auth")
 @Tag(name = "用户认证相关接口", description = "用户注册认证相关操作")
+@Validated
 public class AuthController {
 
     @Autowired
@@ -95,7 +100,7 @@ public class AuthController {
 
     @GetMapping("/phoneCode/{phone}")
     @Operation(summary = "获取手机验证码接口", description = "获取手机验证码接口,在手机登录,修改个人信息时调用")
-    public Result<Void> phoneCode(@PathVariable String phone) {
+    public Result<Void> phoneCode(@PathVariable @NotBlank(message = "手机号不能为空") String phone) {
 
 //        前端设置用户60秒访问一次该接口,
 //- 获取手机号,判断合法性后发送手机验证码,同时要根据手机号对接口进行基于 Redis 的计数器限流和sentinel限流,
@@ -109,7 +114,7 @@ public class AuthController {
 
     @GetMapping("/emailCode/{email}")
     @Operation(summary = "获取邮箱验证码接口", description = "获取邮箱验证码接口,在邮箱登录,修改个人信息时调用")
-    public Result<Void> emailCode(@PathVariable String email) {
+    public Result<Void> emailCode(@PathVariable @NotBlank(message = "邮箱不能为空") String email) {
 
 //        前端设置用户60秒访问一次该接口,
 //- 获取邮箱,判断合法性后发送邮箱验证码,同时要根据邮箱对接口进行基于 Redis 的计数器限流和sentinel限流,
@@ -123,7 +128,7 @@ public class AuthController {
 
     @PostMapping("/customUserRegister")
     @Operation(summary = "用户端用户注册接口", description = "用户端的注册接口")
-    public Result<Void> customUserRegister(@RequestBody CustomUserRegisterDTO customUserRegisterDTO){
+    public Result<Void> customUserRegister(@Validated(AddGroup.class) @RequestBody CustomUserRegisterDTO customUserRegisterDTO){
 //        首先判断用户名,手机号和邮箱的合法性,得到参数后分别根据用户名,手机号和邮箱获取user表的一条数据,
 //                - 如果三份数据都是null则注册用户,分配ROLE_NEW_USER角色,创建user表,关联user_role表,创建user_detail表并填充默认数据
 //                - 其他情况返回错误
@@ -135,7 +140,7 @@ public class AuthController {
 
     @PostMapping("/merchantRegister")
     @Operation(summary = "商户端商户注册接口", description = "商户端的注册接口")
-    public Result<Void> merchantRegister(@RequestBody MerchantRegisterDTO merchantRegisterDTO){
+    public Result<Void> merchantRegister(@Validated(AddGroup.class) @RequestBody MerchantRegisterDTO merchantRegisterDTO){
 //        首先判断用户名,手机号和邮箱的合法性,得到参数后分别根据用户名,手机号和邮箱获取user表的一条数据,
 //                - 如果三份数据都是null则调用用户端注册接口
 //                        - 如果三份数据都指向同一个用户而且没有被分配商户相关角色则将该用户分配ROLE_NEW_MERCHANT角色,
@@ -149,7 +154,7 @@ public class AuthController {
 
     @PostMapping("/rebuildPassword")
     @Operation(summary = "根据验证码找回密码接口", description = "支持根据手机验证码为账号找回密码")
-    public Result<Void> rebuildPassword(@RequestBody RebuildPasswordDTO rebuildPasswordDTO){
+    public Result<Void> rebuildPassword(@Validated(UpdateGroup.class) @RequestBody RebuildPasswordDTO rebuildPasswordDTO){
 //        需要手机和验证码和新密码,后端会判断手机和验证码是否合法且吻合.
 //- 成功更改密码后时redis存储5秒过期的时间戳,过期时间内不能重新更改密码,更改密码后强制在redis的当前用户的token删除
         log.info("根据验证码找回密码接口");

@@ -187,25 +187,30 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     @Override
     @Transactional
     public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO) {
-        if(customUserRegisterDTO == null)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //验证码校验
         if(flexibleCodeCheckerService.checkPhoneAndEmailCodeWrong(
                 customUserRegisterDTO.getPhone(), customUserRegisterDTO.getPhoneCode(),
                 customUserRegisterDTO.getEmail(), customUserRegisterDTO.getEmailCode()
-        )) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        )) {
+            log.error("{}---验证码错误", LogPrompt.PARAM_WRONG_ERROR.msg);
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
         if(this.checkUserUnique(customUserRegisterDTO)==null) {
             customUserRegisterDTO.setUserId(IdWorker.getId());
             this.addUser(customUserRegisterDTO);
         }
-        else throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
+        else {
+            log.error("用户已存在,注册信息指向另一个用户");
+            throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
+        }
     }
 
     @Override
     @Transactional
     public long merchantRegister(MerchantRegisterDTO merchantRegisterDTO) {
-        if(merchantRegisterDTO == null)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        //校验商户指向的分类是否合法
         ShopCategory shopCategory = shopCategoryService.getById(merchantRegisterDTO.getShopCategoryId());
-        if(shopCategory == null) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        if(shopCategory == null||shopCategory.getIsDeleted()) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         CustomUserRegisterDTO customUserRegisterDTO = new CustomUserRegisterDTO();
         BeanUtil.copyProperties(merchantRegisterDTO, customUserRegisterDTO);
         //验证码校验
@@ -252,7 +257,10 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         if(!RegexValidator.validateUsername(customUserRegisterDTO.getUsername())
                 || !RegexValidator.validatePhone(customUserRegisterDTO.getPhone())
                 || !RegexValidator.validateEmail(customUserRegisterDTO.getEmail())
-        ) throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        ) {
+            log.error("{}---参数错误", LogPrompt.PARAM_WRONG_ERROR.msg);
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
 
         //一次查询所有匹配的未删除用户,匹配用户名/手机号/邮箱任一条件
         List<User> userList = baseMapper.selectList(new LambdaQueryWrapper<User>()
@@ -293,6 +301,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         if (matchIdSet.size() == 1) {
             return usernameMatchId;
         }
+        log.error("用户已存在,注册信息指向多个用户");
         throw new CustomException(ResultCodeEnum.USER_EXIST_ERROR);
     }
     //注册普通用户

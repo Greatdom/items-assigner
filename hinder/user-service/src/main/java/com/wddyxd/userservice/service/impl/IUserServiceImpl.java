@@ -21,6 +21,7 @@ import com.wddyxd.userservice.pojo.VO.UserProfileVO;
 import com.wddyxd.userservice.pojo.VO.UserVisitVO;
 import com.wddyxd.userservice.pojo.entity.User;
 import com.wddyxd.userservice.service.Interface.IAuthService;
+import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import com.wddyxd.userservice.service.Interface.IUserService;
 import com.wddyxd.userservice.update.UserUpdateStrategy;
 import com.wddyxd.userservice.update.UserUpdateStrategyFactory;
@@ -51,7 +52,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     private IAuthService authService;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private IUserRoleService userRoleService;
 
     @Override
     public String getUsername(Long id) {
@@ -105,7 +106,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     public void addAdmin(CustomUserRegisterDTO customUserRegisterDTO) {
         MerchantRegisterDTO merchantRegisterDTO = BeanUtil.copyProperties(customUserRegisterDTO, MerchantRegisterDTO.class);
         long userId = authService.merchantRegister(merchantRegisterDTO);
-        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), userId, RoleConstant.ROLE_NEW_ADMIN.getId());
+        userRoleService.insertUserRoleWithDeleteSameGroup(userId, RoleConstant.ROLE_NEW_ADMIN.getId());
 
 
     }

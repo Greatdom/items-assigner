@@ -2,6 +2,7 @@ package com.wddyxd.userservice.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.entity.RolePermission;
@@ -43,5 +44,10 @@ public class IUserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> 
             }
             this.saveBatch(userRoles);
         }
+    }
+
+    @Override
+    public void insertUserRoleWithDeleteSameGroup(Long userId, Long roleId) {
+        baseMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), userId, roleId);
     }
 }

@@ -10,6 +10,7 @@ import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateCardDTO;
 import com.wddyxd.userservice.pojo.entity.UserDetail;
+import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class CardUpdateStrategy implements UserUpdateStrategy<UpdateCardDTO>{
     private UserDetailMapper userDetailMapper;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private IUserRoleService userRoleService;
 
     @Override
     public void validate(UpdateCardDTO dto, UserRelatedData userRelatedData) {
@@ -44,7 +45,7 @@ public class CardUpdateStrategy implements UserUpdateStrategy<UpdateCardDTO>{
         userDetail.setIdCard(dto.getIdCard());
         userDetail.setIsIdCardVerified(1);
         userDetailMapper.updateById(userDetail);
-        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), userDetail.getUserId(), RoleConstant.ROLE_CUSTOM_USER.getId());
+        userRoleService.insertUserRoleWithDeleteSameGroup(userDetail.getUserId(), RoleConstant.ROLE_CUSTOM_USER.getId());
     }
 
     @Override

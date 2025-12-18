@@ -10,6 +10,7 @@ import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantLicenseDTO;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
+import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,7 @@ public class MerchantLicenseUpdateStrategy implements UserUpdateStrategy<UpdateM
     private MerchantSupplementMapper merchantSupplementMapper;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private IUserRoleService userRoleService;
 
     @Override
     public void validate(UpdateMerchantLicenseDTO dto, UserRelatedData userRelatedData) {
@@ -43,7 +44,7 @@ public class MerchantLicenseUpdateStrategy implements UserUpdateStrategy<UpdateM
         merchantSupplement.setShopLicense(dto.getShopLicense());
         merchantSupplement.setShopLicenseImage(dto.getShopLicenseImage());
         merchantSupplementMapper.updateById(merchantSupplement);
-        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), merchantSupplement.getUserId(), RoleConstant.ROLE_CUSTOM_MERCHANT.getId());
+        userRoleService.insertUserRoleWithDeleteSameGroup(merchantSupplement.getUserId(), RoleConstant.ROLE_CUSTOM_MERCHANT.getId());
 
     }
 

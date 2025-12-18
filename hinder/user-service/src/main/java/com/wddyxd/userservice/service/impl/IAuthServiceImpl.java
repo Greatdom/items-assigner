@@ -80,7 +80,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     private FlexibleCodeCheckerService flexibleCodeCheckerService;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private IUserRoleService userRoleService;
 
     @Override
     public PasswordSecurityGetterVO passwordSecurityGetter(String username) {
@@ -196,6 +196,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
 //            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
 //        }
         if(this.checkUserUnique(customUserRegisterDTO)==null) {
+            log.info("用户不存在,开始注册");
             customUserRegisterDTO.setUserId(IdWorker.getId());
             this.addUser(customUserRegisterDTO);
         }
@@ -316,12 +317,14 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         //加密密码
         user.setPassword(passwordEncoder.encode(customUserRegisterDTO.getPassword()));
         //注册并分配角色
+        log.info("插入用户数据");
         baseMapper.insert(user);
         UserDetail userDetail = new UserDetail();
         userDetail.setUserId(user.getId());
         userDetail.setMoney(new BigDecimal(0));
         userDetailService.add(userDetail);
-        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), user.getId(), RoleConstant.ROLE_NEW_USER.getId());
+        log.info("分配角色");
+        userRoleService.insertUserRoleWithDeleteSameGroup(user.getId(), RoleConstant.ROLE_NEW_USER.getId());
     }
 
     private void addMerchant(MerchantRegisterDTO merchantRegisterDTO){
@@ -332,7 +335,7 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         merchantSupplement.setShopAddress(merchantRegisterDTO.getShopAddress());
         merchantSupplement.setShopStatus(1);//关店
         merchantSupplementService.save(merchantSupplement);
-        userRoleMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), merchantRegisterDTO.getUserId(), RoleConstant.ROLE_NEW_MERCHANT.getId());
+        userRoleService.insertUserRoleWithDeleteSameGroup(merchantRegisterDTO.getUserId(), RoleConstant.ROLE_NEW_MERCHANT.getId());
     }
 
     private CurrentUserDTO currentUserDTOGetter(Long userId){

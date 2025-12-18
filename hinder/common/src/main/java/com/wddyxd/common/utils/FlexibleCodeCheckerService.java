@@ -94,18 +94,27 @@ public class FlexibleCodeCheckerService {
             return true;
         }
         try {
-            // 执行双校验：KEYS=[手机前缀, 邮箱前缀], ARGV=[手机号, 手机验证码, 邮箱, 邮箱验证码, "double"]
+            // 执行Lua脚本（双校验模式）
             Object result = redisTemplate.execute(
                     flexibleCodeScript,
                     Arrays.asList(RedisKeyConstant.USER_LOGIN_PHONE_CODE.key, RedisKeyConstant.USER_LOGIN_EMAIL_CODE.key),
-                    phone, phoneCode, email, emailCode, operationType[1]
+                    phone, phoneCode, email, emailCode, "double" // 明确传double模式，避免operationType索引错误
             );
-            System.out.println("RESULT______------:"+result);
-            // 转换为List<Boolean>，兜底返回双false
-            if(result instanceof List){
-                List<String> resultList = (List<String>) result;
-                return resultList.size() != 2 || !"1".equals(resultList.get(0)) || !"1".equals(resultList.get(1));
-            }else return true;
+            log.info("手机号码：{}，手机验证码：{}，邮箱：{}，邮箱验证码：{}，验证结果：{}", phone, phoneCode, email, emailCode, result);
+            // 解析返回值：双校验返回"1,1"/"1,0"等，单校验返回"1"/"0"
+            if (result == null) {
+                return true; // 无返回值判定失败
+            }
+            String resultStr = result.toString().trim();
+            // 双校验场景：拆分结果
+            if (resultStr.contains(",")) {
+                String[] results = resultStr.split(",");
+                // 必须拆分为2个，且都为"1"才校验通过（返回false）
+                return !(results.length == 2 && "1".equals(results[0]) && "1".equals(results[1]));
+            } else {
+                // 非双校验返回格式，直接判定失败
+                return true;
+            }
         } catch (Exception e) {
             throw new CustomException(ResultCodeEnum.SERVER_ERROR);
         }

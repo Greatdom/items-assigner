@@ -1,5 +1,5 @@
----@diagnostic disable: undefined-global
--- 灵活验证码校验脚本（支持单/双校验，双校验全部成功才删Key）
+--@diagnostic disable: undefined-global
+-- 灵活验证码校验脚本（单校验返回"1"/"0"，双校验返回"1,1"/"1,0"/"0,1"/"0,0"）
 -- 入参规则：
 -- ========== 单校验场景 ==========
 -- KEYS[1]：校验类型前缀（"verify:phone:" / "verify:email:"）
@@ -16,7 +16,7 @@
 -- ARGV[3]：邮箱
 -- ARGV[4]：邮箱验证码
 -- ARGV[5]：校验模式（"double"）
--- 返回值：table {"1"/"0", "1"/"0"}（手机/邮箱校验结果）
+-- 返回值：字符串（"1,1"=双成功，"1,0"=手机成功/邮箱失败，"0,1"=手机失败/邮箱成功，"0,0"=双失败）
 
 -- 私有函数：读取存储的验证码（通用逻辑）
 local function getStoredCode(keyPrefix, account)
@@ -42,7 +42,7 @@ local function singleCheck()
     return "0"  -- 验证码不匹配，返回失败
 end
 
--- 私有函数：双校验逻辑（全部成功才删Key）
+-- 私有函数：双校验逻辑（返回拼接字符串，仅双成功才删Key）
 local function doubleCheck()
     local phonePrefix = KEYS[1]
     local emailPrefix = KEYS[2]
@@ -65,15 +65,23 @@ local function doubleCheck()
         redis.call('DEL', emailKey)
     end
 
-    -- 4. 返回各自的校验结果（字符串）
-    return {phoneMatch and "1" or "0", emailMatch and "1" or "0"}
+    -- 4. 核心修改：返回拼接字符串（用逗号分隔两个结果）
+    return (phoneMatch and "1" or "0") .. "," .. (emailMatch and "1" or "0")
 end
 
 -- 主逻辑：根据模式分发
 local checkMode = ARGV[#ARGV] -- 最后一个参数为校验模式
 if checkMode == "single" then
+    -- 单校验参数合法性校验
+    if #KEYS ~= 1 or #ARGV < 3 then
+        return "0"
+    end
     return singleCheck()
 elseif checkMode == "double" then
+    -- 双校验参数合法性校验
+    if #KEYS ~= 2 or #ARGV < 5 then
+        return "0,0" -- 参数错误返回双失败
+    end
     return doubleCheck()
 else
     return "0" -- 非法模式返回失败

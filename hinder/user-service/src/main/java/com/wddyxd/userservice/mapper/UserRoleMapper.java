@@ -19,5 +19,8 @@ import java.util.Map;
 @Mapper
 public interface UserRoleMapper extends BaseMapper<UserRole> {
 
-    void insertUserRoleWithDeleteSameGroup(@Param("id") Long id, @Param("userId") Long userId, @Param("roleId") Long roleId);
+    Integer selectRoleGroupByRoleId(@Param("roleId") Long roleId);
+
+    void deleteSameGroupUserRole(@Param("userId") Long userId, @Param("targetGroup") Integer targetGroup);
+
 }

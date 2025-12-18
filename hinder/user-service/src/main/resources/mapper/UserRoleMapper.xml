@@ -2,32 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wddyxd.userservice.mapper.UserRoleMapper"> <!-- 替换为你的实际包路径 -->
 
-    <insert id="insertUserRoleWithDeleteSameGroup">
-        -- 查询待插入角色的分组
-        SELECT `group` INTO @targetGroup
+    <select id="selectRoleGroupByRoleId" resultType="java.lang.Integer">
+        SELECT `group`
         FROM `role`
-        WHERE `id` = #{roleId} AND `is_deleted` = 0;
+        WHERE `id` = #{roleId}
+          AND `is_deleted` = 0
+    </select>
 
-        -- 逻辑删除同用户+同分组的旧角色
-        IF @targetGroup IS NOT NULL THEN
+    <update id="deleteSameGroupUserRole">
         UPDATE `user_role` ur
             INNER JOIN `role` r ON ur.`role_id` = r.`id`
-            SET ur.`is_deleted` = 1,
+            SET ur.`is_deleted` = 1
         WHERE ur.`user_id` = #{userId}
           AND ur.`is_deleted` = 0
-          AND r.`group` = @targetGroup;
-
-        -- 插入新记录
-        INSERT INTO `user_role` (
-            `id`,
-            `role_id`,
-            `user_id`,
-        ) VALUES (
-                     #{id},
-                     #{roleId},
-                     #{userId},
-                 );
-        END IF;
-    </insert>
+          AND r.`group` = #{targetGroup}
+    </update>
 
 </mapper>

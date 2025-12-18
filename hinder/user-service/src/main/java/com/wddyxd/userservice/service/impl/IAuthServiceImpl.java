@@ -188,13 +188,13 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
     @Transactional
     public void customUserRegister(CustomUserRegisterDTO customUserRegisterDTO) {
         //验证码校验
-//        if(flexibleCodeCheckerService.checkPhoneAndEmailCodeWrong(
-//                customUserRegisterDTO.getPhone(), customUserRegisterDTO.getPhoneCode(),
-//                customUserRegisterDTO.getEmail(), customUserRegisterDTO.getEmailCode()
-//        )) {
-//            log.error("{}---验证码错误", LogPrompt.PARAM_WRONG_ERROR.msg);
-//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-//        }
+        if(flexibleCodeCheckerService.checkPhoneAndEmailCodeWrong(
+                customUserRegisterDTO.getPhone(), customUserRegisterDTO.getPhoneCode(),
+                customUserRegisterDTO.getEmail(), customUserRegisterDTO.getEmailCode()
+        )) {
+            log.error("{}---验证码错误", LogPrompt.PARAM_WRONG_ERROR.msg);
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
         if(this.checkUserUnique(customUserRegisterDTO)==null) {
             log.info("用户不存在,开始注册");
             customUserRegisterDTO.setUserId(IdWorker.getId());

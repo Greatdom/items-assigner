@@ -4,6 +4,8 @@ package com.wddyxd.userservice.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.userservice.mapper.UserRoleMapper;
 import com.wddyxd.userservice.pojo.entity.RolePermission;
 import com.wddyxd.userservice.pojo.entity.UserRole;
@@ -47,7 +49,26 @@ public class IUserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class) // 事务保证原子性
     public void insertUserRoleWithDeleteSameGroup(Long userId, Long roleId) {
-        baseMapper.insertUserRoleWithDeleteSameGroup(IdWorker.getId(), userId, roleId);
+        if (userId == null || roleId == null) {
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+
+        //查询目标角色的分组
+        Integer targetGroup = baseMapper.selectRoleGroupByRoleId(roleId);
+
+        //如果分组存在，先删除同用户同分组的旧角色关联
+        if (targetGroup != null) {
+            baseMapper.deleteSameGroupUserRole(userId, targetGroup);
+
+            //插入新的用户-角色关联
+            Long id = IdWorker.getId();
+            UserRole userRole = new UserRole();
+            userRole.setId(id);
+            userRole.setUserId(userId);
+            userRole.setRoleId(roleId);
+            baseMapper.insert(userRole);
+        }
     }
 }

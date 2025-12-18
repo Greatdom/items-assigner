@@ -152,7 +152,7 @@ public class AuthController {
         return Result.success();
     }
 
-    @PostMapping("/rebuildPassword")
+    @PutMapping("/rebuildPassword")
     @Operation(summary = "根据验证码找回密码接口", description = "支持根据手机验证码为账号找回密码")
     public Result<Void> rebuildPassword(@Validated(UpdateGroup.class) @RequestBody RebuildPasswordDTO rebuildPasswordDTO){
 //        需要手机和验证码和新密码,后端会判断手机和验证码是否合法且吻合.

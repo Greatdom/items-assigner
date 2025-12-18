@@ -334,7 +334,9 @@ public class IAuthServiceImpl extends ServiceImpl<AuthMapper, User> implements I
         merchantSupplement.setShopCategoryId(merchantRegisterDTO.getShopCategoryId());
         merchantSupplement.setShopAddress(merchantRegisterDTO.getShopAddress());
         merchantSupplement.setShopStatus(1);//关店
+        log.info("插入商户数据");
         merchantSupplementService.save(merchantSupplement);
+        log.info("分配角色");
         userRoleService.insertUserRoleWithDeleteSameGroup(merchantRegisterDTO.getUserId(), RoleConstant.ROLE_NEW_MERCHANT.getId());
     }
 

@@ -8,6 +8,8 @@ import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateEmailDTO;
 import com.wddyxd.userservice.pojo.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,14 +31,21 @@ public class EmailUpdateStrategy implements UserUpdateStrategy<UpdateEmailDTO>{
     @Autowired
     private FlexibleCodeCheckerService flexibleCodeCheckerService;
 
+    private static final Logger log = LoggerFactory.getLogger(EmailUpdateStrategy.class);
+
     @Override
     public void validate(UpdateEmailDTO dto, UserRelatedData userRelatedData) {
-        if(!userRelatedData.hasUser()||dto==null)
+        if(!userRelatedData.hasUser()||dto==null) {
+            log.error("用户被判空");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(!Objects.equals(dto.getOldEmail(), userRelatedData.getUser().getEmail()))
+        }
+        if(!Objects.equals(dto.getOldEmail(), userRelatedData.getUser().getEmail())) {
+            log.error("用户原邮箱错误");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(flexibleCodeCheckerService.checkEmailCodeWrong(dto.getNewEmail(), dto.getEmailCode()))
+        }
+        if(flexibleCodeCheckerService.checkEmailCodeWrong(dto.getNewEmail(), dto.getEmailCode())) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
     }
 
     @Override

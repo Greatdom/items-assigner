@@ -85,8 +85,6 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     @Override
     public UserProfileVO profile(Long id) {
         //因为其他用户也会调用这个方法,所以保留id参数
-        if(id== null||id<=0)
-             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         User user = this.getById(id);
         return BeanUtil.copyProperties(user, UserProfileVO.class);
     }

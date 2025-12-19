@@ -14,7 +14,7 @@ public class UserProfileVO {
 
     private String username;
 
-    private String nickname;
+    private String nickName;
 
     private String avatar;
 
@@ -23,7 +23,7 @@ public class UserProfileVO {
         return "UserProfileVO{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", nickname='" + nickname + '\'' +
+                ", nickName='" + nickName + '\'' +
                 ", avatar='" + avatar + '\'' +
                 '}';
     }
@@ -44,12 +44,12 @@ public class UserProfileVO {
         this.username = username;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getAvatar() {

@@ -1,6 +1,9 @@
 package com.wddyxd.common.pojo;
 
 
+import com.wddyxd.common.paramValidateGroup.SelectGroup;
+import jakarta.validation.constraints.Min;
+
 /**
  * @program: items-assigner
  * @description: description
@@ -10,7 +13,9 @@ package com.wddyxd.common.pojo;
 
 public class SearchDTO {
 
+    @Min(value = 1, message = "页码不能小于1",groups = {SelectGroup.class})
     private Integer pageNum = 1;
+    @Min(value = 1, message = "页大小不能小于1",groups = {SelectGroup.class})
     private Integer pageSize = 10 ;
     private String search = "";
 

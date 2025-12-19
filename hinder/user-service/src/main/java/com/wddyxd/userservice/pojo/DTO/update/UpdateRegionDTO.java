@@ -1,6 +1,9 @@
 package com.wddyxd.userservice.pojo.DTO.update;
 
 
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * @program: items-assigner
  * @description: 更新地区接口的请求体
@@ -10,6 +13,7 @@ package com.wddyxd.userservice.pojo.DTO.update;
 
 public class UpdateRegionDTO extends BaseUserUpdateDTO{
 
+    @NotBlank(message = "区域不能为空", groups = {UpdateGroup.class})
     private String region;
 
     public String getRegion(){

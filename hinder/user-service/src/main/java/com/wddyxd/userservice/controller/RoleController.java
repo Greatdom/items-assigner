@@ -4,17 +4,23 @@ package com.wddyxd.userservice.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.SelectGroup;
 import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.DTO.RoleAssignDTO;
+import com.wddyxd.userservice.pojo.DTO.RoleDTO;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
 import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.service.Interface.IRoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +44,7 @@ public class RoleController {
     @GetMapping("/list")
     //需要role.list权限
     @Operation(summary = "分页获取角色列表接口", description = "在管理员的角色管理主界面查看所有存在的角色")
-    public Result<Page<Role>> list(@RequestBody SearchDTO searchDTO){
+    public Result<Page<Role>> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
         return Result.success(roleService.List(searchDTO));
     }
 
@@ -66,25 +72,25 @@ public class RoleController {
     @PostMapping("/add")
     //需要role.add权限
     @Operation(summary = "添加角色接口", description = "管理员可以在角色管理界面添加角色")
-    public Result<Void> add(@RequestParam String name,@RequestParam Integer group){
+    public Result<Void> add(@Validated(AddGroup.class) @RequestBody RoleDTO roleDTO){
 //        添加角色
-        roleService.add(name,group);
+        roleService.add(roleDTO);
         return Result.success();
     }
 
     @PutMapping("/update")
     //需要role.update权限
     @Operation(summary = "更新角色内容接口", description = "管理员可以在角色管理界面更新角色信息")
-    public Result<Void> update(@RequestBody Role role){
+    public Result<Void> update(@Validated(UpdateGroup.class) @RequestBody RoleDTO roleDTO){
 //        更新角色信息,角色被逻辑删除则拒绝更新
-        roleService.update(role);
+        roleService.update(roleDTO);
         return Result.success();
     }
 
     @DeleteMapping("/delete/{id}")
     //需要role.delete权限
     @Operation(summary = "删除店铺分类接口", description = "只有超级管理员有权限删除角色,删除角色按钮在角色管理界面")
-    public Result<Void> delete(@PathVariable Long id){
+    public Result<Void> delete(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 //        删除角色包括根据id将role表的主键等于id,
 //- role_permissions表role_id等于id和user_role表role_id等于id的行逻辑删除,
 //- 不能删除每个角色组的"默认角色",然后遍历用户,如果用户有该角色则将该角色变成所在组的"默认角色"

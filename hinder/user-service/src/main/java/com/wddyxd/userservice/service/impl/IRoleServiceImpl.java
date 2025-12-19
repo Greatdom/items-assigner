@@ -16,6 +16,7 @@ import com.wddyxd.common.utils.Result;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import com.wddyxd.userservice.mapper.RoleMapper;
 import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
+import com.wddyxd.userservice.pojo.DTO.RoleDTO;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
 import com.wddyxd.userservice.pojo.entity.Role;
@@ -118,6 +119,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
             log.error("不能分配多余的超级管理员");
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
+        log.info("开始分配角色...");
         userRoleService.assign(userId, roleIds);
 
         //如果用户之前没有被分配商户但现在被分配商户了就直接创建商户表
@@ -139,26 +141,23 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
     }
 
     @Override
-    public void add(String name,Integer group) {
-        if(group==null||group>=CommonConstant.ROLE_GROUP_NUM||group<0)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+    public void add(RoleDTO roleDTO) {
+
         //TODO幂等性问题
         Role role = new Role();
-        role.setName(name);
-        role.setGroup(group);
+        role.setName(roleDTO.getName());
+        role.setGroup(roleDTO.getGroup());
         this.save(role);
     }
 
     @Override
-    public void update(Role role) {
-        if(role.getName()== null||role.getGroup()==null)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        Role dbRole = this.getById(role.getId());
+    public void update(RoleDTO roleDTO) {
+        Role dbRole = this.getById(roleDTO.getId());
         if (dbRole == null || dbRole.getIsDeleted()) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
-        dbRole.setName(role.getName());
-        dbRole.setGroup(role.getGroup());
+        dbRole.setName(roleDTO.getName());
+        dbRole.setGroup(roleDTO.getGroup());
         baseMapper.updateById(dbRole);
     }
 

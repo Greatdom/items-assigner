@@ -1,6 +1,9 @@
 package com.wddyxd.userservice.pojo.DTO.update;
 
 
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * @program: items-assigner
  * @description: 更新用户密码接口的请求体
@@ -10,12 +13,13 @@ package com.wddyxd.userservice.pojo.DTO.update;
 
 public class UpdatePasswordDTO extends BaseUserUpdateDTO{
 
+    @NotBlank(message = "旧密码不能为空", groups = {UpdateGroup.class})
     private String oldPassword;
-
+    @NotBlank(message = "新密码不能为空", groups = {UpdateGroup.class})
     private String newPassword;
-
+    @NotBlank(message = "手机验证码不能为空", groups = {UpdateGroup.class})
     private String phoneCode;
-
+    @NotBlank(message = "手机号不能为空", groups = {UpdateGroup.class})
     private String phone;
 
     public String getOldPassword() {

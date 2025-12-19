@@ -1,6 +1,10 @@
 package com.wddyxd.userservice.pojo.DTO.update;
 
 
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Date;
 
 /**
@@ -12,6 +16,7 @@ import java.util.Date;
 
 public class UpdateBirthdayDTO extends BaseUserUpdateDTO{
 
+    @NotNull(message = "生日不能为空", groups = {UpdateGroup.class})
     private Date birthday;
 
     public Date getBirthday() {

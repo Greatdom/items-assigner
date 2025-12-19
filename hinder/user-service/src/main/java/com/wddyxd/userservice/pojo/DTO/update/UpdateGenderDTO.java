@@ -1,6 +1,11 @@
 package com.wddyxd.userservice.pojo.DTO.update;
 
 
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * @program: items-assigner
  * @description: 更新性别接口的请求体
@@ -10,6 +15,9 @@ package com.wddyxd.userservice.pojo.DTO.update;
 
 public class UpdateGenderDTO extends BaseUserUpdateDTO{
 
+    @NotNull(message = "性别不能为空", groups = {UpdateGroup.class})
+    @Min(value = 0, message = "性别不能小于0", groups = {UpdateGroup.class})
+    @Max(value = 2, message = "性别不能大于2", groups = {UpdateGroup.class})
     private Integer gender;
 
     public Integer getGender() {

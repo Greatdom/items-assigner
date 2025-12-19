@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.userservice.pojo.DTO.RoleDTO;
 import com.wddyxd.userservice.pojo.VO.RoleVO;
 import com.wddyxd.userservice.pojo.entity.Role;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,9 +29,9 @@ public interface IRoleService extends IService<Role> {
 
     public void assign(Long userId, List<Long> roleIds);
 
-    public void add(String name,Integer group);
+    public void add(RoleDTO roleDTO);
 
-    public void update(Role role);
+    public void update(RoleDTO roleDTO);
 
     public void delete(@PathVariable Long id);
 

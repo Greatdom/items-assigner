@@ -1,6 +1,9 @@
 package com.wddyxd.userservice.pojo.DTO.update;
 
 
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * @program: items-assigner
  * @description: 换绑手机号接口的请求体
@@ -9,11 +12,11 @@ package com.wddyxd.userservice.pojo.DTO.update;
  **/
 
 public class UpdatePhoneDTO extends BaseUserUpdateDTO{
-
+    @NotBlank(message = "旧手机号不能为空", groups = {UpdateGroup.class})
     private String oldPhone;
-
+    @NotBlank(message = "新手机号不能为空", groups = {UpdateGroup.class})
     private String newPhone;
-
+    @NotBlank(message = "手机验证码不能为空", groups = {UpdateGroup.class})
     private String phoneCode;
 
     public String getOldPhone() {

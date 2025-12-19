@@ -1,0 +1,882 @@
+{
+	"info": {
+		"_postman_id": "932cc635-4cf0-4221-ab35-1424c0084b1f",
+		"name": "item-assigner",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40056637"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"ADMIN\",\r\n    \"password\":\"123456\",\r\n    \"loginType\":\"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\":\"15626448742\",\r\n    \"phoneCode\":\"495603\",\r\n    \"loginType\":\"phone\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": ""
+				},
+				{
+					"name": "login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"ADMIN\",\r\n    \"password\":\"123456\",\r\n    \"loginType\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"www778005729@outlook.com\",\r\n    \"emailCode\":\"123456\",\r\n    \"loginType\":\"email\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "me",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:10010/api/user/user/me",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"user",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "productAdd",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"布莱克凯特是由石油提炼的吗?\",\r\n    \"categoryId\":\"2000803576611430401\",\r\n    \"description\":\"BlackCat!\",\r\n    \"productSkuDTOS\":[\r\n        {\r\n            \"specs\":\"豪华款\",\r\n            \"price\":39.99,\r\n            \"stock\":5,\r\n            \"isDefault\":false,\r\n            \"logo\":\"\"\r\n        },\r\n        {\r\n            \"specs\":\"基础款\",\r\n            \"price\":29.99,\r\n            \"stock\":20,\r\n            \"isDefault\":true,\r\n            \"logo\":\"\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/product/product/add",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"product",
+						"product",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "productCategoryAdd",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"基础分类\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/product/productCategory/add?name=",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"product",
+						"productCategory",
+						"add"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "productCategoryList",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/product/productCategory/list",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"product",
+						"productCategory",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "productList",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/product/product/list",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"product",
+						"product",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "productFeed",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"categoryId\":\"2000803576611430401\",\r\n    \"sortColumn\":\"sales\",\r\n    \"sortOrder\":\"asc\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/product/product/feed",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"product",
+						"product",
+						"feed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "phoneCode",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "localhost:8080/user/auth/phoneCode/15626448742",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"user",
+						"auth",
+						"phoneCode",
+						"15626448742"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "phoneCode",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/user/auth/phoneCode/13809711111",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"auth",
+								"phoneCode",
+								"13809711111"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": ""
+				},
+				{
+					"name": "phoneCode",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/user/auth/phoneCode/15626448742",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"auth",
+								"phoneCode",
+								"15626448742"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				},
+				{
+					"name": "phoneCode",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/user/auth/phoneCode/15626448741",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"auth",
+								"phoneCode",
+								"15626448741"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": ""
+				}
+			]
+		},
+		{
+			"name": "emailCode",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "localhost:10010/api/user/auth/emailCode/www778005729@outlook.com",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"emailCode",
+						"www778005729@outlook.com"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "emailCode",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:10010/api/user/auth/emailCode/778005722@qq.com",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"emailCode",
+								"778005722@qq.com"
+							]
+						}
+					},
+					"_postman_previewlanguage": "",
+					"header": [],
+					"cookie": [
+						{
+							"expires": "Invalid Date",
+							"domain": "",
+							"path": ""
+						}
+					],
+					"body": ""
+				},
+				{
+					"name": "emailCode",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:10010/api/user/auth/emailCode/www778005729@outlook.com",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"emailCode",
+								"www778005729@outlook.com"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "customUserRegister",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"firstUser\",\r\n    \"phone\":\"13809711111\",\r\n    \"email\":\"778005722@qq.com\",\r\n    \"password\":\"123456\",\r\n    \"emailCode\":\"673676\",\r\n    \"phoneCode\":\"197026\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/auth/customUserRegister",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"customUserRegister"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "merchantRegister",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"secondUser\",\r\n    \"phone\":\"13809711112\",\r\n    \"email\":\"778005723@qq.com\",\r\n    \"password\":\"123456\",\r\n    \"emailCode\":\"673676\",\r\n    \"phoneCode\":\"197026\",\r\n    \"shopName\":\"哇哈哈购物中心\",\r\n    \"shopAddress\":\"远在天边,近在眼前\",\r\n    \"shopCategoryId\":\"1996954588037107713\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/auth/merchantRegister",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"merchantRegister"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rebuildPassword",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\":\"secondUser\",\r\n    \"phone\":\"13809711112\",\r\n    \"phoneCode\":\"123456\",\r\n    \"newPassword\":\"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/auth/rebuildPassword",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"auth",
+						"rebuildPassword"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "role.assign",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\":\"2001625299854921729\",\r\n    \"roleIds\":[\r\n        \"1996956489071730690\",\r\n        \"1996956489134645250\",\r\n        \"1996956489134645252\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/role/assign",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"role",
+						"assign"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user.list",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/user/list",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"user",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user.profile",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n}"
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/user/profile/1996953140859625474",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"user",
+						"profile",
+						"1996953140859625474"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user.update.password",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"oldPassword\":\"wwwwww\",\r\n    \"newPassword\":\"123456\",\r\n    \"phone\":\"15626448742\",\r\n    \"phoneCode\":\"191236\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/user/update/password",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"user",
+						"update",
+						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user.update.phone",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"oldPhone\":\"15626448742\",\r\n    \"newPhone\":\"13809711111\",\r\n    \"phoneCode\":\"703786\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:10010/api/user/user/update/phone",
+					"host": [
+						"localhost"
+					],
+					"port": "10010",
+					"path": [
+						"api",
+						"user",
+						"user",
+						"update",
+						"phone"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

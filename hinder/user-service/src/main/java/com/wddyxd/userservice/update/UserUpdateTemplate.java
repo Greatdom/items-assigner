@@ -41,23 +41,12 @@ public class UserUpdateTemplate {
     @Autowired
     private MerchantSupplementMapper merchantSupplementMapper;
 
-    @Autowired
-    private UserRoleMapper userRoleMapper;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-
     //通用多表更新流程
     @Transactional
     public <T extends BaseUserUpdateDTO> void update(T dto, UserUpdateStrategy<T> strategy){
         //TODO 作为仅可自己触发的业务,应该用从token获取的id来代替参数的id
-        if(dto == null || dto.getId() == null)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         //按需加载多表数据
         UserRelatedData relatedData = loadRelatedData(dto.getId(), strategy.needLoadTables());
-
-        if(!relatedData.hasUser())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
 
         strategy.validate(dto, relatedData);
 

@@ -36,12 +36,12 @@ spring:
 mybatis-plus:
   type-aliases-package: com.wddyxd.userservice.pojo
   mapper-locations: classpath*:mapper/*.xml
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:10086/eureka/
-token:
-  signKey: 123456
-  expiration: 86400000
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:10086/eureka/
+#token:
+#  signKey: 123456
+#  expiration: 86400000
 logging:
   config: classpath:logback-dev.xml

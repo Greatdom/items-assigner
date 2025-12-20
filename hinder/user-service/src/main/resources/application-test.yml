@@ -40,8 +40,8 @@ mybatis-plus:
 #  instance:
 #    prefer-ip-address: true
 #    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
-token:
-  signKey: 123456
-  expiration: 86400000
+#token:
+#  signKey: 123456
+#  expiration: 86400000
 logging:
   config: classpath:logback-test.xml

@@ -33,9 +33,18 @@ public class AvatarUpdateStrategy implements UserUpdateStrategy<UpdateAvatarDTO>
 
     @Override
     public void update(UpdateAvatarDTO dto, UserRelatedData userRelatedData) {
+        //TODO 用分布式事务
+
+        //远程调用上传文件接口来更新头像
+
+        //获取旧的user列数据
+
+        //更新成新的user数据
         User user = userRelatedData.getUser();
         user.setAvatar(dto.getAvatar());
         userMapper.updateById(user);
+
+        //远程调用删除文件接口来删除旧头像
     }
 
     @Override

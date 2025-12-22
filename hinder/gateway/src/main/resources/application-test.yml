@@ -55,6 +55,13 @@ spring:
             - Path=/api/chat/**
           filters:
             - RewritePath=/api/(?<segment>.*), /$\{segment}
+        - id: file-service
+          uri: lb://file-service
+          predicates:
+            - Path=/api/file/**
+          filters:
+            - RewritePath=/api/(?<segment>.*), /$\{segment}
+
 
       globalcors:
         corsConfigurations:

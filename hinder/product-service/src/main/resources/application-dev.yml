@@ -16,7 +16,7 @@ spring:
       connection-timeout: 30000
       pool-name: MyHikariCP
   application:
-    name: product-service
+    name: file-service
   data:
     redis:
       host: localhost
@@ -41,9 +41,6 @@ mybatis-plus:
 #  client:
 #    service-url:
 #      defaultZone: http://localhost:10086/eureka/
-token:
-  signKey: 123456
-  expiration: 86400000
 logging:
   config: classpath:logback-dev.xml
 feign:

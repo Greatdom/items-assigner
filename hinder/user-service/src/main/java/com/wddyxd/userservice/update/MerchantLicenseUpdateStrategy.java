@@ -1,12 +1,16 @@
 package com.wddyxd.userservice.update;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.constant.RoleConstant;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.security.security.UserInfoManager;
+import com.wddyxd.userservice.mapper.AuthMapper;
 import com.wddyxd.userservice.mapper.MerchantSupplementMapper;
 import com.wddyxd.userservice.mapper.UserRoleMapper;
+import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateMerchantLicenseDTO;
 import com.wddyxd.userservice.pojo.entity.MerchantSupplement;
@@ -32,6 +36,12 @@ public class MerchantLicenseUpdateStrategy implements UserUpdateStrategy<UpdateM
     @Autowired
     private IUserRoleService userRoleService;
 
+    @Autowired
+    private AuthMapper authMapper;
+
+    @Autowired
+    private UserInfoManager userInfoManager;
+
     @Override
     public void validate(UpdateMerchantLicenseDTO dto, UserRelatedData userRelatedData) {
         if(!userRelatedData.hasMerchantSupplement()||dto==null)
@@ -45,7 +55,11 @@ public class MerchantLicenseUpdateStrategy implements UserUpdateStrategy<UpdateM
         merchantSupplement.setShopLicenseImage(dto.getShopLicenseImage());
         merchantSupplementMapper.updateById(merchantSupplement);
         userRoleService.insertUserRoleWithDeleteSameGroup(merchantSupplement.getUserId(), RoleConstant.ROLE_CUSTOM_MERCHANT.getId());
-
+        //在redis更新用户信息
+        CurrentUserDTO currentUserDTO = authMapper.getCurrentUserById(merchantSupplement.getUserId());
+        com.wddyxd.security.pojo.CurrentUserDTO securityCurrentUserDTO = new com.wddyxd.security.pojo.CurrentUserDTO();
+        BeanUtil.copyProperties(currentUserDTO,securityCurrentUserDTO);
+        userInfoManager.saveInfoInRedis(securityCurrentUserDTO);
     }
 
     @Override

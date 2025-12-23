@@ -13,7 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class UpdateAvatarDTO {
 
-    private Long userId;
+    private Long id;
 
     private String avatar;
 
@@ -25,12 +25,12 @@ public class UpdateAvatarDTO {
         this.avatar = avatar;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 控制台输出配置 - 仅输出 INFO 及以上级别 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 新增：控制台级别过滤（INFO及以上） -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%method:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 文件输出配置 - 仅输出 WARN 及以上级别（保留原有过滤） -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/logs/fileservice/file-service.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/var/logs/fileservice/file-service.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 可选：添加日志保留天数，避免日志文件过多 -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36}.%method:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root级别设为INFO（保证整体日志基础级别），关联两个追加器 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

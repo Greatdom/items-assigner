@@ -35,7 +35,7 @@ public interface UserClient {
     @GetMapping("/user/user/getUsername/{id}")
     Result<String> getUsername(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id);
 
-    @PutMapping("/update/avatar")
+    @PutMapping("/user/user/update/avatar")
     @Operation(summary = "更新头像接口", description = "更新头像")
     public Result<Void> updateAvatar(@Validated(UpdateGroup.class) @RequestBody UpdateAvatarDTO updateAvatarDTO);
 

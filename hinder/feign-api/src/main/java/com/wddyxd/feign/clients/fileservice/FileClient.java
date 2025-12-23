@@ -25,16 +25,16 @@ import org.springframework.web.multipart.MultipartFile;
         fallbackFactory = FileClientFallbackFactory.class)
 public interface FileClient {
 
-    @PostMapping("/uploadCompressibleFile")
+    @PostMapping("/file/file/uploadCompressibleFile")
     public Result<String> uploadCompressibleFile(@NotNull(message = "file不能为空") @RequestParam MultipartFile file,
                                                  @Min(value = 1L, message = "userId不能小于1") @RequestParam Long userId);
 
-    @PostMapping("/uploadIncompressibleFile")
+    @PostMapping("/file/file/uploadIncompressibleFile")
     public Result<String> uploadIncompressibleFile(@NotNull(message = "file不能为空") @RequestParam MultipartFile file,
                                                    @Min(value = 1L, message = "userId不能小于1") @RequestParam Long userId);
 
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/file/file/delete")
     @ResponseBody
     public Result<Void> deleteFile(@Min(value = 1L, message = "userId不能小于1") @RequestParam("userId") Long userId,
                                    @NotBlank(message = "fileName不能为空") @RequestParam("fileName") String fileName);

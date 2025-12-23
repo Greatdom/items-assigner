@@ -6,6 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.fileservice.mapper.UserFileBindMapper;
@@ -13,6 +14,9 @@ import com.wddyxd.fileservice.pojo.entity.UserFileBind;
 import com.wddyxd.fileservice.service.Interface.IUserFileBindService;
 import com.wddyxd.fileservice.utils.FilePathPackager;
 import com.wddyxd.fileservice.utils.FileRedisManager;
+import com.wddyxd.security.security.UserInfoManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -37,13 +41,7 @@ import java.util.HashMap;
 @Service
 public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, UserFileBind> implements IUserFileBindService {
 
-    private static final long MAX_FILE_SIZE = 1024 * 1024 * 100L;
 
-    private static final String[] IMAGE_TYPES = {"jpg", "jpeg", "png", "webp", "bmp"};
-
-    private static final String compressQueue="file-compress-queue";
-
-    private static final String deleteQueue="file-delete-queue";
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -54,6 +52,7 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
     @Autowired
     private FileRedisManager fileRedisManager;
 
+    private static final Logger log = LoggerFactory.getLogger(IUserFileBindServiceImpl.class);
 
     @Override
     public String uploadCompressibleFile(MultipartFile file, Long userId) {
@@ -61,11 +60,7 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
         HashMap<String, String> map = transferToFile(userId, file, true);
         String filePath = map.get("filePath");
         String fileName = map.get("uniqueFileName");
-        if(fileName == null|| filePath == null|| filePath.isEmpty()||fileName.isEmpty()) {
-            System.out.println("文件保存失败");
-            throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
-        }
-        rabbitTemplate.convertAndSend(compressQueue,filePath);
+        rabbitTemplate.convertAndSend(CommonConstant.compressQueue,filePath);
         UserFileBind userFileBind = new UserFileBind();
         userFileBind.setFileName(fileName);
         userFileBind.setUserId(userId);
@@ -82,10 +77,6 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
         HashMap<String, String> map = transferToFile(userId, file, false);
         String filePath = map.get("filePath");
         String fileName = map.get("uniqueFileName");
-        if(fileName == null|| filePath == null|| filePath.isEmpty()||fileName.isEmpty()) {
-            System.out.println("文件保存失败");
-            throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
-        }
         UserFileBind userFileBind = new UserFileBind();
         userFileBind.setFileName(fileName);
         userFileBind.setUserId(userId);
@@ -138,18 +129,18 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
                 .set(UserFileBind::getIsValid, 0)
                 .set(UserFileBind::getIsDeleted, true));
         if (updateCount == 0){
-            System.out.println("文件删除失败");
+            log.error("删除文件失败");
             throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
         }
         fileRedisManager.deleteFileMeta(userId,fileName);
         String filePath = filePathPackager.getTotalFileStoragePath(userId,fileName);
-        rabbitTemplate.convertAndSend(deleteQueue,filePath);
+        rabbitTemplate.convertAndSend(CommonConstant.deleteQueue,filePath);
     }
 
     private void validateFile(MultipartFile file){
         if(file == null|| file.isEmpty())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(file.getSize() > MAX_FILE_SIZE)
+        if(file.getSize() > CommonConstant.MAX_FILE_SIZE)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
     }
 
@@ -159,7 +150,7 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
         String suffix = FileUtil.extName(originalFileName);
         String uniqueFileName = userId + "_" + IdUtil.simpleUUID() + "." + suffix;
         if(isCompressible && !isImageFile(suffix)){
-            System.out.println("非图片文件不能被压缩");
+            log.error("非容忍压缩文件不可压缩");
             throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
         }
         // 创建用户存储目录
@@ -168,7 +159,7 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
         if(!userDir.exists()){
             boolean mkDirs = userDir.mkdirs();
             if(!mkDirs){
-                System.out.println("创建用户存储目录失败");
+                log.error("创建文件路径失败");
                 throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
             }
         }
@@ -178,7 +169,7 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
         try {
             file.transferTo(destFile);
         } catch (IOException e) {
-            System.out.println("保存文件失败");
+            log.error("保存文件失败");
             throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
         }
         HashMap<String, String> result = new HashMap<>();
@@ -188,7 +179,7 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
     }
 
     private boolean isImageFile(String suffix){
-        for(String type : IMAGE_TYPES){
+        for(String type : CommonConstant.IMAGE_TYPES){
             if(type.equalsIgnoreCase(suffix)){
                 return true;
             }

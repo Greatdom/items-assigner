@@ -2,6 +2,8 @@ package com.wddyxd.fileservice.rabbitMQ;
 
 
 import cn.hutool.core.io.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
@@ -16,7 +18,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileDeleteConsumer {
 
-//    @RabbitListener(queues = "${rabbitmq.queue.delete:file-delete-queue}")
+    private static final Logger log = LoggerFactory.getLogger(FileDeleteConsumer.class);
+
     @RabbitListener(queuesToDeclare = @Queue(
             name = "${rabbitmq.queue.delete:file-delete-queue}", // 保留配置读取+默认值
             durable = "true",
@@ -28,12 +31,12 @@ public class FileDeleteConsumer {
             // 删除文件
             boolean delete = FileUtil.del(filePath);
             if (delete) {
-                System.out.println("文件删除成功：" + filePath);
+                log.info("文件删除成功：{}", filePath);
             } else {
-                System.err.println("文件删除失败（文件不存在）：" + filePath);
+                log.error("文件删除失败：{}", filePath);
             }
         } catch (Exception e) {
-            System.err.println("文件删除异常：" + filePath + "，异常：" + e.getMessage());
+            log.error("文件删除异常：{}", filePath);
             e.printStackTrace();
         }
     }

@@ -23,8 +23,12 @@ public class CommonConstant {
 
     public static final Integer MAX_PRODUCT_SKU_NUM = 20;//商品最大SKU数量
 
-    public static final String filePath = System.getProperty("user.dir") + "/files/";
-    //TODO 在不同环境怎么配置不同路径?
-    public static final String serverDomain = "http://localhost:10010/api";
+    public static final long MAX_FILE_SIZE = 1024 * 1024 * 10L;//最大传输文件大小，10M
+    public static final String[] IMAGE_TYPES = {"jpg", "jpeg", "png", "webp", "bmp"};//图片文件类型
+    public static final String compressQueue="file-compress-queue";//RabbitMQ压缩队列
+    public static final String deleteQueue="file-delete-queue";//RabbitMQ删除队列
+    public static final String fileStoragePath="E:/FILE_STORAGE/";//文件存储路径
+    public static final float COMPRESS_QUALITY = 0.5f; // 图片压缩质量（0-1，数值越小压缩率越高，失真越严重）
+
 
 }

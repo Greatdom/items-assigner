@@ -1,6 +1,7 @@
 package com.wddyxd.fileservice.utils;
 
 
+import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,8 @@ public class FileRedisManager {
     @Autowired
     private FilePathPackager filePathPackager;
 
-    // 文件存储根路径（本地文件系统，Demo用）
-    private static final String fileStoragePath="E:/FILE_STORAGE/";
-
-    private static final String FILE_META_KEY_PREFIX = "file:meta:";
-
     public void setFileMata(Long userId, String uniqueFileName){
-        String key = FILE_META_KEY_PREFIX + userId + "_" + uniqueFileName;
+        String key = RedisKeyConstant.FILE_META.key + userId + "_" + uniqueFileName;
         String filePath = filePathPackager.getTotalFileStoragePath(userId, uniqueFileName);
         try {
             redisTemplate.opsForValue().set(key, filePath,1, TimeUnit.HOURS);
@@ -41,7 +37,7 @@ public class FileRedisManager {
     }
 
     public String getFileMeta(Long userId, String uniqueFileName){
-        String key = FILE_META_KEY_PREFIX + userId + "_" + uniqueFileName;
+        String key = RedisKeyConstant.FILE_META.key + userId + "_" + uniqueFileName;
         try {
             return (String) redisTemplate.opsForValue().get(key);
         } catch (Exception e) {
@@ -50,7 +46,7 @@ public class FileRedisManager {
     }
 
     public void deleteFileMeta(Long userId, String uniqueFileName){
-        String key = FILE_META_KEY_PREFIX + userId + "_" + uniqueFileName;
+        String key = RedisKeyConstant.FILE_META.key + userId + "_" + uniqueFileName;
         try {
             redisTemplate.delete(key);
         } catch (Exception e) {

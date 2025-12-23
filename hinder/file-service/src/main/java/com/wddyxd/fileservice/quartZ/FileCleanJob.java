@@ -45,7 +45,6 @@ public class FileCleanJob extends QuartzJobBean {
             for (UserFileBind bind : invalidFileBinds) {
                 String filePath = fileStoragePath + File.separator + bind.getUserId() + File.separator + bind.getFileName();
                 FileUtil.del(filePath); // 删除文件
-                // 可选：删除MySQL无效记录（或保留归档）
                 bind.setIsDeleted(true);
                 userFileBindMapper.updateById(bind);
             }

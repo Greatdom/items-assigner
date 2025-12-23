@@ -1,18 +1,11 @@
 package com.wddyxd.feign.clients.userservice;
 
 
-import com.wddyxd.common.constant.ResultCodeEnum;
-import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.feign.fallback.AuthClientFallbackFactory;
-import com.wddyxd.feign.fallback.UserClientFallbackFactory;
-import com.wddyxd.feign.pojo.userservice.authcontroller.CurrentUserDTO;
-import com.wddyxd.feign.pojo.userservice.authcontroller.PasswordSecurityGetterVO;
+import com.wddyxd.feign.fallback.userservice.UserClientFallbackFactory;
 import com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 

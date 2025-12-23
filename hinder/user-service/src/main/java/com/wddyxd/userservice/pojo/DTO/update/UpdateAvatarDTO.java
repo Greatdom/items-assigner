@@ -3,6 +3,8 @@ package com.wddyxd.userservice.pojo.DTO.update;
 
 import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @program: items-assigner
@@ -13,15 +15,16 @@ import jakarta.validation.constraints.NotBlank;
 
 public class UpdateAvatarDTO extends BaseUserUpdateDTO{
 
-    @NotBlank(message = "头像不能为空", groups = {UpdateGroup.class})
-    private String avatar;
 
-    public String getAvatar() {
-        return avatar;
+    @NotNull(message = "file不能为空", groups = {UpdateGroup.class})
+    private MultipartFile file;
+
+    public MultipartFile getFile() {
+        return file;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 
 }

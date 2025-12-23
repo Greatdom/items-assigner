@@ -2,9 +2,7 @@ package com.wddyxd.feign.clients.userservice;
 
 
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.feign.fallback.MerchantSupplementClientFallbackFactory;
-import com.wddyxd.feign.fallback.UserClientFallbackFactory;
-import io.swagger.v3.oas.annotations.Operation;
+import com.wddyxd.feign.fallback.userservice.MerchantSupplementClientFallbackFactory;
 import jakarta.validation.constraints.Min;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

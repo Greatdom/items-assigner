@@ -1,12 +1,9 @@
-package com.wddyxd.feign.fallback;
+package com.wddyxd.feign.fallback.userservice;
 
 
 import com.wddyxd.common.constant.LogPrompt;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.feign.clients.userservice.AuthClient;
 import com.wddyxd.feign.clients.userservice.MerchantSupplementClient;
-import com.wddyxd.feign.pojo.userservice.authcontroller.CurrentUserDTO;
-import com.wddyxd.feign.pojo.userservice.authcontroller.PasswordSecurityGetterVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
@@ -22,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MerchantSupplementClientFallbackFactory implements FallbackFactory<MerchantSupplementClient> {
 
-    static final Logger log = LoggerFactory.getLogger(com.wddyxd.feign.fallback.MerchantSupplementClientFallbackFactory.class);
+    static final Logger log = LoggerFactory.getLogger(MerchantSupplementClientFallbackFactory.class);
 
     @Override
     public MerchantSupplementClient create(Throwable cause) {

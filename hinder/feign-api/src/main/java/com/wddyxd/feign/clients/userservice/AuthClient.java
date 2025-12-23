@@ -2,11 +2,9 @@ package com.wddyxd.feign.clients.userservice;
 
 
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.feign.fallback.AuthClientFallbackFactory;
+import com.wddyxd.feign.fallback.userservice.AuthClientFallbackFactory;
 import com.wddyxd.feign.pojo.userservice.authcontroller.CurrentUserDTO;
-import com.wddyxd.feign.pojo.userservice.authcontroller.EmailCodeSecurityGetterVO;
 import com.wddyxd.feign.pojo.userservice.authcontroller.PasswordSecurityGetterVO;
-import com.wddyxd.feign.pojo.userservice.authcontroller.PhoneCodeSecurityGetterVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -47,9 +47,9 @@ public class FileController {
 
     @DeleteMapping("/delete")
     @ResponseBody
-    public Result<Void> deleteFile(@Min(value = 1L, message = "userId不能小于1") @RequestParam("userId") String userId,
+    public Result<Void> deleteFile(@Min(value = 1L, message = "userId不能小于1") @RequestParam("userId") Long userId,
                                    @NotBlank(message = "fileName不能为空") @RequestParam("fileName") String fileName){
-        userFileBindService.deleteFile(Long.parseLong(userId), fileName);
+        userFileBindService.deleteFile(userId, fileName);
         return Result.success();
     }
 

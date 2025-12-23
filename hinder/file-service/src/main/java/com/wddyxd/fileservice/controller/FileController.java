@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @create: 2025-12-21 10:42
  **/
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/file/file")
 @Validated
 public class FileController {
 

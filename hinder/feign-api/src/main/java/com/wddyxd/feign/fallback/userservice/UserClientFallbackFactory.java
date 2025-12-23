@@ -4,6 +4,7 @@ package com.wddyxd.feign.fallback.userservice;
 import com.wddyxd.common.constant.LogPrompt;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.clients.userservice.UserClient;
+import com.wddyxd.feign.pojo.userservice.usercontroller.UpdateAvatarDTO;
 import com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,11 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
                 return Result.error();
             }
 
+            @Override
+            public Result<Void> updateAvatar(UpdateAvatarDTO updateAvatarDTO) {
+                log.error(LogPrompt.FEIGN_ERROR.msg);
+                return Result.error();
+            }
         };
     }
 

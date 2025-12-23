@@ -1,13 +1,19 @@
 package com.wddyxd.feign.clients.userservice;
 
 
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.fallback.userservice.UserClientFallbackFactory;
+import com.wddyxd.feign.pojo.userservice.usercontroller.UpdateAvatarDTO;
 import com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * @program: items-assigner
@@ -29,6 +35,9 @@ public interface UserClient {
     @GetMapping("/user/user/getUsername/{id}")
     Result<String> getUsername(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id);
 
+    @PutMapping("/update/avatar")
+    @Operation(summary = "更新头像接口", description = "更新头像")
+    public Result<Void> updateAvatar(@Validated(UpdateGroup.class) @RequestBody UpdateAvatarDTO updateAvatarDTO);
 
 
 }

@@ -4,6 +4,7 @@ package com.wddyxd.userservice.service.Interface;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.pojo.SearchDTO;
+import com.wddyxd.userservice.pojo.DTO.PermissionDTO;
 import com.wddyxd.userservice.pojo.entity.Permission;
 
 /**
@@ -20,9 +21,9 @@ public interface IPermissionService extends IService<Permission> {
 
     public void assign(Long roleId,Long[] permissionIds);
 
-    public void add(String name,String permissionValue);
+    public void add(PermissionDTO permissionDTO);
 
-    public void update(Long id, String name,String permissionValue);
+    public void update(PermissionDTO permissionDTO);
 
     public void delete(Long id);
 }

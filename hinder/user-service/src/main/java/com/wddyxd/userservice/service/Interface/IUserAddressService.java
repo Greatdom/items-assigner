@@ -20,7 +20,9 @@ public interface IUserAddressService extends IService<UserAddress> {
 
     public void add(UserAddressDTO userAddressDTO);
 
-    public void update(List<UserAddressDTO> userAddressDTOS);
+    public void update(UserAddressDTO userAddressDTO);
+
+    public void assign(Long userId);
 
     public void delete(Long id);
 

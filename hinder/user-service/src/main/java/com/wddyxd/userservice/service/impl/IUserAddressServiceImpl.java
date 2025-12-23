@@ -86,34 +86,39 @@ public class IUserAddressServiceImpl extends ServiceImpl<UserAddressMapper, User
 
     @Override
     @Transactional
-    public void update(List<UserAddressDTO> userAddressDTOS) {
+    public void update(UserAddressDTO userAddressDTO) {
         //参数校验
         //如果有多个默认地址则只保留第一个默认地址,如果没有默认地址则设置第一个地址为默认地址
-        if(userAddressDTOS==null|| userAddressDTOS.isEmpty())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        long userId = getCurrentUserInfoService.getCurrentUserId();
-        boolean getDefault = false;
-        for(UserAddressDTO userAddressDTO:userAddressDTOS){
-            if(userAddressDTO.getUserId()!=userId)
-                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-            if(userAddressDTO.getDefault()) {
-                if(getDefault)
-                    userAddressDTO.setDefault(false);
-                else getDefault = true;
-            }
-        }
-        if(!getDefault) userAddressDTOS.getFirst().setDefault(true);
-        List<Long> ids = userAddressDTOS.stream().map(UserAddressDTO::getId).toList();
-        boolean  flag = baseMapper.checkAllIdsExistAndNotDeleted(ids);
-        if(!flag)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        //更新数据库
-        List<UserAddress> userAddresses = new ArrayList<>();
-        for(UserAddressDTO userAddressDTO:userAddressDTOS){
-            UserAddress userAddress = new UserAddress();
-            BeanUtils.copyProperties(userAddressDTO, userAddress);
-            userAddresses.add(userAddress);
-        }
-        this.updateBatchById(userAddresses);
+//        if(userAddressDTOS==null|| userAddressDTOS.isEmpty())
+//            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        long userId = getCurrentUserInfoService.getCurrentUserId();
+//        boolean getDefault = false;
+//        for(UserAddressDTO userAddressDTO:userAddressDTOS){
+//            if(userAddressDTO.getUserId()!=userId)
+//                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//            if(userAddressDTO.getDefault()) {
+//                if(getDefault)
+//                    userAddressDTO.setDefault(false);
+//                else getDefault = true;
+//            }
+//        }
+//        if(!getDefault) userAddressDTOS.getFirst().setDefault(true);
+//        List<Long> ids = userAddressDTOS.stream().map(UserAddressDTO::getId).toList();
+//        boolean  flag = baseMapper.checkAllIdsExistAndNotDeleted(ids);
+//        if(!flag)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+//        //更新数据库
+//        List<UserAddress> userAddresses = new ArrayList<>();
+//        for(UserAddressDTO userAddressDTO:userAddressDTOS){
+//            UserAddress userAddress = new UserAddress();
+//            BeanUtils.copyProperties(userAddressDTO, userAddress);
+//            userAddresses.add(userAddress);
+//        }
+//        this.updateBatchById(userAddresses);
+    }
+
+    @Override
+    public void assign(Long userId) {
+
     }
 
     @Override

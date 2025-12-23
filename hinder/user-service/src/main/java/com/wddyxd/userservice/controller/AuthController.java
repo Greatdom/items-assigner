@@ -64,7 +64,7 @@ public class AuthController {
 
     @GetMapping("/phoneCodeSecurityGetter/{phone}")
     @Operation(summary = "用户登录接口的手机登录接口", description = "在用户登录接口触发时如果登录类型为phoneCode则触发, 得到手机验证码和用户信息")
-    public Result<CurrentUserDTO> phoneCodeSecurityGetter(@PathVariable String phone){
+    public Result<CurrentUserDTO> phoneCodeSecurityGetter(@PathVariable @NotBlank(message = "手机号不能为空") String phone){
 
 //        PhoneCodeUserDetailServiceImpl调用该接口,
 //                - 然后根据手机号查找数据库得到用户基本信息User来判断用户是否存在和正常使用,然后先从redis得到用户信息currentUserVO和用户的手机验证码,
@@ -76,7 +76,7 @@ public class AuthController {
 
     @GetMapping("/emailCodeSecurityGetter/{email}")
     @Operation(summary = "用户登录接口的邮箱登录接口", description = "在用户登录接口触发时如果登录类型为emailCode则触发, 得到邮箱验证码和用户信息")
-    public Result<CurrentUserDTO> emailCodeSecurityGetter(@PathVariable String email){
+    public Result<CurrentUserDTO> emailCodeSecurityGetter(@PathVariable @NotBlank(message = "邮箱不能为空") String email){
 
 //        EmailCodeUserDetailServiceImpl调用该接口,
 //                - 然后根据邮箱查找数据库得到用户基本信息User来判断用户是否存在和正常使用,然后先从redis得到用户信息currentUserVO和用户的邮箱验证码,

@@ -9,6 +9,7 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.userservice.mapper.PermissionMapper;
+import com.wddyxd.userservice.pojo.DTO.PermissionDTO;
 import com.wddyxd.userservice.pojo.entity.Permission;
 import com.wddyxd.userservice.pojo.entity.Role;
 import com.wddyxd.userservice.pojo.entity.RolePermission;
@@ -83,22 +84,22 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionMapper, Permis
     }
 
     @Override
-    public void add(String name, String permissionValue) {
+    public void add(PermissionDTO permissionDTO) {
         //TODO幂等性问题
         Permission permission = new Permission();
-        permission.setName(name);
-        permission.setPermissionValue(permissionValue);
+        permission.setName(permissionDTO.getName());
+        permission.setPermissionValue(permissionDTO.getPermissionValue());
         this.save(permission);
     }
 
     @Override
-    public void update(Long id, String name, String permissionValue) {
-        Permission dbPermission = this.getById(id);
+    public void update(PermissionDTO permissionDTO) {
+        Permission dbPermission = this.getById(permissionDTO.getId());
         if (dbPermission == null || dbPermission.getIsDeleted()) {
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
-        dbPermission.setName(name);
-        dbPermission.setPermissionValue(permissionValue);
+        dbPermission.setName(permissionDTO.getName());
+        dbPermission.setPermissionValue(permissionDTO.getPermissionValue());
         baseMapper.updateById(dbPermission);
     }
 

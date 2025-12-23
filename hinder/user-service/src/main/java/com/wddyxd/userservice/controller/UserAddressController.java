@@ -51,9 +51,18 @@ public class UserAddressController {
     @PutMapping("/update")
     //访问者的id等于参数的id
     @Operation(summary = "修改地址簿接口", description = "修改地址簿")
-    public Result<Void> update(@RequestBody List<UserAddressDTO> updatePasswordDTOS){
-//        传入List<UserAddressDTO>,注意只将第一个默认地址设为默认地址
-        userAddressService.update(updatePasswordDTOS);
+    public Result<Void> update(@RequestBody UserAddressDTO userAddressDTO){
+//        传入UserAddressDTO,注意只将第一个默认地址设为默认地址
+        userAddressService.update(userAddressDTO);
+        return Result.success();
+    }
+
+    @PutMapping("/assign")
+    //访问者的id等于参数的id
+    @Operation(summary = "分配默认地址接口", description = "分配默认地址")
+    public Result<Void> assign(@PathVariable Long id){
+//        传入地址的id,将id对应的地址设为默认地址
+        userAddressService.assign(id);
         return Result.success();
     }
 

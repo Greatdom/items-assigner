@@ -1,17 +1,23 @@
 package com.wddyxd.userservice.update;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.constant.RoleConstant;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.security.security.UserInfoManager;
+import com.wddyxd.userservice.mapper.AuthMapper;
 import com.wddyxd.userservice.mapper.UserDetailMapper;
+import com.wddyxd.userservice.mapper.UserMapper;
 import com.wddyxd.userservice.mapper.UserRoleMapper;
+import com.wddyxd.userservice.pojo.DTO.CurrentUserDTO;
 import com.wddyxd.userservice.pojo.DTO.UserRelatedData;
 import com.wddyxd.userservice.pojo.DTO.update.UpdateCardDTO;
 import com.wddyxd.userservice.pojo.entity.UserDetail;
 import com.wddyxd.userservice.service.Interface.IUserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,6 +38,12 @@ public class CardUpdateStrategy implements UserUpdateStrategy<UpdateCardDTO>{
     @Autowired
     private IUserRoleService userRoleService;
 
+    @Autowired
+    private AuthMapper authMapper;
+
+    @Autowired
+    private UserInfoManager userInfoManager;
+
     @Override
     public void validate(UpdateCardDTO dto, UserRelatedData userRelatedData) {
         if(!userRelatedData.hasUserDetail()||dto==null)
@@ -46,6 +58,11 @@ public class CardUpdateStrategy implements UserUpdateStrategy<UpdateCardDTO>{
         userDetail.setIsIdCardVerified(1);
         userDetailMapper.updateById(userDetail);
         userRoleService.insertUserRoleWithDeleteSameGroup(userDetail.getUserId(), RoleConstant.ROLE_CUSTOM_USER.getId());
+        //在redis更新用户信息
+        CurrentUserDTO currentUserDTO = authMapper.getCurrentUserById(userDetail.getUserId());
+        com.wddyxd.security.pojo.CurrentUserDTO securityCurrentUserDTO = new com.wddyxd.security.pojo.CurrentUserDTO();
+        BeanUtil.copyProperties(currentUserDTO,securityCurrentUserDTO);
+        userInfoManager.saveInfoInRedis(securityCurrentUserDTO);
     }
 
     @Override

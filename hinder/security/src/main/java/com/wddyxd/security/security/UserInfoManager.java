@@ -53,6 +53,12 @@ public class UserInfoManager {
         }
     }
 
+    public void saveInfoInRedis(CurrentUserDTO currentUserDTO){
+        SecurityUser securityUser = new SecurityUser();
+        securityUser.setCurrentUserInfo(currentUserDTO);
+        saveInfoInRedis(securityUser);
+    }
+
     public CurrentUserDTO getInfoFromRedis(Long id) {
         String key = RedisKeyConstant.USER_LOGIN_USERINFO.key + id.toString();
         CurrentUserDTO currentUserInfo = null;

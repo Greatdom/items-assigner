@@ -163,7 +163,7 @@ public class UserController {
     }
 
     @PutMapping("/update/avatar")
-    //更新者的id等于参数id
+    //更新者的id等于参数id,被远程调用
     @Operation(summary = "更新头像接口", description = "更新头像")
     public Result<Void> updateAvatar(@Validated(UpdateGroup.class) @RequestBody UpdateAvatarDTO updateAvatarDTO){
 //        传入UpdateAvatarDTO更换头像,查询不到用户或用户被逻辑删除则不应该执行更新

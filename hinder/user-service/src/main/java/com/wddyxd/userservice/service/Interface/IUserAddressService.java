@@ -22,7 +22,7 @@ public interface IUserAddressService extends IService<UserAddress> {
 
     public void update(UserAddressDTO userAddressDTO);
 
-    public void assign(Long userId);
+    public void assign(Long addressId);
 
     public void delete(Long id);
 

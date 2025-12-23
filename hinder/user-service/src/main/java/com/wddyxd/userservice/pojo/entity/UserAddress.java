@@ -96,11 +96,11 @@ public class UserAddress extends BaseEntity implements Serializable {
         this.address = address;
     }
 
-    public Boolean getDefault() {
+    public Boolean getIsDefault() {
         return isDefault;
     }
 
-    public void setDefault(Boolean aDefault) {
+    public void setIsDefault(Boolean aDefault) {
         isDefault = aDefault;
     }
 

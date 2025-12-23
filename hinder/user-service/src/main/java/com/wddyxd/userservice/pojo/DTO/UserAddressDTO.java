@@ -1,6 +1,13 @@
 package com.wddyxd.userservice.pojo.DTO;
 
 
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
+
 /**
  * @program: items-assigner
  * @description: 用户地址簿相关接口的请求体和响应体
@@ -9,23 +16,26 @@ package com.wddyxd.userservice.pojo.DTO;
  **/
 
 public class UserAddressDTO {
-
+    @Null(message = "ID必须为空",groups = {AddGroup.class})
+    @NotNull(message = "ID不能为空",groups = {UpdateGroup.class})
+    @Min(value = 1, message = "ID必须大于0",groups = {UpdateGroup.class})
     private Long id;
-
+    @NotNull(message = "ID不能为空",groups = {AddGroup.class,UpdateGroup.class})
+    @Min(value = 1, message = "ID必须大于0",groups = {AddGroup.class,UpdateGroup.class})
     private Long userId;
-
+    @NotBlank(message = "收货人不能为空",groups = {AddGroup.class,UpdateGroup.class})
     private String receiver;
-
+    @NotBlank(message = "手机号不能为空",groups = {AddGroup.class,UpdateGroup.class})
     private String phone;
-
+    @NotBlank(message = "省不能为空",groups = {AddGroup.class,UpdateGroup.class})
     private String province;
-
+    @NotBlank(message = "市不能为空",groups = {AddGroup.class,UpdateGroup.class})
     private String city;
-
+    @NotBlank(message = "区不能为空",groups = {AddGroup.class,UpdateGroup.class})
     private String district;
-
+    @NotBlank(message = "详细地址不能为空",groups = {AddGroup.class,UpdateGroup.class})
     private String address;
-
+    @NotNull(message = "是否默认不能为空",groups = {AddGroup.class})
     private Boolean isDefault;
 
     @Override
@@ -107,11 +117,11 @@ public class UserAddressDTO {
         this.address = address;
     }
 
-    public Boolean getDefault() {
+    public Boolean getIsDefault() {
         return isDefault;
     }
 
-    public void setDefault(Boolean aDefault) {
+    public void setIsDefault(Boolean aDefault) {
         isDefault = aDefault;
     }
 }

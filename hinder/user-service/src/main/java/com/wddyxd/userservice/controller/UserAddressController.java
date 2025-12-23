@@ -3,13 +3,19 @@ package com.wddyxd.userservice.controller;
 
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.userservice.pojo.DTO.UserAddressDTO;
 import com.wddyxd.userservice.pojo.entity.UserAddress;
 import com.wddyxd.userservice.service.Interface.IUserAddressService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,10 +29,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/user/userAddress")
 @Tag(name = "用户地址簿控制器", description = "用户地址簿相关接口")
+@Validated
 public class UserAddressController {
 
     @Autowired
     private IUserAddressService userAddressService;
+
+    private static final Logger log = LoggerFactory.getLogger(UserAddressController.class);
 
     @GetMapping("/list")
     //访问者的id等于参数的id
@@ -34,16 +43,18 @@ public class UserAddressController {
     public Result<List<UserAddress>> list(){
 //        在用户端个人中心或后台的用户管理可查询用户端地址簿,返回List<UserAddressDTO>
 //- 只需返回没有被逻辑删除的地址
+        log.info("获取个人用户地址簿");
         return Result.success(userAddressService.List());
     }
 
     @PostMapping("/add")
     //访问者的id等于参数的id
     @Operation(summary = "新增地址簿接口", description = "新增地址簿,仅允许用户添加地址")
-    public Result<Void> add(@RequestBody UserAddressDTO userAddressDTO){
+    public Result<Void> add(@Validated(AddGroup.class) @RequestBody UserAddressDTO userAddressDTO){
 //        传入UserAddressDTO,一个用户最多添加5个正常状态的地址簿,
 //- 如果将地址设为默认地址,则将之前默认地址设为非默认地址
 //- 用redis存储添加的时间戳,过期5秒,redis数据存在期间不能添加数据
+        log.info("新增地址簿");
         userAddressService.add(userAddressDTO);
         return Result.success();
     }
@@ -51,8 +62,9 @@ public class UserAddressController {
     @PutMapping("/update")
     //访问者的id等于参数的id
     @Operation(summary = "修改地址簿接口", description = "修改地址簿")
-    public Result<Void> update(@RequestBody UserAddressDTO userAddressDTO){
+    public Result<Void> update(@Validated(UpdateGroup.class) @RequestBody UserAddressDTO userAddressDTO){
 //        传入UserAddressDTO,注意只将第一个默认地址设为默认地址
+        log.info("修改地址簿");
         userAddressService.update(userAddressDTO);
         return Result.success();
     }
@@ -60,8 +72,9 @@ public class UserAddressController {
     @PutMapping("/assign")
     //访问者的id等于参数的id
     @Operation(summary = "分配默认地址接口", description = "分配默认地址")
-    public Result<Void> assign(@PathVariable Long id){
+    public Result<Void> assign(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
 //        传入地址的id,将id对应的地址设为默认地址
+        log.info("分配默认地址");
         userAddressService.assign(id);
         return Result.success();
     }
@@ -69,8 +82,9 @@ public class UserAddressController {
     @DeleteMapping("/delete/{id}")
     //访问者的id等于参数的id
     @Operation(summary = "删除地址簿接口", description = "删除地址簿")
-    public Result<Void> delete(@PathVariable Long id){
+    public Result<Void> delete(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
 //       逻辑删除地址簿
+        log.info("删除地址簿");
         userAddressService.delete(id);
          return Result.success();
     }

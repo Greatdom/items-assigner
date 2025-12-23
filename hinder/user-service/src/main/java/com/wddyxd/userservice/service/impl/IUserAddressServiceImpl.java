@@ -44,7 +44,7 @@ public class IUserAddressServiceImpl extends ServiceImpl<UserAddressMapper, User
         Long id = getCurrentUserInfoService.getCurrentUserId();
         if (id == null||id<=0)throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         return this.list(new LambdaQueryWrapper<UserAddress>()
-                .eq(UserAddress::getId, id)
+                .eq(UserAddress::getUserId, id)
                 .eq(UserAddress::getIsDeleted, 0));
     }
 

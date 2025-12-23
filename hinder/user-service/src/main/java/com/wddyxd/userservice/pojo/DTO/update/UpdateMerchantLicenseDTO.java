@@ -14,23 +14,23 @@ import jakarta.validation.constraints.NotBlank;
 public class UpdateMerchantLicenseDTO extends BaseUserUpdateDTO{
 
     @NotBlank(message = "许可证不能为空",groups = {UpdateGroup.class})
-    private String ShopLicense;
+    private String shopLicense;
     @NotBlank(message = "许可证图片不能为空",groups = {UpdateGroup.class})
-    private String ShopLicenseImage;
+    private String shopLicenseImage;
 
     public String getShopLicense() {
-        return ShopLicense;
+        return shopLicense;
     }
 
     public void setShopLicense(String shopLicense) {
-        ShopLicense = shopLicense;
+        this.shopLicense = shopLicense;
     }
 
     public String getShopLicenseImage() {
-        return ShopLicenseImage;
+        return shopLicenseImage;
     }
 
     public void setShopLicenseImage(String shopLicenseImage) {
-        ShopLicenseImage = shopLicenseImage;
+        this.shopLicenseImage = shopLicenseImage;
     }
 }

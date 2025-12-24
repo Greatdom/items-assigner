@@ -16,6 +16,8 @@ import com.wddyxd.userservice.service.Interface.IMerchantSupplementService;
 import com.wddyxd.userservice.update.UserUpdateStrategy;
 import com.wddyxd.userservice.update.UserUpdateStrategyFactory;
 import com.wddyxd.userservice.update.UserUpdateTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,13 +41,19 @@ public class IMerchantSupplementServiceImpl extends ServiceImpl<MerchantSuppleme
     @Autowired
     private GetCurrentUserInfoService getCurrentUserInfoService;
 
+    private static final Logger log = LoggerFactory.getLogger(IMerchantSupplementServiceImpl.class);
+
+
     @Override
     public String getShopName(Long id) {
         MerchantSupplement merchantSupplement = baseMapper.selectOne(
                 new LambdaQueryWrapper<>(MerchantSupplement.class)
                 .eq(MerchantSupplement::getUserId, id));
-        if(merchantSupplement == null||merchantSupplement.getIsDeleted())
+        if(merchantSupplement == null||merchantSupplement.getIsDeleted()) {
+            log.warn("商户信息不存在");
             return null;
+        }
+        System.out.println(merchantSupplement);
         return merchantSupplement.getName();
     }
 

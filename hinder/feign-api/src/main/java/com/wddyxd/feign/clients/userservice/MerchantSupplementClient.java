@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 )
 public interface MerchantSupplementClient {
 
-    @GetMapping("/getShopName/{id}")
+    @GetMapping("/user/merchantSupplement/getShopName/{id}")
     public Result<String> getShopName(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id);
 
 }

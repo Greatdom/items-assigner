@@ -39,7 +39,7 @@ public class MerchantSupplementController {
     @DeleteMapping("/delete/{id}")
     //需要user.delete权限
     @Operation(summary = "删除商户接口", description = "只有管理员有权限删除商户,普通商户要注销需要将注销请求发送给管理员")
-    public Result<Void> delete(@Validated(UpdateGroup.class) @PathVariable Long id){
+    public Result<Void> delete(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 //       在删除账户之前在redis查看上次删除该用户的时间戳如果存在则直接返回,
 //- 否则要强制取消和退货为完成的订单(调用取消和退货订单接口)
 //- 然后先强制下架商品再删除商品(调用删除商品接口,其中回收所有的用户领取的自己发放的优惠券,然后将该商家的优惠劵折现删除),

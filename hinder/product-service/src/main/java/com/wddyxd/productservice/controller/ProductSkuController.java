@@ -27,6 +27,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/product/productSku")
 @Tag(name = "商品规格控制器", description = "商品规格相关接口")
+@Validated
 public class ProductSkuController {
 
     @Autowired

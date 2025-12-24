@@ -88,7 +88,7 @@ public class AuthController {
 
     @GetMapping("/passwordSecurityGetter/{username}")
     @Operation(summary = "用户登录接口的密码登录接口", description = "在用户登录接口触发时如果登录类型为password则触发, 得到用户密码和用户信息")
-    public Result<PasswordSecurityGetterVO> passwordSecurityGetter(@PathVariable String username){
+    public Result<PasswordSecurityGetterVO> passwordSecurityGetter(@PathVariable @NotBlank(message = "用户名不能为空") String username){
 
 //        PasswordUserDetailServiceImpl调用该接口,在username这个参数进行正则表达式校验,判断是用户名/手机/邮箱,
 //                - 然后用username参数查找数据库得到用户基本信息User来得到密码,然后先从redis得到用户信息currentUserVO,

@@ -3,6 +3,7 @@ package com.wddyxd.productservice.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.common.paramValidateGroup.AddGroup;
+import com.wddyxd.common.paramValidateGroup.SelectGroup;
 import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
@@ -14,6 +15,8 @@ import com.wddyxd.productservice.service.Interface.ICouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,21 +32,25 @@ import java.util.List;
 @RestController
 @RequestMapping("/product/coupon")
 @Tag(name = "优惠券控制器", description = "优惠券相关接口")
+@Validated
 public class CouponController {
 
     @Autowired
     private ICouponService couponService;
 
+    private static final Logger log = LoggerFactory.getLogger(CouponController.class);
+
     @GetMapping("/list")
     //需要coupon.list权限而且(访问者的id等于参数的userId或访问者是管理员)
     @Operation(summary = "分页查询优惠券列表接口", description = "在后台和商户端的优惠券管理界面查看平台的所有优惠券或当前商户的优惠券," +
             "或在商品管理界面查看商品可用的优惠券")
-    public Result<Page<Coupon>> list(@RequestBody SearchDTO searchDTO){
+    public Result<Page<Coupon>> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
 
 //        传入CouponListDTO,在后台和商户端的商品管理界面查看所有存在的优惠券或当前商户的优惠券,
 //- 在mysql为优惠券名建立索引以支持关键字搜索
 //- 返回List<CouponVO>并由PageResult包装
 //- 注意无论优惠券是否被逻辑删除都应该被被查到
+        log.info("用户查看优惠券列表");
         return Result.success(couponService.List(searchDTO));
     }
 

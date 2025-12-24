@@ -4,6 +4,7 @@ package com.wddyxd.productservice.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.common.paramValidateGroup.SelectGroup;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.productservice.pojo.entity.ProductCategory;
@@ -34,7 +35,7 @@ public class ProductCategoryController {
     @GetMapping("/list")
     //需要productCategory.list权限
     @Operation(summary = "分页查询商品分类列表接口", description = "在管理员的商品分类管理主界面查看所有存在的商品分类")
-    public Result<Page<ProductCategory>> list(@RequestBody SearchDTO searchDTO){
+    public Result<Page<ProductCategory>> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
 
 //        在管理员的商品分类主界面查看所有存在的权限,支持根据关键字搜索,
 //- 在mysql为分类名建立索引以支持关键字搜索

@@ -12,6 +12,8 @@ import com.wddyxd.productservice.pojo.entity.UserCoupon;
 import com.wddyxd.productservice.service.Interface.ICouponService;
 import com.wddyxd.productservice.service.Interface.IUserCouponService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,8 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
 
     @Autowired
     private ICouponService couponService;
+
+    private static final Logger log = LoggerFactory.getLogger(IUserCouponServiceImpl.class);
 
     @Override
     public List<UserCouponVO> List() {

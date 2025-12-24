@@ -31,7 +31,7 @@ public class MerchantSupplement extends BaseEntity implements Serializable {
         return "MerchantSupplement{" +
                 super.toString() +
                 ", userId=" + userId +
-                ", shopName='" + name + '\'' +
+                ", name='" + name + '\'' +
                 ", shopCategoryId=" + shopCategoryId +
                 ", shopAddress='" + shopAddress + '\'' +
                 ", shopLicense='" + shopLicense + '\'' +
@@ -54,7 +54,7 @@ public class MerchantSupplement extends BaseEntity implements Serializable {
         return name;
     }
 
-    public void setName(String shopName) {
+    public void setName(String name) {
         this.name = name;
     }
 

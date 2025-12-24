@@ -12,6 +12,7 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.clients.userservice.MerchantSupplementClient;
+import com.wddyxd.productservice.controller.UserCouponController;
 import com.wddyxd.productservice.mapper.CouponMapper;
 import com.wddyxd.productservice.mapper.ProductMapper;
 import com.wddyxd.productservice.pojo.DTO.CouponDTO;
@@ -21,6 +22,8 @@ import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.service.Interface.ICouponService;
 import com.wddyxd.productservice.service.Interface.IProductService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +49,8 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
 
     @Autowired
     private GetCurrentUserInfoService getCurrentUserInfoService;
+
+    private static final Logger log = LoggerFactory.getLogger(ICouponServiceImpl.class);
 
     @Override
     public Page<Coupon> List(SearchDTO searchDTO) {
@@ -87,8 +92,11 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
         //设置pointer字段
         if(couponDTO.getTargetType() == 1){
             Result<String> getShopName = merchantSupplementClient.getShopName(couponDTO.getTargetId());
-            if(getShopName.getCode()!=200||getShopName.getData()==null)
+            if(getShopName.getCode()!=200||getShopName.getData()==null) {
+                System.out.println(getShopName);
+                log.error("获取商户名称失败");
                 throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+            }
             coupon.setPointer(getShopName.getData());
         }else if(couponDTO.getTargetType() == 2){
             Product product = productMapper.selectById(couponDTO.getTargetId());

@@ -4,11 +4,13 @@ package com.wddyxd.productservice.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.productservice.controller.ProductSkuController;
 import com.wddyxd.productservice.mapper.ProductMapper;
 import com.wddyxd.productservice.mapper.ProductSkuMapper;
 import com.wddyxd.productservice.pojo.DTO.ProductSkuDTO;
@@ -17,6 +19,8 @@ import com.wddyxd.productservice.pojo.entity.Coupon;
 import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.pojo.entity.ProductSku;
 import com.wddyxd.productservice.service.Interface.IProductSkuService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +45,8 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
         return baseMapper.selectProductSkuVOByProductId(id);
     }
 
+    private static final Logger log = LoggerFactory.getLogger(IProductSkuServiceImpl.class);
+
     @Override
     @Transactional
     public void add(ProductSkuDTO productSkuDTO) {
@@ -54,12 +60,17 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
         // 添加商品规格
         ProductSku productSku = new ProductSku();
         BeanUtil.copyProperties(productSkuDTO, productSku);
+        productSku.setId(IdWorker.getId());
         // 获取商品
         Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
                 .eq(Product::getId, productSkuDTO.getProductId()));
         if(product == null||product.getIsDeleted())
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         int productStock = product.getStock();
+        // 设置默认商品规格
+        if(productSkuDTO.getIsDefault()){
+            product.setProductSkuId(productSku.getId());
+        }
         //计算库存
         product.setStock(product.getStock()+productSku.getStock());
         // 执行乐观锁更新
@@ -91,12 +102,13 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
         //拷贝
         BeanUtil.copyProperties(productSkuDTO, productSku);
         //更新商品库存
+        Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
+                .eq(Product::getId, productSkuDTO.getProductId()));
+        if(product == null||product.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         if(isUpdateStock){
             //得到旧商品
-            Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
-                    .eq(Product::getId, productSkuDTO.getProductId()));
-            if(product == null||product.getIsDeleted())
-                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+
             int productStock = product.getStock();
             product.setStock(product.getStock()-productSkuStock+productSku.getStock());
             // 执行乐观锁更新
@@ -108,6 +120,10 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
             //TODO 可用异步通信技术添加重试机制
             if (updateCount == 0)
                 throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
+        if(productSkuDTO.getIsDefault()){
+            product.setProductSkuId(productSku.getId());
+            productMapper.updateById(product);
         }
         //乐观锁更新商品规格
         LambdaUpdateWrapper<ProductSku> updateWrapper = Wrappers.lambdaUpdate(ProductSku.class)

@@ -16,7 +16,7 @@ spring:
       connection-timeout: 30000
       pool-name: MyHikariCP
   application:
-    name: file-service
+    name: product-service
   data:
     redis:
       host: localhost

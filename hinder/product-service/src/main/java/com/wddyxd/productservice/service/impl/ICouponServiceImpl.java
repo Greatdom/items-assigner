@@ -13,6 +13,7 @@ import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.clients.userservice.MerchantSupplementClient;
 import com.wddyxd.productservice.mapper.CouponMapper;
+import com.wddyxd.productservice.mapper.ProductMapper;
 import com.wddyxd.productservice.pojo.DTO.CouponDTO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
@@ -38,7 +39,7 @@ import java.util.Objects;
 public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implements ICouponService {
 
     @Autowired
-    private IProductService productService;
+    private ProductMapper productMapper;
 
     @Autowired
     private MerchantSupplementClient merchantSupplementClient;
@@ -90,7 +91,7 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
                 throw new CustomException(ResultCodeEnum.PARAM_ERROR);
             coupon.setPointer(getShopName.getData());
         }else if(couponDTO.getTargetType() == 2){
-            Product product = productService.getById(couponDTO.getTargetId());
+            Product product = productMapper.selectById(couponDTO.getTargetId());
             if(product==null||product.getIsDeleted())
                 throw new CustomException(ResultCodeEnum.PARAM_ERROR);
             coupon.setPointer(product.getName());
@@ -129,7 +130,7 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
                     throw new CustomException(ResultCodeEnum.PARAM_ERROR);
                 coupon.setPointer(getShopName.getData());
             }else if(couponDTO.getTargetType() == 2){
-                Product product = productService.getById(couponDTO.getTargetId());
+                Product product = productMapper.selectById(couponDTO.getTargetId());
                 if(product==null||product.getIsDeleted())
                     throw new CustomException(ResultCodeEnum.PARAM_ERROR);
                 coupon.setPointer(product.getName());

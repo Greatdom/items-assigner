@@ -15,9 +15,12 @@ import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
 import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.service.Interface.IProductService;
+import com.wddyxd.security.security.UserInfoManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +40,8 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
+    private static final Logger log = LoggerFactory.getLogger(ProductController.class);
+
     @GetMapping("/list")
     //需要product.list权限而且(参数userId等于访问者的id或访问者是管理员)
     @Operation(summary = "分页获取商品列表接口", description = "在后台和商户端的商品管理界面查看所有商品")
@@ -50,6 +55,7 @@ public class ProductController {
 //- 这里是展示类而不是实体类,因为返回的商品不是商品本身,而是商品+商品分类+默认商品样式的整合
 //- 返回的商品的名字是商品名字和默认样式的名字的拼接,库存是总库存,价格是默认样式的价格,销量是总销量
 //- 注意无论商品是否被下架或逻辑删除都应该被被查到
+        log.info("product.list");
         return Result.success(productService.List(productListDTO));
     }
 
@@ -63,7 +69,7 @@ public class ProductController {
 //- 每次触发都会推送的分类标识的最新商品,其中分类标识包括推荐商品和最新商品以及具体分类,
 //- 在高级搜索有筛选器,根据地区和排序进行筛选,每次触发该接口,前一次的返回结果不会丢失.
 //- 后续接入Elasticsearch
-        System.out.println(productFeedDTO);
+        log.info("product.feed");
         return Result.success(productService.feed(productFeedDTO));
     }
 
@@ -75,7 +81,8 @@ public class ProductController {
 //       返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
 //- 用户概要指向商户UserProfileVO,优惠券指向用户领取的生效的可用优惠券CouponVO,商品规格是该商品的所有规格ProductSkuVO,
 //- 用户端不应该访问被下架或删除的商品
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        log.info("product.visit");
+        return Result.success(productService.visit(id));
     }
 
     @GetMapping("/detail/{id}")
@@ -86,7 +93,8 @@ public class ProductController {
 //        返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
 //- 用户概要指向商户UserProfileVO,优惠券指向商品的所有可用优惠券List<CouponVO>,商品规格是该商品的所有规格List<ProductSkuVO>,
 //- 在商户端和后台可以访问被下架或删除的商品
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        log.info("product.detail");
+        return Result.success(productService.detail(id));
     }
 
     @PostMapping("/add")
@@ -100,6 +108,7 @@ public class ProductController {
 //- 然后查看商品规格中第一个isDefault=true的规格,将这个规格的id赋给商品的productSkuId字段,
 //- 在插入前在redis插入添加商品的时间戳,过期时间5秒,下次访问接口时如果查询到该redis记录则直接返回
 //- 然后将商品和规格插入到数据库,数据库对没有处理的字段默认处理
+        log.info("product.add");
         productService.add(productAddDTO);
         return Result.success();
     }
@@ -109,6 +118,7 @@ public class ProductController {
     @Operation(summary = "修改商品内容接口", description = "在商品管理界面更新商品内容,但不同时更新规格的内容")
     public Result<Void> update(@Validated(UpdateGroup.class) @RequestBody ProductBasicUpdateDTO productBasicUpdateDTO){
 //        传入ProductBasicUpdateDTO,商品被逻辑删除则拒绝更新,查询到的商品存在不合法,不匹配的情况则拒绝更新
+        log.info("product.update");
         productService.update(productBasicUpdateDTO);
         return Result.success();
     }
@@ -117,6 +127,7 @@ public class ProductController {
     @Operation(summary = "下架/上架商品接口", description = "下架/上架商品")
     public Result<Void> status(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 //        下架/上架商品,如果未付款则强制取消订单,商品被逻辑删除则拒绝更新
+        productService.status(id);
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
@@ -127,6 +138,7 @@ public class ProductController {
 //        查询商品,如果商品的id和userId合法吻合则进入下一步,
 //- 查找商品和规格并进行逻辑删除,先删除商品,再删除商品的规格,回收用户持有的优惠券,并回收该商品的所有优惠券
 //- 商品或规格被逻辑删除则跳过
+        log.info("product.delete");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 

@@ -1,6 +1,8 @@
 package com.wddyxd.orderservice.pojo.VO;
 
 
+import java.math.BigDecimal;
+
 /**
  * @program: items-assigner
  * @description: 订单概要响应体
@@ -10,30 +12,144 @@ package com.wddyxd.orderservice.pojo.VO;
 
 public class OrderProfileVO {
 
-    //    {
-//        "id": 1,
-//            "userId": 1,
-//            "productId": 1,
-//            "skuId": 1,
-//            "quantity": 1,
-//
-//            "productName": "商品名称",
-//            "skuSpecs": "商品规格",
-//            "logo": "商品图片",
-//
-//            "totalPrice": 100,
-//            "payPrice": 90,
-//
-//            "status": 0,
-//            "isDeleted": false,
-//
-//
-//            "userProfileVO": {
-//        "id": 1,
-//                "username": "wddyxd",
-//                "nickName": "wddyxd",
-//                "avatar": "https://example.com/avatar.png"
-//    }
-//    }
+    private Long id;
+    private Long userId;
+    private Long productId;
+    private Long skuId;
+    private Integer quantity;
 
+    private String productName;
+    private String skuSpecs;
+    private String logo;
+
+    private BigDecimal totalPrice;
+    private BigDecimal payPrice;
+
+    private Integer status;
+    private Boolean isDeleted;
+
+    private UserProfileVO userProfileVO;
+
+    @Override
+    public String toString() {
+        return "OrderProfileVO{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", productId=" + productId +
+                ", skuId=" + skuId +
+                ", quantity=" + quantity +
+                ", productName='" + productName + '\'' +
+                ", skuSpecs='" + skuSpecs + '\'' +
+                ", logo='" + logo + '\'' +
+                ", totalPrice=" + totalPrice +
+                ", payPrice=" + payPrice +
+                ", status=" + status +
+                ", isDeleted=" + isDeleted +
+                ", userProfileVO=" + userProfileVO +
+                '}';
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getSkuSpecs() {
+        return skuSpecs;
+    }
+
+    public void setSkuSpecs(String skuSpecs) {
+        this.skuSpecs = skuSpecs;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public BigDecimal getPayPrice() {
+        return payPrice;
+    }
+
+    public void setPayPrice(BigDecimal payPrice) {
+        this.payPrice = payPrice;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public UserProfileVO getUserProfileVO() {
+        return userProfileVO;
+    }
+
+    public void setUserProfileVO(UserProfileVO userProfileVO) {
+        this.userProfileVO = userProfileVO;
+    }
 }

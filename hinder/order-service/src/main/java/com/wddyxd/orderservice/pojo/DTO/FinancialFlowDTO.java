@@ -1,6 +1,8 @@
 package com.wddyxd.orderservice.pojo.DTO;
 
 
+import java.math.BigDecimal;
+
 /**
  * @program: items-assigner
  * @description: 添加财务的请求体
@@ -8,5 +10,10 @@ package com.wddyxd.orderservice.pojo.DTO;
  * @create: 2025-12-03 12:54
  **/
 
-public class FinancialAddDTO {
+public class FinancialFlowDTO {
+
+    private Integer tradeType;
+
+    private BigDecimal amount;
+
 }

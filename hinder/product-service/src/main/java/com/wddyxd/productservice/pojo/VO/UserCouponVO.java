@@ -17,7 +17,7 @@ public class UserCouponVO extends Coupon {
     private Date getTime;//领取时间
     private Date useTime;//使用时间
     private Long orderId;//订单id
-    private Integer useStatus;//使用状态
+    private Integer status;//使用状态
 
     @Override
     public String toString() {
@@ -26,7 +26,7 @@ public class UserCouponVO extends Coupon {
                 "getTime=" + getTime +
                 ", useTime=" + useTime +
                 ", orderId=" + orderId +
-                ", useStatus=" + useStatus +
+                ", status=" + status +
                 '}';
     }
 
@@ -54,11 +54,13 @@ public class UserCouponVO extends Coupon {
         this.orderId = orderId;
     }
 
-    public Integer getUseStatus() {
-        return useStatus;
+    @Override
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setUseStatus(Integer useStatus) {
-        this.useStatus = useStatus;
+    @Override
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

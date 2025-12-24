@@ -51,17 +51,23 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
         //TODO一人一券
         //得到旧优惠券
         Coupon coupon = couponService.getById(id);
-        if(coupon== null||coupon.getIsDeleted())
+        if(coupon== null||coupon.getIsDeleted()) {
+            log.error("优惠券不存在");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
         Date now = new Date();
         //判断优惠券本身是否可用且在期限内
         if(coupon.getStatus()!=1
                 ||coupon.getStartTime().after(now)
-                ||coupon.getEndTime().before(now))
+                ||coupon.getEndTime().before(now)) {
+            log.error("优惠券不可用");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
         //判断优惠券库存是否已空
-        if(coupon.getStock()-coupon.getSendingStock()<=0)
+        if(coupon.getStock()-coupon.getSendingStock()<=0) {
+            log.error("优惠券库存已空");
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
         //生成用户的优惠券
         UserCoupon userCoupon = new UserCoupon();
         userCoupon.setUserId(getCurrentUserInfoService.getCurrentUserId());

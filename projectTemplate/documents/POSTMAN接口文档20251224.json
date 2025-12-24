@@ -1,0 +1,1950 @@
+{
+	"info": {
+		"_postman_id": "932cc635-4cf0-4221-ab35-1424c0084b1f",
+		"name": "item-assigner",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40056637"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"ADMIN\",\r\n    \"password\":\"123456\",\r\n    \"loginType\":\"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"phone\":\"15626448742\",\r\n    \"phoneCode\":\"495603\",\r\n    \"loginType\":\"phone\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:10010/api/user/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "10010",
+									"path": [
+										"api",
+										"user",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": "",
+							"header": [],
+							"cookie": [
+								{
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
+								}
+							],
+							"body": ""
+						},
+						{
+							"name": "login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\":\"ADMIN\",\r\n    \"password\":\"123456\",\r\n    \"loginType\":\"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:10010/api/user/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "10010",
+									"path": [
+										"api",
+										"user",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\":\"www778005729@outlook.com\",\r\n    \"emailCode\":\"123456\",\r\n    \"loginType\":\"email\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:10010/api/user/auth/login",
+									"host": [
+										"localhost"
+									],
+									"port": "10010",
+									"path": [
+										"api",
+										"user",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"_postman_previewlanguage": "",
+							"header": [],
+							"cookie": [
+								{
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
+								}
+							],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "me",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:10010/api/user/user/me",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "phoneCode",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:8080/user/auth/phoneCode/15626448742",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"auth",
+								"phoneCode",
+								"15626448742"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "phoneCode",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "localhost:8080/user/auth/phoneCode/13809711111",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"auth",
+										"phoneCode",
+										"13809711111"
+									]
+								}
+							},
+							"_postman_previewlanguage": "",
+							"header": [],
+							"cookie": [
+								{
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
+								}
+							],
+							"body": ""
+						},
+						{
+							"name": "phoneCode",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "localhost:8080/user/auth/phoneCode/15626448742",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"auth",
+										"phoneCode",
+										"15626448742"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "phoneCode",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "localhost:8080/user/auth/phoneCode/15626448741",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user",
+										"auth",
+										"phoneCode",
+										"15626448741"
+									]
+								}
+							},
+							"_postman_previewlanguage": "",
+							"header": [],
+							"cookie": [
+								{
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
+								}
+							],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "emailCode",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:10010/api/user/auth/emailCode/www778005729@outlook.com",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"emailCode",
+								"www778005729@outlook.com"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "emailCode",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "localhost:10010/api/user/auth/emailCode/778005722@qq.com",
+									"host": [
+										"localhost"
+									],
+									"port": "10010",
+									"path": [
+										"api",
+										"user",
+										"auth",
+										"emailCode",
+										"778005722@qq.com"
+									]
+								}
+							},
+							"_postman_previewlanguage": "",
+							"header": [],
+							"cookie": [
+								{
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
+								}
+							],
+							"body": ""
+						},
+						{
+							"name": "emailCode",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "localhost:10010/api/user/auth/emailCode/www778005729@outlook.com",
+									"host": [
+										"localhost"
+									],
+									"port": "10010",
+									"path": [
+										"api",
+										"user",
+										"auth",
+										"emailCode",
+										"www778005729@outlook.com"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "emailCode",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_x3LOwrAIAwA0LtkdoifJMazuLTUwUEQtFAQ717a9cFbMO4TEqwMs7Yy5tF6hmSFScVHdILeZKjXh6qs5G3ASMqOgoQNBsrT_8DI6NDtF8gH8H1TAAAA.9Q7RaczC0Rd35S8S4Fkpjt6Y5E1dVtZb4wd84ceqeNwWHhdiZOGqJjDrBBRomQ19IKbqAEWR5aOfMv_7yyrmrw",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "localhost:10010/api/user/auth/emailCode/www778005728@outlook.com",
+									"host": [
+										"localhost"
+									],
+									"port": "10010",
+									"path": [
+										"api",
+										"user",
+										"auth",
+										"emailCode",
+										"www778005728@outlook.com"
+									]
+								}
+							},
+							"_postman_previewlanguage": "",
+							"header": [],
+							"cookie": [
+								{
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
+								}
+							],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "customUserRegister",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"firstUser\",\r\n    \"phone\":\"13809711111\",\r\n    \"email\":\"778005722@qq.com\",\r\n    \"password\":\"123456\",\r\n    \"emailCode\":\"673676\",\r\n    \"phoneCode\":\"197026\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/auth/customUserRegister",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"customUserRegister"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "merchantRegister",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"secondUser\",\r\n    \"phone\":\"13809711112\",\r\n    \"email\":\"778005723@qq.com\",\r\n    \"password\":\"123456\",\r\n    \"emailCode\":\"673676\",\r\n    \"phoneCode\":\"197026\",\r\n    \"shopName\":\"哇哈哈购物中心\",\r\n    \"shopAddress\":\"远在天边,近在眼前\",\r\n    \"shopCategoryId\":\"1996954588037107713\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/auth/merchantRegister",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"merchantRegister"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rebuildPassword",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"secondUser\",\r\n    \"phone\":\"13809711112\",\r\n    \"phoneCode\":\"123456\",\r\n    \"newPassword\":\"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/auth/rebuildPassword",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"auth",
+								"rebuildPassword"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "user.list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/list",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}"
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/profile/1996953140859625474",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"profile",
+								"1996953140859625474"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.password",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"oldPassword\":\"wwwwww\",\r\n    \"newPassword\":\"123456\",\r\n    \"phone\":\"15626448742\",\r\n    \"phoneCode\":\"191236\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/update/password",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"update",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.phone",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"oldPhone\":\"15626448742\",\r\n    \"newPhone\":\"13809711111\",\r\n    \"phoneCode\":\"703786\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/update/phone",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"update",
+								"phone"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.email",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBxDFrREFrMtTrQ1VR9o5sZBVkCrTBQHn6H5DQR9wvjoE6blMAAAA.mi-9XrtkMID3TKHOsueGujf4imjPhDUWbZRxUg8qXyQ6BAngw9jTTD1mN4JO88RNFExRy8VuddUH_dwj-1AJLQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"oldEmail\":\"www778005728@outlook.com\",\r\n    \"newEmail\":\"www778005729@outlook.com\",\r\n    \"emailCode\":\"691987\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/update/email",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"update",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.nickName",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82UFtoknP4tJSBwdB0EJBvHspXR-8iX6f2DETRqm5j6O2hN3FEEiUrZB4k1CuD1WD8ubICmvwTJEWDPLT_sCR1cp6AWcA2vlTAAAA.wCX815UTKt4pZy-Emkn5a0Dx6j9V9GdlCba8barvIQqJF4_L32nXTHjiflxNHsNCHWRbceJLkGNmFYBsZJezCw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"nickName\":\"WDD\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/update/nickName",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"update",
+								"nickName"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.gender",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82UFtoknP4tJSBwdB0EJBvHspXR-8iX6f2DETRqm5j6O2hN3FEEiUrZB4k1CuD1WD8ubICmvwTJEWDPLT_sCR1cp6AWcA2vlTAAAA.wCX815UTKt4pZy-Emkn5a0Dx6j9V9GdlCba8barvIQqJF4_L32nXTHjiflxNHsNCHWRbceJLkGNmFYBsZJezCw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"gender\":\"1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/update/gender",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"update",
+								"gender"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.birthday",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82UFtoknP4tJSBwdB0EJBvHspXR-8iX6f2DETRqm5j6O2hN3FEEiUrZB4k1CuD1WD8ubICmvwTJEWDPLT_sCR1cp6AWcA2vlTAAAA.wCX815UTKt4pZy-Emkn5a0Dx6j9V9GdlCba8barvIQqJF4_L32nXTHjiflxNHsNCHWRbceJLkGNmFYBsZJezCw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"birthday\":\"2005-07-31\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/update/birthday",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"update",
+								"birthday"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.region",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82UFtoknP4tJSBwdB0EJBvHspXR-8iX6f2DETRqm5j6O2hN3FEEiUrZB4k1CuD1WD8ubICmvwTJEWDPLT_sCR1cp6AWcA2vlTAAAA.wCX815UTKt4pZy-Emkn5a0Dx6j9V9GdlCba8barvIQqJF4_L32nXTHjiflxNHsNCHWRbceJLkGNmFYBsZJezCw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"region\":\"广东工业大学\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/update/region",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"update",
+								"region"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.card",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82UFtoknP4tJSBwdB0EJBvHspXR-8iX6f2DETRqm5j6O2hN3FEEiUrZB4k1CuD1WD8ubICmvwTJEWDPLT_sCR1cp6AWcA2vlTAAAA.wCX815UTKt4pZy-Emkn5a0Dx6j9V9GdlCba8barvIQqJF4_L32nXTHjiflxNHsNCHWRbceJLkGNmFYBsZJezCw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"realName\":\"布莱克凯特\",\r\n    \"idCard\":\"000x0x000x0x0x000x\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/user/update/card",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"user",
+								"update",
+								"card"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.update.license",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_y3LMQrAIAwF0Lv82cFUExvP4tJSBwdB0EJBvHspdH3wJvp9ImImjFJzH0dtCZGCCNvgWEnIJJTrQ1VRduTtziob--AXDPLT_qAusK4XdLnl5FMAAAA.Pj2wsZ-b_hmNvsZFe2eeWA2EJSevRMDydIVXqrSDSFv4ckK6tmmVWH2Rg97Gdp-I-bikNBvuudHTcOQ9w1hQ_w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"1996953140859625474\",\r\n    \"shopLicense\":\"00X00X00X\",\r\n    \"shopLicenseImage\":\"000x0x000x0x0x000x\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/merchantSupplement/update/license",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"merchantSupplement",
+								"update",
+								"license"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userAddress.add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_y3LMQrAIAwF0Lv82cFUExvP4tJSBwdB0EJBvHspdH3wJvp9ImImjFJzH0dtCZGCCNvgWEnIJJTrQ1VRduTtziob--AXDPLT_qAusK4XdLnl5FMAAAA.Pj2wsZ-b_hmNvsZFe2eeWA2EJSevRMDydIVXqrSDSFv4ckK6tmmVWH2Rg97Gdp-I-bikNBvuudHTcOQ9w1hQ_w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"1996953140859625474\",\r\n    \"receiver\":\"布莱克凯特\",\r\n    \"phone\":\"15626448742\",\r\n    \"province\":\"广东\",\r\n    \"city\":\"汕头\",\r\n    \"district\":\"达濠\",\r\n    \"address\":\"广文书店\",\r\n    \"isDefault\":\"false\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/userAddress/add",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"userAddress",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userAddress.update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_y3LMQrAIAwF0Lv82cFUExvP4tJSBwdB0EJBvHspdH3wJvp9ImImjFJzH0dtCZGCCNvgWEnIJJTrQ1VRduTtziob--AXDPLT_qAusK4XdLnl5FMAAAA.Pj2wsZ-b_hmNvsZFe2eeWA2EJSevRMDydIVXqrSDSFv4ckK6tmmVWH2Rg97Gdp-I-bikNBvuudHTcOQ9w1hQ_w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"2003505705483100161\",\r\n    \"userId\":\"1996953140859625474\",\r\n    \"receiver\":\"布莱克凯特\",\r\n    \"phone\":\"15626448742\",\r\n    \"province\":\"广东\",\r\n    \"city\":\"汕头\",\r\n    \"district\":\"达濠\",\r\n    \"address\":\"西泽园\",\r\n    \"isDefault\":\"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/userAddress/update",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"userAddress",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userAddress.list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_y3LMQrAIAwF0Lv82cFUExvP4tJSBwdB0EJBvHspdH3wJvp9ImImjFJzH0dtCZGCCNvgWEnIJJTrQ1VRduTtziob--AXDPLT_qAusK4XdLnl5FMAAAA.Pj2wsZ-b_hmNvsZFe2eeWA2EJSevRMDydIVXqrSDSFv4ckK6tmmVWH2Rg97Gdp-I-bikNBvuudHTcOQ9w1hQ_w",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"2003505705483100161\",\r\n    \"userId\":\"1996953140859625474\",\r\n    \"receiver\":\"布莱克凯特\",\r\n    \"phone\":\"15626448742\",\r\n    \"province\":\"广东\",\r\n    \"city\":\"汕头\",\r\n    \"district\":\"达濠\",\r\n    \"address\":\"西泽园\",\r\n    \"isDefault\":\"true\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/userAddress/list",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"userAddress",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "role.assign",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLOQrAIBAAwL9sbaHrHupbbBJiYSEIGgiIfw8h7cAsGPcJCVaGWVsZ82g9Q3Iq4gg9KVsyGer1YYwS2TuygaMgk9IGA-Xpf0AMSrpf2Q31JlMAAAA.zxtcZbKQWoS7BCE4_4a86fie7MknvOR3xn8Z_VI0QVJ5lqsnTRd3EaXrAT41ZcbrmfAbzK2vJP8krfiCDO-AXg",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\":\"2001625299854921729\",\r\n    \"roleIds\":[\r\n        \"1996956489071730690\",\r\n        \"1996956489134645250\",\r\n        \"1996956489134645252\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/role/assign",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"role",
+								"assign"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user.getShopName",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"全场优惠券满二百打七折三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"1\",\r\n    \"targetType\":\"0\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"30\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:10010/api/user/merchantSupplement/getShopName/1996953140859625474",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"user",
+								"merchantSupplement",
+								"getShopName",
+								"1996953140859625474"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "file",
+			"item": [
+				{
+					"name": "file.uploadCompressibleFile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSqo5RKsnMTS0uScwtiFGyMjQ3MzMxMzU2NLI0NdOJUcpMAQlaWppZAsVMDCxMLc2MTE3MTWqVdJRSKwogGkxNDc0NjWoBkf3dwVMAAAA.2DqIzntjKC9tr3DJg6PKjb1bmkV-V1_wpdwhVmj47z9WbArbEPrBxyQKrsRnphBCtlxAItsCf4JHf2cnMTDQIA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userId",
+									"value": "342524",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/www77/Pictures/Camera Roll/20240729.2.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:10010/api/file/file/uploadCompressibleFile?userId=1&file",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"file",
+								"file",
+								"uploadCompressibleFile"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "file",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "file.uploadIncompressibleFile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSqo5RKsnMTS0uScwtiFGyMjQ3MzMxMzU2NLI0NdOJUcpMAQlaWppZAsVMDCxMLc2MTE3MTWqVdJRSKwogGkxNDc0NjWoBkf3dwVMAAAA.2DqIzntjKC9tr3DJg6PKjb1bmkV-V1_wpdwhVmj47z9WbArbEPrBxyQKrsRnphBCtlxAItsCf4JHf2cnMTDQIA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userId",
+									"value": "123456",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/www77/Pictures/Camera Roll/20240729.2.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:10010/api/file/file/uploadIncompressibleFile?userId=1&file",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"file",
+								"file",
+								"uploadIncompressibleFile"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								},
+								{
+									"key": "file",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "file.download",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSqo5RKsnMTS0uScwtiFGyMjQ3MzMxMzU2NLI0NdOJUcpMAQlaWppZAsVMDCxMLc2MTE3MTWqVdJRSKwogGkxNDc0NjWoBkf3dwVMAAAA.2DqIzntjKC9tr3DJg6PKjb1bmkV-V1_wpdwhVmj47z9WbArbEPrBxyQKrsRnphBCtlxAItsCf4JHf2cnMTDQIA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:10010/api/file/file/download?userId=123&fileName=123_936886da459943be8f0a80b2a5b4849f.jpg",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"file",
+								"file",
+								"download"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "123"
+								},
+								{
+									"key": "fileName",
+									"value": "123_936886da459943be8f0a80b2a5b4849f.jpg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "file.delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:10010/api/file/file/delete?userId=123&fileName=123_995fb9824b854688acc23f5dc0b9e3de.jpeg",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"file",
+								"file",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "123"
+								},
+								{
+									"key": "fileName",
+									"value": "123_995fb9824b854688acc23f5dc0b9e3de.jpeg"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "file.update.avatar",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLSwqAIBAA0LvM2kU6P6ezuCly4UIQNAjEu0e0ffAm9PuEHWaCUWru46gtwe5VhNSQMWJwCcr1oZkYo6ctsklgUlrgID_tDyysjOsFlanb1FMAAAA.AeCj4dEow-EPuzXXALBh74GrUV575KKqXuX4HLb6eDi5jajC0GI0ZNKDJUzjv4be6zPDVdLsiRLZ9BAMdklLqQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/www77/Pictures/Camera Roll/BlackCat.jpeg"
+								},
+								{
+									"key": "userId",
+									"value": "1996953140859625474",
+									"type": "text"
+								},
+								{
+									"key": "oldAvatar",
+									"value": "1996953140859625474_a92bf18e28cc459db9aa037963e79843.jpg",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:10010/api/file/update/avatar",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"file",
+								"update",
+								"avatar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "productCategoryAdd",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"基础分类\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/productCategory/add?name=",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"productCategory",
+								"add"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productCategoryList",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/productCategory/list",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"productCategory",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productList",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/product/list",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"product",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productFeed",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryId\":\"2000803576611430401\",\r\n    \"sortColumn\":\"sales\",\r\n    \"sortOrder\":\"asc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/product/feed",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"product",
+								"feed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productAdd",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwF0Lv82aHWGBPP4tJSBwdB0EJBvHspXR-8iX6fiJgJo9Tcx1FbQrSBvbAjEWU2CeX6UJXVO0ubeOXdU6AFg_y0PyipiKwXYou5uFMAAAA.uz37IlwqNtZTDpCQrjnYVbv3kLgAvOsbtptpk7MXM2HrXo2g1zlf-W0d15_zKlwCg8sYNNVGq4NHIB3bykYOfA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"布莱克凯特是由石油提炼的吗?\",\r\n    \"categoryId\":\"2000803576611430401\",\r\n    \"description\":\"BlackCat!\",\r\n    \"productSkuDTOS\":[\r\n        {\r\n            \"specs\":\"豪华款\",\r\n            \"price\":39.99,\r\n            \"stock\":5,\r\n            \"isDefault\":false,\r\n            \"logo\":\"\"\r\n        },\r\n        {\r\n            \"specs\":\"基础款\",\r\n            \"price\":29.99,\r\n            \"stock\":20,\r\n            \"isDefault\":true,\r\n            \"logo\":\"\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/product/add",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"product",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product.visit",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:10010/api/product/product/visit/2000808873962766337",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"product",
+								"visit",
+								"2000808873962766337"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product.detail",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSqo5RKsnMTS0uScwtiFGyMjQ3MzM1tjQ1NjC0sNCJUcpMAQlaWpoBhQxNDCxMLc2MTE3MTWqVdJRSKwogGoBClsYGtQAbrXELUwAAAA.Umqy9T-wg7H64uHdlOiu6btIvEmjF925OAfnYlsni0r9eotcY0P8WxO3TGxIe7IV_gmMddeSJrSxt8mbF-d58Q",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:10010/api/product/product/detail/2000808472433655809",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"product",
+								"detail",
+								"2000808472433655809"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "productSku.add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_6tWKi5NUrJSqo5RKsnMTS0uScwtiFGyMjQ3MzM1tjQ1NjC0sNCJUcpMAQlaWpoBhQxNDCxMLc2MTE3MTWqVdJRSKwogGoBClsYGtQAbrXELUwAAAA.Umqy9T-wg7H64uHdlOiu6btIvEmjF925OAfnYlsni0r9eotcY0P8WxO3TGxIe7IV_gmMddeSJrSxt8mbF-d58Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productId\":\"2000808873962766337\",\r\n    \"specs\":\"二手款\",\r\n    \"price\":\"13.9\",\r\n    \"stock\":\"5\",\r\n    \"isDefault\":\"true\",\r\n    \"logo\":\"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/productSku/add",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"productSku",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "coupon.add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"全场优惠券满二百打七折三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"1\",\r\n    \"targetType\":\"0\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"30\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/coupon/add",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"coupon",
+								"add"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "coupon.add",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"全场优惠券满二百打七折三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"1\",\r\n    \"targetType\":\"0\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"30\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:10010/api/product/coupon/add",
+									"host": [
+										"localhost"
+									],
+									"port": "10010",
+									"path": [
+										"api",
+										"product",
+										"coupon",
+										"add"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "coupon.add",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\":\"超级管理员商店优惠券满二百减五十三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"0\",\r\n    \"targetType\":\"1\",\r\n    \"targetId\":\"1996953140859625474\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"50\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:10010/api/product/coupon/add",
+									"host": [
+										"localhost"
+									],
+									"port": "10010",
+									"path": [
+										"api",
+										"product",
+										"coupon",
+										"add"
+									]
+								}
+							},
+							"_postman_previewlanguage": "",
+							"header": [],
+							"cookie": [
+								{
+									"expires": "Invalid Date",
+									"domain": "",
+									"path": ""
+								}
+							],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "coupon.detail",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"全场优惠券满二百打七折三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"1\",\r\n    \"targetType\":\"0\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"30\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/coupon/detail/2000808472433655809",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"coupon",
+								"detail",
+								"2000808472433655809"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "coupon.visit",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"全场优惠券满二百打七折三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"1\",\r\n    \"targetType\":\"0\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"30\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/coupon/visit/2000808472433655809",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"coupon",
+								"visit",
+								"2000808472433655809"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "coupon.list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"全场优惠券满二百打七折三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"1\",\r\n    \"targetType\":\"0\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"30\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/coupon/list",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"coupon",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userCoupon.add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"全场优惠券满二百打七折三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"1\",\r\n    \"targetType\":\"0\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"30\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/userCoupon/add/2003658193305096194",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"userCoupon",
+								"add",
+								"2003658193305096194"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userCoupon.list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzUxMiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_yXLMQrAIAwAwL9kdtCYRONbXFrq4CAIWiiIfy-l68EtGPcJCVaGWVsZ82g9Q3JBhMnbiMLeZKjXh6qi7B3ZyCrIFGiDgfL0PwgqRdwvhIzmlVMAAAA.EP8sWHdDuSDNwKLKxO19be7AtJuKJlqf4uAKmofU15XP94SsvWSjVjHPaPZROE2_IIJfbLrhetr8H5WcYc6p1Q",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"全场优惠券满二百打七折三年期二零二五年十二月中旬开始\",\r\n    \"getType\":\"1\",\r\n    \"targetType\":\"0\",\r\n    \"isDiscount\":\"0\",\r\n    \"threshold\":\"200\",\r\n    \"startTime\":\"2025-12-16T14:01:28.000+08:00\",\r\n    \"endTime\":\"2028-12-16T14:01:28.000+08:00\",\r\n    \"stock\":\"100\",\r\n    \"value\":\"30\"\r\n}"
+						},
+						"url": {
+							"raw": "localhost:10010/api/product/userCoupon/list",
+							"host": [
+								"localhost"
+							],
+							"port": "10010",
+							"path": [
+								"api",
+								"product",
+								"userCoupon",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

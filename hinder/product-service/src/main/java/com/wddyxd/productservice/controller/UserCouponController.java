@@ -62,7 +62,7 @@ public class UserCouponController {
                                 @PathVariable @Min(value = 1L, message = "优惠券id不能小于1") Long orderId){
 //        用户在下单时进行优惠券的消费,传入orderId后生成useTime,status代表该优惠券被消费
         userCouponService.consume(id,orderId);
-        return Result.success();
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
     @DeleteMapping("/destroy/{id}")

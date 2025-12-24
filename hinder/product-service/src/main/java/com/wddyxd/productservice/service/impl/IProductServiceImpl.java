@@ -12,6 +12,7 @@ import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.clients.userservice.UserClient;
+import com.wddyxd.productservice.controller.ProductController;
 import com.wddyxd.productservice.mapper.ProductCategoryMapper;
 import com.wddyxd.productservice.mapper.ProductMapper;
 import com.wddyxd.productservice.pojo.DTO.*;
@@ -28,6 +29,8 @@ import com.wddyxd.productservice.service.Interface.IProductCategoryService;
 import com.wddyxd.productservice.service.Interface.IProductService;
 import com.wddyxd.productservice.service.Interface.IProductSkuService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +64,9 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Autowired
     private ICouponService couponService;
 
+    private static final Logger log = LoggerFactory.getLogger(IProductServiceImpl.class);
+
+
     @Override
     public Page<ProductProfileVO> List(ProductListDTO productListDTO) {
         productListDTO.validatePageParams(productListDTO);
@@ -78,8 +84,10 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Override
     public ProductDetailVO visit(Long id) {
         ProductProfileVO productProfileVO = baseMapper.getProductProfileVOById(id);
-        if(productProfileVO==null||productProfileVO.getIsDeleted()||productProfileVO.getStatus()!=1)
+        if(productProfileVO==null||productProfileVO.getIsDeleted()||productProfileVO.getStatus()!=1) {
+            log.error("商品不存在");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
         Result<com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO> getUserProfileVO
                 = userClient.profile(productProfileVO.getUserId());
         if(getUserProfileVO.getCode()!=200||getUserProfileVO.getData()==null)
@@ -103,8 +111,10 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Override
     public ProductDetailVO detail(Long id) {
         ProductProfileVO productProfileVO = baseMapper.getProductProfileVOById(id);
-        if(productProfileVO==null)
+        if(productProfileVO==null||productProfileVO.getIsDeleted()||productProfileVO.getStatus()!=1) {
+            log.error("商品不存在");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
         Result<com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO> getUserProfileVO
                 = userClient.profile(productProfileVO.getUserId());
         if(getUserProfileVO.getCode()!=200||getUserProfileVO.getData()==null)

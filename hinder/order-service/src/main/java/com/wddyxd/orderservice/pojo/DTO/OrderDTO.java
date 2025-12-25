@@ -38,7 +38,7 @@ public class OrderDTO {
     @Min(value = 1,message = "购买数量必须大于0",groups = {AddGroup.class})
     private Integer quantity;
     @NotNull(message = "用户优惠券ID数组不能为null", groups = {AddGroup.class})
-    private Long[] userCouponIds;
+    private Long[] couponIds;
 
     @Override
     public String toString() {
@@ -49,7 +49,7 @@ public class OrderDTO {
                 ", productId=" + productId +
                 ", skuId=" + skuId +
                 ", quantity=" + quantity +
-                ", userCouponIds=" + Arrays.toString(userCouponIds) +
+                ", couponIds=" + Arrays.toString(couponIds) +
                 '}';
     }
 
@@ -101,11 +101,11 @@ public class OrderDTO {
         this.quantity = quantity;
     }
 
-    public Long[] getUserCouponIds() {
-        return userCouponIds;
+    public Long[] getCouponIds() {
+        return couponIds;
     }
 
-    public void setUserCouponIds(Long[] userCouponIds) {
-        this.userCouponIds = userCouponIds;
+    public void setCouponIds(Long[] couponIds) {
+        this.couponIds = couponIds;
     }
 }

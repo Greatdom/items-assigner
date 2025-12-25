@@ -85,10 +85,20 @@ public class ProductSkuController {
     @PutMapping("/update/consume")
     //需要product.update权限而且访问者的id等于参数的userId
     @Operation(summary = "修改商品规格接口", description = "在创建商品后编辑商品时可用")
-    public Result<Void> updateConsume(@RequestParam Long skuId,@RequestParam Integer quantity){
+    public Result<Void> updateConsume(@RequestParam @Min(value = 1, message = "ID必须大于0") Long skuId,@RequestParam @Min(value = 1, message = "quantity必须大于0") Integer quantity){
 //        传入ProductSkuDTO,消费商品规格和商品
         log.info("product.update.consume");
         productSkuService.updateConsume(skuId, quantity);
+        return Result.success();
+    }
+
+    @PutMapping("/update/logo")
+    //需要product.update权限而且访问者的id等于参数的userId
+    @Operation(summary = "修改商品规格接口", description = "在创建商品后编辑商品时可用")
+    public Result<Void> updateCLogo(@Validated(UpdateGroup.class) @RequestBody ProductSkuDTO productSkuDTO){
+//        传入ProductSkuDTO,消费商品规格和商品
+        log.info("product.update.logo");
+        productSkuService.updateLogo(productSkuDTO);
         return Result.success();
     }
 

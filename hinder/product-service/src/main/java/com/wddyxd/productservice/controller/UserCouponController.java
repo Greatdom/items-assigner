@@ -9,6 +9,7 @@ import com.wddyxd.productservice.service.Interface.IUserCouponService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,17 +58,17 @@ public class UserCouponController {
 
     @PutMapping("/consume/{id}/{orderId}")
     //需要userCoupon.update权限且访问者的id等于参数的userId
-    @Operation(summary = "修改商品分类接口", description = "管理员可以在商品分类管理界面更新商品分类信息")
-    public Result<Void> consume(@PathVariable @Min(value = 1L, message = "优惠券id不能小于1") Long id,
+    @Operation(summary = "消费优惠券接口", description = "管理员可以在商品分类管理界面更新商品分类信息")
+    public Result<Void> consume(@PathVariable @NotNull(message = "优惠券id不能为空") Long[] couponIds,
                                 @PathVariable @Min(value = 1L, message = "优惠券id不能小于1") Long orderId){
 //        用户在下单时进行优惠券的消费,传入orderId后生成useTime,status代表该优惠券被消费
-        userCouponService.consume(id,orderId);
+        userCouponService.consume(couponIds,orderId);
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
     @DeleteMapping("/destroy/{id}")
     //需要userCoupon.delete权限
-    @Operation(summary = "删除商品分类接口", description = "由于一些原因,触发优惠券的删除,这时会回收用户领取的优惠券,在优惠券被删除时调用接口")
+    @Operation(summary = "销毁用户的优惠券接口", description = "由于一些原因,触发优惠券的删除,这时会回收用户领取的优惠券,在优惠券被删除时调用接口")
     public Result<Void> destroy(@PathVariable @Min(value = 1L, message = "优惠券id不能小于1") Long id){
 //       传入优惠券的id,批量逻辑删除该couponId指向的所有用户领取的优惠券,然后减去优惠券的库存
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

@@ -32,4 +32,5 @@ public interface IProductSkuService extends IService<ProductSku> {
 
     public void delete(Long id);
 
+    void updateLogo(ProductSkuDTO productSkuDTO);
 }

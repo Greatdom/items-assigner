@@ -84,33 +84,40 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
     }
 
     @Override
-    public void consume(Long id, Long orderId) {
-//        用户在下单时进行优惠券的消费,传入orderId后生成useTime,status代表该优惠券被消费
-        //得到待消费的优惠券
-        Coupon coupon = couponService.getById(id);
-        if(coupon== null||coupon.getIsDeleted())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        Date now = new Date();
-        //判断优惠券本身是否可用且在期限内
-        if(coupon.getStatus()!=1
-                ||coupon.getStartTime().after(now)
-                ||coupon.getEndTime().before(now))
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        //得到用户领取的优惠券
-        UserCoupon userCoupon = baseMapper.selectOne(
-                new LambdaQueryWrapper<UserCoupon>()
-                        .eq(UserCoupon::getCouponId, id)
-                        .eq(UserCoupon::getUserId, getCurrentUserInfoService.getCurrentUserId())
+    public void consume(Long[] couponIds, Long orderId) {
+        //TODO 也许优惠券不完全合法的时候可以进行消费但是要给警告
+        for(Long couponId:couponIds)
+            if(couponId==null || couponId<=0){
+                log.error("优惠券id不能小于1");
+                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+            }
+        //TODO可优化条件的查询
+        List<Coupon> coupons = couponService.list(new LambdaQueryWrapper<Coupon>()
+                .in(Coupon::getId,couponIds)
+                .eq(Coupon::getIsDeleted,false)
+                .eq(Coupon::getStatus,1)
         );
-        if(userCoupon==null||userCoupon.getIsDeleted())
+        if(coupons.size()!=couponIds.length){
+            log.error("优惠券列表不合法");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        //判断优惠券是否被使用
-        if(userCoupon.getStatus()!=0)
+        }
+        Date now = new Date();
+        List<UserCoupon> userCoupons = list(
+                new LambdaQueryWrapper<UserCoupon>()
+                        .eq(UserCoupon::getUserId, getCurrentUserInfoService.getCurrentUserId())
+                        .in(UserCoupon::getCouponId,couponIds)
+                        .eq(UserCoupon::getStatus,0)
+        );
+        if(userCoupons.size()!=coupons.size()){
+            log.error("优惠券列表不合法");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        userCoupon.setUseTime(now);
+        }
+        for(UserCoupon userCoupon:userCoupons) {
+            userCoupon.setUseTime(now);
         userCoupon.setStatus(1);
         userCoupon.setOrderId(orderId);
-        baseMapper.updateById(userCoupon);
+        }
+        updateBatchById(userCoupons);
     }
 
     @Override

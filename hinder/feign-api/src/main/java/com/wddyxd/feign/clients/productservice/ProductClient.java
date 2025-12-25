@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
         fallbackFactory = ProductClientFallbackFactory.class)
 public interface ProductClient {
 
-    @GetMapping("/visit/{id}")
+    @GetMapping("/product/product/visit/{id}")
     //任何用户登录后可访问
     @Operation(summary = "在用户端访问商品接口", description = "在用户端点击被推送的商品可以访问该商品")
     public Result<ProductDetailVO> visit(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id);

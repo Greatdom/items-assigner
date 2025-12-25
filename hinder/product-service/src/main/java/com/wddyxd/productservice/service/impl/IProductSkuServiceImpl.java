@@ -88,72 +88,88 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
 
     }
 
-    public void update(ProductSkuDTO productSkuDTO) {
-        //得到旧的商品规格
-        ProductSku productSku = baseMapper.selectById(productSkuDTO.getId());
-        if(productSku == null||productSku.getIsDeleted())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        //得到旧商品规格库存
-        int productSkuStock = productSku.getStock();
-        //判断是否需要更新商品规格库存和商品库存
-        boolean isUpdateStock = !Objects.equals(productSku.getStock(), productSkuDTO.getStock());
-        //拷贝
-        BeanUtil.copyProperties(productSkuDTO, productSku);
-        //更新商品库存
-        Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
-                .eq(Product::getId, productSkuDTO.getProductId()));
-        if(product == null||product.getIsDeleted())
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        if(isUpdateStock){
-            //得到旧商品
-
-            int productStock = product.getStock();
-            product.setStock(product.getStock()-productSkuStock+productSku.getStock());
-            // 执行乐观锁更新
-            LambdaUpdateWrapper<Product> updateWrapper = Wrappers.lambdaUpdate(Product.class)
-                    .eq(Product::getId, product.getId())
-                    .eq(Product::getStock, productStock)
-                    .eq(Product::getIsDeleted, false);
-            int updateCount = productMapper.update(product, updateWrapper);
-            //TODO 可用异步通信技术添加重试机制
-            if (updateCount == 0)
-                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
-        }
-        if(productSkuDTO.getIsDefault()){
-            product.setProductSkuId(productSku.getId());
-            productMapper.updateById(product);
-        }
-        //乐观锁更新商品规格
-        LambdaUpdateWrapper<ProductSku> updateWrapper = Wrappers.lambdaUpdate(ProductSku.class)
-                .eq(ProductSku::getId, productSku.getId())
-                .eq(ProductSku::getStock, productSkuStock)
-                .eq(ProductSku::getIsDeleted, false);
-        int updateCount = baseMapper.update(productSku, updateWrapper);
-        if (updateCount == 0)
-            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
-    }
-
     @Override
     public void updateCommon(ProductSkuDTO productSkuDTO) {
         //得到旧的商品规格
         ProductSku productSku = baseMapper.selectById(productSkuDTO.getId());
-        if(productSku == null||productSku.getIsDeleted())
+        if(productSku == null||productSku.getIsDeleted()) {
+            log.error("商品规格不存在");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        productSku.setProductId(productSkuDTO.getProductId());
+        productSku.setSpecs(productSkuDTO.getSpecs());
+        productSku.setPrice(productSkuDTO.getPrice());
+        baseMapper.updateById(productSku);
     }
 
     @Override
     public void updateStock(ProductSkuDTO productSkuDTO) {
-
+        ProductSku productSku = baseMapper.selectById(productSkuDTO.getId());
+        if(productSku == null||productSku.getIsDeleted()) {
+            log.error("商品规格不存在");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        productSku.setStock(productSkuDTO.getStock());
+        Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
+                .eq(Product::getId, productSkuDTO.getProductId()));
+        if(product == null||product.getIsDeleted()) {
+            log.error("商品不存在");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        product.setStock(product.getStock()-productSkuDTO.getStock()+productSkuDTO.getStock());
+        //TODO 用乐观锁更新商品和规格
+        //TODO 如果乐观锁判定失败则用消息队列进行失败重试
+        productMapper.updateById(product);
+        baseMapper.updateById(productSku);
     }
 
     @Override
     public void updateDefault(ProductSkuDTO productSkuDTO) {
-
+        Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
+                .eq(Product::getId, productSkuDTO.getProductId()));
+        if(product == null||product.getIsDeleted()) {
+            log.error("商品不存在");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        product.setProductSkuId(productSkuDTO.getId());
+        productMapper.updateById(product);
     }
 
     @Override
     public void updateConsume(Long skuId, Integer quantity) {
+        ProductSku productSku = baseMapper.selectById(skuId);
+        if(productSku == null||productSku.getIsDeleted()) {
+            log.error("商品规格不存在");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        //TODO 判断是否超库存
+        if(productSku.getStock() < quantity) {
+            log.error("商品规格库存不足");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        productSku.setStock(productSku.getStock() - quantity);
+        Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
+                .eq(Product::getId, productSku.getProductId()));
+        if(product == null||product.getIsDeleted()) {
+            log.error("商品不存在");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        product.setStock(product.getStock() - quantity);
+        //TODO 用乐观锁更新商品和规格
+        //TODO 如果乐观锁判定失败则用消息队列进行失败重试
+        productMapper.updateById(product);
+        baseMapper.updateById(productSku);
+    }
 
+    @Override
+    public void updateLogo(ProductSkuDTO productSkuDTO) {
+        ProductSku productSku = baseMapper.selectById(productSkuDTO.getId());
+        if(productSku == null||productSku.getIsDeleted()) {
+            log.error("商品规格不存在");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        productSku.setLogo(productSkuDTO.getLogo());
+        baseMapper.updateById(productSku);
     }
 
     @Override

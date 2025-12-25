@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.productservice.pojo.DTO.ProductSkuDTO;
 import com.wddyxd.productservice.pojo.VO.ProductSkuVO;
 import com.wddyxd.productservice.pojo.entity.ProductSku;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -21,7 +22,13 @@ public interface IProductSkuService extends IService<ProductSku> {
 
     public void add(ProductSkuDTO productSkuDTO);
 
-    public void update(ProductSkuDTO productSkuDTO);
+    public void updateCommon(ProductSkuDTO productSkuDTO);
+
+    public void updateStock(ProductSkuDTO productSkuDTO);
+
+    public void updateDefault(ProductSkuDTO productSkuDTO);
+
+    public void updateConsume(Long skuId, Integer quantity);
 
     public void delete(Long id);
 

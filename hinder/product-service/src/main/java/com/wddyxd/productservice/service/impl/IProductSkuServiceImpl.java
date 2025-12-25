@@ -88,8 +88,6 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
 
     }
 
-    @Override
-    @Transactional
     public void update(ProductSkuDTO productSkuDTO) {
         //得到旧的商品规格
         ProductSku productSku = baseMapper.selectById(productSkuDTO.getId());
@@ -133,6 +131,29 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
         int updateCount = baseMapper.update(productSku, updateWrapper);
         if (updateCount == 0)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+    }
+
+    @Override
+    public void updateCommon(ProductSkuDTO productSkuDTO) {
+        //得到旧的商品规格
+        ProductSku productSku = baseMapper.selectById(productSkuDTO.getId());
+        if(productSku == null||productSku.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+    }
+
+    @Override
+    public void updateStock(ProductSkuDTO productSkuDTO) {
+
+    }
+
+    @Override
+    public void updateDefault(ProductSkuDTO productSkuDTO) {
+
+    }
+
+    @Override
+    public void updateConsume(Long skuId, Integer quantity) {
+
     }
 
     @Override

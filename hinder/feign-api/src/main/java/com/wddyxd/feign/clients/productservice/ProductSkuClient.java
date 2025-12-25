@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam;
         fallbackFactory = ProductSkuClientFallbackFactory.class)
 public interface ProductSkuClient {
 
-    @PutMapping("/update/consume")
-    //需要product.update权限而且访问者的id等于参数的userId
     @Operation(summary = "修改商品规格接口", description = "在创建商品后编辑商品时可用")
     public Result<Void> updateConsume(@RequestParam Long skuId, @RequestParam Integer quantity);
 

@@ -18,4 +18,6 @@ public interface MerchantSupplementMapper extends BaseMapper<MerchantSupplement>
     @Select("select * from merchant_supplement where user_id = #{userId} and is_deleted = 0")
     public MerchantSupplement selectByUserId(Long userId);
 
+    public boolean getIsValidShop(Long id);
+
 }

@@ -78,6 +78,7 @@ public class ProductController {
     @Operation(summary = "在用户端访问商品接口", description = "在用户端点击被推送的商品可以访问该商品")
     public Result<ProductDetailVO> visit(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id){
 
+        //TODO 将ProductDetailVO里除了CouponVO的内容都缓存到redis里
 //       返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
 //- 用户概要指向商户UserProfileVO,优惠券指向用户领取的生效的可用优惠券CouponVO,商品规格是该商品的所有规格ProductSkuVO,
 //- 用户端不应该访问被下架或删除的商品

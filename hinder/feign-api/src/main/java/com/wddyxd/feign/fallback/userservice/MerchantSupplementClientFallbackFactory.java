@@ -29,6 +29,12 @@ public class MerchantSupplementClientFallbackFactory implements FallbackFactory<
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }
+
+            @Override
+            public Result<Boolean> getIsValidShop(Long id) {
+                log.error(LogPrompt.FEIGN_ERROR.msg);
+                return Result.error();
+            }
         };
     }
 

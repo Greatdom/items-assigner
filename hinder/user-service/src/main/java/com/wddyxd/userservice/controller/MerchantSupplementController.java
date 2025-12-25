@@ -36,6 +36,14 @@ public class MerchantSupplementController {
         return Result.success(merchantSupplementService.getShopName(id));
     }
 
+    @GetMapping("/getIsValidShop/{id}")
+    @Operation(summary = "查看商户是否可用接口", description = "远程调用接口")
+    public Result<Boolean> getIsValidShop(@Min(value = 1, message = "ID必须大于0") @PathVariable Long id){
+        //判断商户是否没被删除/封禁/关店
+        return Result.success(merchantSupplementService.getIsValidShop(id));
+    }
+
+
     @DeleteMapping("/delete/{id}")
     //需要user.delete权限
     @Operation(summary = "删除商户接口", description = "只有管理员有权限删除商户,普通商户要注销需要将注销请求发送给管理员")

@@ -28,9 +28,6 @@ public class OrderDTO {
     @Min(value = 0,message = "支付方式必须大于0",groups = {UpdateGroup.class})
     @Max(value = 2,message = "支付方式必须小于3",groups = {UpdateGroup.class})
     private Integer payMethod;
-    @NotNull(message = "用户ID不能为空",groups = {AddGroup.class})
-    @Min(value = 1,message = "用户ID必须大于0",groups = {AddGroup.class})
-    private Long userId;
     @NotNull(message = "商品ID不能为空",groups = {AddGroup.class})
     @Min(value = 1,message = "商品ID必须大于0",groups = {AddGroup.class})
     private Long productId;
@@ -49,7 +46,6 @@ public class OrderDTO {
                 "id=" + id +
                 ", status=" + status +
                 ", payMethod=" + payMethod +
-                ", userId=" + userId +
                 ", productId=" + productId +
                 ", skuId=" + skuId +
                 ", quantity=" + quantity +
@@ -79,14 +75,6 @@ public class OrderDTO {
 
     public void setPayMethod(Integer payMethod) {
         this.payMethod = payMethod;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public Long getProductId() {

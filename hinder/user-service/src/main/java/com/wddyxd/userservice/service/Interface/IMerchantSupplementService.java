@@ -20,6 +20,8 @@ public interface IMerchantSupplementService extends IService<MerchantSupplement>
 
     public String getShopName(Long id);
 
+    public boolean getIsValidShop(Long id);
+
     public void add(MerchantSupplement merchantSupplement);
 
     public void delete(Long id);

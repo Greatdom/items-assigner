@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wddyxd.userservice.mapper.MerchantSupplementMapper"> <!-- 替换为你的实际包路径 -->
+
+    <select id="getIsValidShop" resultType="java.lang.Boolean">
+        SELECT
+        EXISTS (
+        SELECT 1
+        FROM `user` u
+        INNER JOIN `merchant_supplement` ms
+        ON u.`id` = ms.`user_id`
+        WHERE u.`id` = #{id}
+        AND u.`status` = 0
+        AND u.`is_deleted` = 0
+        AND ms.`shop_status` = 0
+        AND ms.`is_deleted` = 0
+        )
+    </select>
+
+</mapper>

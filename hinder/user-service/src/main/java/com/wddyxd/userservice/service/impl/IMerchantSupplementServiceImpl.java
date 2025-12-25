@@ -58,6 +58,11 @@ public class IMerchantSupplementServiceImpl extends ServiceImpl<MerchantSuppleme
     }
 
     @Override
+    public boolean getIsValidShop(Long id) {
+        return baseMapper.getIsValidShop(id);
+    }
+
+    @Override
     @Transactional
     public void add(MerchantSupplement merchantSupplement) {
         baseMapper.insert(merchantSupplement);

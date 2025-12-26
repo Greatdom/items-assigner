@@ -26,4 +26,5 @@ public interface IUserAddressService extends IService<UserAddress> {
 
     public void delete(Long id);
 
+    public UserAddress get(Long id);
 }

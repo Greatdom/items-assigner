@@ -1,6 +1,8 @@
 package com.wddyxd.orderservice.service.impl;
 
 
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -12,15 +14,20 @@ import com.wddyxd.feign.clients.productservice.ProductClient;
 import com.wddyxd.feign.clients.productservice.ProductSkuClient;
 import com.wddyxd.feign.clients.productservice.UserCouponClient;
 import com.wddyxd.feign.clients.userservice.MerchantSupplementClient;
+import com.wddyxd.feign.clients.userservice.UserAddressClient;
 import com.wddyxd.feign.clients.userservice.UserClient;
 import com.wddyxd.feign.pojo.productservice.Coupon;
 import com.wddyxd.feign.pojo.productservice.ProductDetailVO;
+import com.wddyxd.feign.pojo.productservice.ProductProfileVO;
 import com.wddyxd.feign.pojo.productservice.ProductSkuVO;
+import com.wddyxd.feign.pojo.userservice.usercontroller.UserAddress;
 import com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO;
+import com.wddyxd.orderservice.mapper.OrderAddressMapper;
 import com.wddyxd.orderservice.mapper.OrderMainMapper;
 import com.wddyxd.orderservice.pojo.DTO.OrderDTO;
 import com.wddyxd.orderservice.pojo.VO.OrderDetailVO;
 import com.wddyxd.orderservice.pojo.VO.OrderProfileVO;
+import com.wddyxd.orderservice.pojo.entity.OrderAddress;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
@@ -30,10 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -66,6 +70,12 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
     @Autowired
     private UserClient userClient;
 
+    @Autowired
+    private UserAddressClient userAddressClient;
+
+    @Autowired
+    private OrderAddressMapper orderAddressMapper;
+
     @Override
     public void add(OrderDTO orderDTO) {
         //TODO 要注意超卖问题,分布事务问题,并发性能问题,幂等性问题等,将该订单传入定时任务,如果15分钟没有付款就执行取消订单操作
@@ -81,6 +91,11 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         boolean isSkuExist = false;
         for(ProductSkuVO productSkuVO:getProductDetailVO.getData().getProductSkuVO())
             if(productSkuVO.getId().equals(orderDTO.getSkuId())){
+                //第一次判断quantity是否比sku的stock大
+                if(orderDTO.getQuantity()<productSkuVO.getStock()){
+                    log.error("商品库存不足");
+                    throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+                }
                 orderMain.setSkuSpecs(productSkuVO.getSpecs());
                 isSkuExist = true;
                 break;
@@ -89,6 +104,7 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
             log.error("商品规格不存在");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
+
         //设置订单ID
         orderMain.setId(IdWorker.getId());
         //设置用户ID
@@ -112,22 +128,20 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
             log.error("不合法的优惠券列表");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
-        //第一次判断quantity是否比sku的stock大
-
         //然后查看商家是否在开张
         Result<Boolean> getIsValidShop = merchantSupplementClient.getIsValidShop(getProductDetailVO.getData().getUserProfileVO().getId());
         //判断结果集合法性
 
         //TODO 消息队列的异步操作:
         //远程调用商品和规格库存减少接口,远程接口第二次判断quantity是否比sku的stock大
-        Result<Void> getProductSkuConsume= productSkuClient.updateConsume(orderDTO.getSkuId(), orderDTO.getQuantity());
+        Result<Void> getProductSkuConsume= productSkuClient.updateConsume(orderDTO.getSkuId(), orderMain.getQuantity());
         //判断结果集合法性
         //然后在用户领取的优惠券标记优惠券已经使用,然后计算订单总价格和实际价格
-        Result<List<Long>> getUserCouponConsume = userCouponClient.consume(orderDTO.getCouponIds(), orderDTO.getId());
+        Result<List<Long>> getUserCouponConsume = userCouponClient.consume(orderDTO.getCouponIds(), orderMain.getId());
         //判断结果集合法性
         //计算totalPrice和payPrice
         orderMain.setTotalPrice(getProductDetailVO.getData().getProductProfileVO().getPrice()
-                .multiply(new BigDecimal(orderDTO.getQuantity())));
+                .multiply(new BigDecimal(orderMain.getQuantity())));
         //TODO 要根据优惠券的使用情况和性质计算payPrice
         orderMain.setPayPrice(orderMain.getTotalPrice());
         //添加remark,如果订单发起成功则记录优惠券使用情况,否则则记录订单发起失败
@@ -145,6 +159,17 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         orderStatusLog.setOperateTime(new Date());
         orderStatusLog.setRemark("订单待付款");
         orderStatusLogService.save(orderStatusLog);
+        //然后存储收货地址快照
+        Result<UserAddress> userAddress = userAddressClient.get(userId);
+        //判断结果集合法性
+        OrderAddress orderAddress = new OrderAddress();
+        BeanUtil.copyProperties(userAddress.getData(),orderAddress);
+        orderAddress.setOrderId(orderMain.getId());
+        orderAddress.setOrderId(IdWorker.getId());
+        orderAddress.setUpdateTime(new Date());
+        orderAddress.setCreateTime(new Date());
+        orderAddressMapper.insert(orderAddress);
+
         //将该订单存入数据库
         baseMapper.insert(orderMain);
 
@@ -171,45 +196,113 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
                 .stream()
                 .map(OrderProfileVO::getMerchantId)
                 .toList();
-//        List<UserProfileVO> userProfileVOS = userClient.profiles(merchantIds);
-
-        //        在用户端根据订单的状态(全部,未付款,待发货,待收货,已完成,已取消)来查询没有被删除的订单的列表,
-//- 当再次访问这个接口时前一次的返回结果会保留,
-//- 携带的用户信息是商家信息
-//- 返回List<OrderProfileVO>并由PageResult包装
+        Result<HashMap<Long,UserProfileVO>> getUserProfileVOS = userClient.profiles(merchantIds.toArray(Long[]::new));
+        if(getUserProfileVOS==null||getUserProfileVOS.getData()==null||getUserProfileVOS.getCode()!=200){
+            log.error("获取用户信息失败");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        HashMap<Long,UserProfileVO> userProfileVOS = getUserProfileVOS.getData();
+        //判断结果集合法性
+        for(OrderProfileVO orderProfileVO:page.getRecords()){
+            if(userProfileVOS.containsKey(orderProfileVO.getMerchantId())){
+                com.wddyxd.orderservice.pojo.VO.UserProfileVO userProfileVO = new com.wddyxd.orderservice.pojo.VO.UserProfileVO();
+                BeanUtil.copyProperties(userProfileVOS.get(orderProfileVO.getMerchantId()),userProfileVO);
+                orderProfileVO.setUserProfileVO(userProfileVO);
+            }
+        }
+        return page;
     }
 
     @Override
     public Page<OrderProfileVO> listMerchant(SearchDTO searchDTO) {
         Page<OrderProfileVO> page = baseMapper.listMerchant(
                 new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), searchDTO.getSearch());
-        return null;
-        //        在商户端根据订单的状态,
-//- 来查询没有被删除的订单的列表,
-//- 支持根据商户名称,购买者名称,商品名称和商品规格进行关键字检索
-//- - 携带的用户信息是用户信息
-//- 返回List<OrderProfileVO>并由PageResult包装
+        List<Long> buyerIds = page.getRecords()
+                .stream()
+                .map(OrderProfileVO::getBuyerId)
+                .toList();
+        Result<HashMap<Long,UserProfileVO>> getUserProfileVOS = userClient.profiles(buyerIds.toArray(Long[]::new));
+        if(getUserProfileVOS==null||getUserProfileVOS.getData()==null||getUserProfileVOS.getCode()!=200){
+            log.error("获取用户信息失败");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        HashMap<Long,UserProfileVO> userProfileVOS = getUserProfileVOS.getData();
+        //判断结果集合法性
+        for(OrderProfileVO orderProfileVO:page.getRecords()){
+            if(userProfileVOS.containsKey(orderProfileVO.getBuyerId())){
+                com.wddyxd.orderservice.pojo.VO.UserProfileVO userProfileVO = new com.wddyxd.orderservice.pojo.VO.UserProfileVO();
+                BeanUtil.copyProperties(userProfileVOS.get(orderProfileVO.getBuyerId()),userProfileVO);
+                orderProfileVO.setUserProfileVO(userProfileVO);
+            }
+        }
+        return page;
     }
 
     @Override
     public Page<OrderProfileVO> listAdmin(SearchDTO searchDTO) {
-        Page<OrderProfileVO> page = baseMapper.listAdmin(
+        Page<OrderProfileVO> page = baseMapper.listMerchant(
                 new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), searchDTO.getSearch());
-        return null;
-//        在后台端根据订单的状态,
-//- 来查询没有被删除的订单的列表,
-//- 支持根据商户名称,购买者名称,商品名称和商品规格进行关键字检索
-//- - 携带的用户信息是用户信息
-//- 返回List<OrderProfileVO>并由PageResult包装
+        List<Long> buyerIds = page.getRecords()
+                .stream()
+                .map(OrderProfileVO::getBuyerId)
+                .toList();
+        Result<HashMap<Long,UserProfileVO>> getUserProfileVOS = userClient.profiles(buyerIds.toArray(Long[]::new));
+        if(getUserProfileVOS==null||getUserProfileVOS.getData()==null||getUserProfileVOS.getCode()!=200){
+            log.error("获取用户信息失败");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        HashMap<Long,UserProfileVO> userProfileVOS = getUserProfileVOS.getData();
+        //判断结果集合法性
+        for(OrderProfileVO orderProfileVO:page.getRecords()){
+            if(userProfileVOS.containsKey(orderProfileVO.getBuyerId())){
+                com.wddyxd.orderservice.pojo.VO.UserProfileVO userProfileVO = new com.wddyxd.orderservice.pojo.VO.UserProfileVO();
+                BeanUtil.copyProperties(userProfileVOS.get(orderProfileVO.getBuyerId()),userProfileVO);
+                orderProfileVO.setUserProfileVO(userProfileVO);
+            }
+        }
+        return page;
     }
 
     @Override
     public OrderDetailVO detail(Long id) {
-        return null;
+        //获取OrderMain
+        OrderMain orderMain = baseMapper.selectById(id);
+        //获取ProductProfileVO
+        Result<ProductProfileVO> getProductProfileVO = productClient.get(orderMain.getProductId());
+        if(getProductProfileVO==null||getProductProfileVO.getData()==null||getProductProfileVO.getCode()!=200){
+            log.error("获取商品信息失败");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        com.wddyxd.orderservice.pojo.VO.ProductProfileVO productProfileVO = new com.wddyxd.orderservice.pojo.VO.ProductProfileVO();
+        BeanUtil.copyProperties(getProductProfileVO.getData(),productProfileVO);
+        //获取UserProfileVO
+        List<Long> counterPartIds = new ArrayList<>();
+        counterPartIds.add(orderMain.getBuyerId());
+        if(!Objects.equals(orderMain.getBuyerId(), orderMain.getMerchantId()))
+            counterPartIds.add(orderMain.getMerchantId());
+        Result<HashMap<Long,UserProfileVO>> getUserProfileVOS = userClient.profiles(counterPartIds.toArray(Long[]::new));
+        if(getUserProfileVOS==null||getUserProfileVOS.getData()==null||getUserProfileVOS.getCode()!=200){
+            log.error("获取用户信息失败");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        HashMap<String,com.wddyxd.orderservice.pojo.VO.UserProfileVO> resultUserProfileVOS = new HashMap<>();
+        com.wddyxd.orderservice.pojo.VO.UserProfileVO buyer = new com.wddyxd.orderservice.pojo.VO.UserProfileVO();
+        com.wddyxd.orderservice.pojo.VO.UserProfileVO merchant = new com.wddyxd.orderservice.pojo.VO.UserProfileVO();
+        BeanUtil.copyProperties(getUserProfileVOS.getData().get(orderMain.getBuyerId()),buyer);
+        BeanUtil.copyProperties(getUserProfileVOS.getData().get(orderMain.getMerchantId()),merchant);
+        resultUserProfileVOS.put(OrderDetailVO.userProfileVOMapKeys.buyer.getKey(),buyer);
+        resultUserProfileVOS.put(OrderDetailVO.userProfileVOMapKeys.merchant.getKey(),merchant);
+        //获取OrderAddress
+        OrderAddress orderAddress = orderAddressMapper.selectOne(new LambdaQueryWrapper<OrderAddress>()
+                .eq(OrderAddress::getOrderId, id)
+        );
+        OrderDetailVO orderDetailVO = new OrderDetailVO();
+        orderDetailVO.setOrderMain(orderMain);
+        orderDetailVO.setOrderAddress(orderAddress);
+        orderDetailVO.setUserProfileVOMap(resultUserProfileVOS);
+        orderDetailVO.setProductProfileVO(productProfileVO);
+        return orderDetailVO;
     }
 
-    @Override
-    public void update(OrderDTO orderDTO) {
 
-    }
 }

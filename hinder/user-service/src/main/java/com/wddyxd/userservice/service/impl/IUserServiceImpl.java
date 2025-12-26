@@ -67,8 +67,6 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public Page<User> List(SearchDTO searchDTO) {
-        searchDTO.validatePageParams(searchDTO);
-
         LambdaQueryWrapper<User> wrapper = Wrappers.lambdaQuery(User.class)
                 .like(StringUtils.hasText(searchDTO.getSearch()), User::getUsername, searchDTO.getSearch());
 
@@ -86,8 +84,12 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     }
 
     @Override
-    public List<UserProfileVO> profiles(Long[] ids) {
-        return baseMapper.selectUserProfileVOListByIds(ids);
+    public HashMap<Long,UserProfileVO> profiles(Long[] ids) {
+        List<UserProfileVO> userProfileVOList = baseMapper.selectUserProfileVOListByIds(ids);
+        HashMap<Long,UserProfileVO> map = new HashMap<>();
+        for (UserProfileVO userProfileVO : userProfileVOList)
+            map.put(userProfileVO.getId(),userProfileVO);
+        return map;
     }
 
     @Override

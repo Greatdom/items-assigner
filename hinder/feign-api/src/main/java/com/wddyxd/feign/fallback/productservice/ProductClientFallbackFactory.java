@@ -7,6 +7,7 @@ import com.wddyxd.feign.clients.productservice.ProductClient;
 import com.wddyxd.feign.clients.userservice.AuthClient;
 import com.wddyxd.feign.fallback.userservice.AuthClientFallbackFactory;
 import com.wddyxd.feign.pojo.productservice.ProductDetailVO;
+import com.wddyxd.feign.pojo.productservice.ProductProfileVO;
 import com.wddyxd.feign.pojo.userservice.authcontroller.CurrentUserDTO;
 import com.wddyxd.feign.pojo.userservice.authcontroller.PasswordSecurityGetterVO;
 import org.slf4j.Logger;
@@ -30,6 +31,12 @@ public class ProductClientFallbackFactory implements FallbackFactory<ProductClie
         return new ProductClient() {
             @Override
             public Result<ProductDetailVO> visit(Long id) {
+                log.error(LogPrompt.FEIGN_ERROR.msg);
+                return Result.error();
+            }
+
+            @Override
+            public Result<ProductProfileVO> get(Long id) {
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }

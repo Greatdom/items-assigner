@@ -10,6 +10,7 @@ import com.wddyxd.productservice.pojo.DTO.ProductListDTO;
 import com.wddyxd.productservice.pojo.VO.ProductDetailVO;
 import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.entity.Product;
+import jakarta.validation.constraints.Min;
 
 /**
  * @program: items-assigner
@@ -36,4 +37,5 @@ public interface IProductService extends IService<Product> {
 
     public void delete(Long id);
 
+    ProductProfileVO get(@Min(value = 1, message = "ID必须大于0") Long id);
 }

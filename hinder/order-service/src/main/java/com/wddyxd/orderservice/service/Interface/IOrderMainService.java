@@ -28,6 +28,4 @@ public interface IOrderMainService extends IService<OrderMain> {
 
     public OrderDetailVO detail(Long id);
 
-    public void update(OrderDTO orderDTO);
-
 }

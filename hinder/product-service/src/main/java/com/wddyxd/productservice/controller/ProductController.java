@@ -42,6 +42,14 @@ public class ProductController {
 
     private static final Logger log = LoggerFactory.getLogger(ProductController.class);
 
+    @GetMapping("/get/{id}")
+    //远程调用接口
+    @Operation(summary = "获取商品接口", description = "远程调用接口")
+    public Result<ProductProfileVO> get(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id) {
+        log.info("product.get");
+        return Result.success(productService.get(id));
+    }
+
     @GetMapping("/list")
     //需要product.list权限而且(参数userId等于访问者的id或访问者是管理员)
     @Operation(summary = "分页获取商品列表接口", description = "在后台和商户端的商品管理界面查看所有商品")

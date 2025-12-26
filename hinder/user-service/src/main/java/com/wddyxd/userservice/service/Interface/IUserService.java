@@ -29,7 +29,7 @@ public interface IUserService extends IService<User> {
 
     public UserDetailVO detail(Long id);
 
-    public List<UserProfileVO> profiles(Long[] ids);
+    public HashMap<Long,UserProfileVO> profiles(Long[] ids);
 
     public UserProfileVO profile(Long id);
 

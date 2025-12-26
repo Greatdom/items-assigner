@@ -37,13 +37,23 @@ public class UserAddressController {
 
     private static final Logger log = LoggerFactory.getLogger(UserAddressController.class);
 
-    @GetMapping("/list")
+    @GetMapping("/get/{id}")
     //访问者的id等于参数的id
     @Operation(summary = "获取个人用户地址簿", description = "获取个人用户地址簿")
-    public Result<List<UserAddress>> list(){
+    public Result<UserAddress> get(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
 //        在用户端个人中心或后台的用户管理可查询用户端地址簿,返回List<UserAddressDTO>
 //- 只需返回没有被逻辑删除的地址
         log.info("获取个人用户地址簿");
+        return Result.success(userAddressService.get(id));
+    }
+
+    @GetMapping("/list")
+    //访问者的id等于参数的id
+    @Operation(summary = "获取个人用户所有地址簿", description = "获取个人用户所有地址簿")
+    public Result<List<UserAddress>> list(){
+//        在用户端个人中心或后台的用户管理可查询用户端地址簿,返回List<UserAddressDTO>
+//- 只需返回没有被逻辑删除的地址
+        log.info("获取个人用户所有地址簿");
         return Result.success(userAddressService.List());
     }
 

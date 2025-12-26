@@ -40,6 +40,14 @@ public class IUserAddressServiceImpl extends ServiceImpl<UserAddressMapper, User
     private static final Logger log = LoggerFactory.getLogger(IUserAddressServiceImpl.class);
 
     @Override
+    public UserAddress get(Long id) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<UserAddress>()
+                .eq(UserAddress::getUserId, id)
+                .eq(UserAddress::getIsDefault, true)
+                .eq(UserAddress::getIsDeleted, 0));
+    }
+
+    @Override
     public List<UserAddress> List() {
         Long id = getCurrentUserInfoService.getCurrentUserId();
         if (id == null||id<=0)throw new CustomException(ResultCodeEnum.PARAM_ERROR);

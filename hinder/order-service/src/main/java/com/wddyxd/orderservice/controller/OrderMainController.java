@@ -103,12 +103,4 @@ public class OrderMainController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
-    @PutMapping("/update")
-    //需要orderStatusLog.add权限
-    @Operation(summary = "修改订单信息接口", description = "在订单状态改变后被订单日志接口调用")
-    public Result<Void> update(@Validated(UpdateGroup.class) @RequestBody OrderDTO orderDTO){
-//       传入OrderUpdateDTO,修改订单信息
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
-    }
-
 }

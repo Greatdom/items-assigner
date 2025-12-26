@@ -73,4 +73,19 @@ public class OrderDetailVO {
     public void setOrderAddress(OrderAddress orderAddress) {
         this.orderAddress = orderAddress;
     }
+
+    public enum userProfileVOMapKeys {
+        buyer( "buyer"),
+         merchant( "merchant");
+
+        private final String key;
+         userProfileVOMapKeys(String key) {
+            this.key = key;
+        }
+
+        public String getKey() {
+            return key;
+        }
+    }
+
 }

@@ -66,6 +66,10 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
     private static final Logger log = LoggerFactory.getLogger(IProductServiceImpl.class);
 
+    @Override
+    public ProductProfileVO get(Long id) {
+        return baseMapper.getProductProfileVOById(id);
+    }
 
     @Override
     public Page<ProductProfileVO> List(ProductListDTO productListDTO) {

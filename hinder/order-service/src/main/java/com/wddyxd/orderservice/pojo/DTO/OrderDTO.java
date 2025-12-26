@@ -17,17 +17,6 @@ import java.util.Arrays;
  **/
 
 public class OrderDTO {
-    @NotNull(message = "订单ID不能为空",groups = {UpdateGroup.class})
-    @Min(value = 1,message = "订单ID必须大于0",groups = {UpdateGroup.class})
-    private Long id;
-    @NotNull(message = "订单状态不能为空",groups = {UpdateGroup.class})
-    @Min(value = 0,message = "订单状态必须大于0",groups = {UpdateGroup.class})
-    @Max(value = 5,message = "订单状态必须小于6",groups = {UpdateGroup.class})
-    private Integer status;
-    @NotNull(message = "支付方式不能为空",groups = {UpdateGroup.class})
-    @Min(value = 0,message = "支付方式必须大于0",groups = {UpdateGroup.class})
-    @Max(value = 2,message = "支付方式必须小于3",groups = {UpdateGroup.class})
-    private Integer payMethod;
     @NotNull(message = "商品ID不能为空",groups = {AddGroup.class})
     @Min(value = 1,message = "商品ID必须大于0",groups = {AddGroup.class})
     private Long productId;
@@ -43,38 +32,11 @@ public class OrderDTO {
     @Override
     public String toString() {
         return "OrderDTO{" +
-                "id=" + id +
-                ", status=" + status +
-                ", payMethod=" + payMethod +
                 ", productId=" + productId +
                 ", skuId=" + skuId +
                 ", quantity=" + quantity +
                 ", couponIds=" + Arrays.toString(couponIds) +
                 '}';
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getPayMethod() {
-        return payMethod;
-    }
-
-    public void setPayMethod(Integer payMethod) {
-        this.payMethod = payMethod;
     }
 
     public Long getProductId() {

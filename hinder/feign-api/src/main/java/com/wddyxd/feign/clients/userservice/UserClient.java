@@ -42,6 +42,6 @@ public interface UserClient {
     public Result<Void> updateAvatar(@Validated(UpdateGroup.class) @RequestBody UpdateAvatarDTO updateAvatarDTO);
 
     @GetMapping("/user/user/profiles")
-    public Result<List<UserProfileVO>> profiles(@RequestParam Long[] ids);
+    public Result<HashMap<Long,UserProfileVO>> profiles(@RequestParam Long[] ids);
 
 }

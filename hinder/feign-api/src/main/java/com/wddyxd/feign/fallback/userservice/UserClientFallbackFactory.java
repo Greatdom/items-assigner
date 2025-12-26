@@ -49,7 +49,7 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
             }
 
             @Override
-            public Result<List<UserProfileVO>> profiles(Long[] ids) {
+            public Result<HashMap<Long,UserProfileVO>> profiles(Long[] ids) {
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }

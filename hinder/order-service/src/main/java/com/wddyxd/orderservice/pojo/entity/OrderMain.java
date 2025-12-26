@@ -16,7 +16,8 @@ import java.util.Date;
  **/
 @TableName("order_main")
 public class OrderMain extends BaseEntity implements Serializable {
-    private Long userId;
+    private Long buyerId;
+    private Long merchantId;
     private Long productId;
     private Long skuId;
     private Integer quantity;//购买数量
@@ -32,7 +33,8 @@ public class OrderMain extends BaseEntity implements Serializable {
     public String toString() {
         return "OrderMain{" +
                 super.toString() +
-                ", userId=" + userId +
+                ", merchantId=" + merchantId +
+                ", buyerId=" + buyerId +
                 ", productId=" + productId +
                 ", skuId=" + skuId +
                 ", quantity=" + quantity +
@@ -46,12 +48,20 @@ public class OrderMain extends BaseEntity implements Serializable {
                 '}';
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getMerchantId() {
+        return merchantId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
+    }
+
+    public Long getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(Long buyerId) {
+        this.buyerId = buyerId;
     }
 
     public Long getProductId() {

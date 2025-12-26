@@ -84,7 +84,8 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         //设置订单ID
         orderMain.setId(IdWorker.getId());
         //设置用户ID
-        orderMain.setUserId(userId);
+        orderMain.setBuyerId(userId);
+        orderMain.setMerchantId(getProductDetailVO.getData().getProductProfileVO().getUserId());
         //设置商品ID
         orderMain.setProductId(orderDTO.getProductId());
         //设置商品规格ID
@@ -132,7 +133,7 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         OrderStatusLog orderStatusLog = new OrderStatusLog();
         orderStatusLog.setOrderId(orderMain.getId());
         orderStatusLog.setStatus(0);
-        orderStatusLog.setOperatorId(orderMain.getUserId());
+        orderStatusLog.setOperatorId(orderMain.getBuyerId());
         orderStatusLog.setOperateTime(new Date());
         orderStatusLog.setRemark("订单待付款");
         orderStatusLogService.save(orderStatusLog);

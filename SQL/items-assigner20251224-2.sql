@@ -193,26 +193,26 @@ CREATE TABLE `order_comment`  (
 -- Table structure for order_main
 -- ----------------------------
 DROP TABLE IF EXISTS `order_main`;
-CREATE TABLE `order_main`  (
+CREATE TABLE `order_main` (
   `id` bigint NOT NULL COMMENT '主键',
-  `user_id` bigint NOT NULL COMMENT '下单者ID',
+  `merchant_id` bigint NOT NULL COMMENT '商户ID',
+  `buyer_id` bigint NOT NULL COMMENT '下单者ID',
   `product_id` bigint NOT NULL COMMENT '商品ID',
   `sku_id` bigint NOT NULL COMMENT '规格ID',
-  `quantity` int NOT NULL DEFAULT 1 COMMENT '购买数量',
-  `total_price` decimal(10, 2) NOT NULL COMMENT '订单总金额',
-  `pay_price` decimal(10, 2) NOT NULL COMMENT '实际支付金额',
+  `quantity` int NOT NULL DEFAULT '1' COMMENT '购买数量',
+  `total_price` decimal(10,2) NOT NULL COMMENT '订单总金额',
+  `pay_price` decimal(10,2) NOT NULL COMMENT '实际支付金额',
   `product_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '商品名称快照',
-  `sku_specs` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '规格快照',
-  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '订单备注(比如优惠明细，发货要求等)',
+  `sku_specs` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '规格快照',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '订单备注(比如优惠明细，发货要求等)',
   `pay_method` tinyint NOT NULL COMMENT '0-未选择 1-微信支付 2-支付宝支付',
-  `status` tinyint NOT NULL COMMENT '0-待付款 1-待发货 2-待收货 3-已完成 4-已取消',
-  `is_deleted` tinyint UNSIGNED NOT NULL DEFAULT 0 COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
+  `status` tinyint NOT NULL COMMENT '0-待付款 1-待发货 2-待收货 3-已完成 4-已取消 5-发起失败',
+  `is_deleted` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '逻辑删除 1（true）已删除， 0（false）未删除',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `update_time` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `idx_product_id`(`product_id` ASC) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '订单详情表' ROW_FORMAT = DYNAMIC;
-
+  KEY `idx_product_id` (`product_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='订单详情表';
 -- ----------------------------
 -- Records of order_main
 -- ----------------------------

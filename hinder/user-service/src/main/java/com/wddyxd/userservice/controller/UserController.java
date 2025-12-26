@@ -80,7 +80,7 @@ public class UserController {
     @GetMapping("/profiles")
     //任何用户无需登录都可访问
     @Operation(summary = "多用户概要接口", description = "远程调用接口")
-    public Result<List<HashMap<String,UserProfileVO>>> profiles(@RequestParam Long[] buyers, @RequestParam Long[] merchants){
+    public Result<List<UserProfileVO>> profiles(@RequestParam Long[] ids){
 
         log.info("user.profiles");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

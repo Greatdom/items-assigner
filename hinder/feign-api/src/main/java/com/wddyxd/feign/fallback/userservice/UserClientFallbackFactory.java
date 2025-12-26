@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,13 +31,13 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
     public UserClient create(Throwable cause) {
         return new UserClient() {
             @Override
-            public Result<UserProfileVO> profile(@PathVariable Long id){
+            public Result<UserProfileVO> profile(Long id){
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }
 
             @Override
-            public Result<String> getUsername(@PathVariable Long id) {
+            public Result<String> getUsername(Long id) {
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }
@@ -48,7 +49,7 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
             }
 
             @Override
-            public Result<List<HashMap<String, UserProfileVO>>> profiles(Long[] buyers, Long[] merchants) {
+            public Result<List<UserProfileVO>> profiles(Long[] ids) {
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }

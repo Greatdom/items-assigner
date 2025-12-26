@@ -86,7 +86,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     }
 
     @Override
-    public List<HashMap<String, UserProfileVO>> profiles(Long[] buyers, Long[] merchants) {
+    public List<UserProfileVO> profiles(Long[] ids) {
         return null;
     }
 

@@ -2,6 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wddyxd.userservice.mapper.UserMapper"> <!-- 替换为你的实际包路径 -->
 
+    <resultMap id="UserProfileVOMap" type="com.wddyxd.userservice.pojo.VO.UserProfileVO">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="avatar" property="avatar"/>
+    </resultMap>
 
+    <sql id="BaseUserProfileVOSQL">
+        SELECT
+        id,
+        username,
+        nick_name,
+        avatar
+        FROM
+        `user`
+    </sql>
+
+    <select id="selectUserProfileVOById" resultMap="UserProfileVOMap">
+        <include refid="BaseUserProfileVOSQL"/>
+        WHERE
+        id = #{id}
+        AND is_deleted = 0
+    </select>
+
+    <select id="selectUserProfileVOListByIds" resultMap="UserProfileVOMap">
+        <include refid="BaseUserProfileVOSQL"/>
+        WHERE
+        id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        AND is_deleted = 0
+    </select>
 
 </mapper>

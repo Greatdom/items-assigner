@@ -2,6 +2,7 @@ package com.wddyxd.orderservice.service.impl;
 
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
@@ -11,11 +12,14 @@ import com.wddyxd.feign.clients.productservice.ProductClient;
 import com.wddyxd.feign.clients.productservice.ProductSkuClient;
 import com.wddyxd.feign.clients.productservice.UserCouponClient;
 import com.wddyxd.feign.clients.userservice.MerchantSupplementClient;
+import com.wddyxd.feign.clients.userservice.UserClient;
 import com.wddyxd.feign.pojo.productservice.Coupon;
 import com.wddyxd.feign.pojo.productservice.ProductDetailVO;
 import com.wddyxd.feign.pojo.productservice.ProductSkuVO;
+import com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO;
 import com.wddyxd.orderservice.mapper.OrderMainMapper;
 import com.wddyxd.orderservice.pojo.DTO.OrderDTO;
+import com.wddyxd.orderservice.pojo.VO.OrderDetailVO;
 import com.wddyxd.orderservice.pojo.VO.OrderProfileVO;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
@@ -30,6 +34,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @program: items-assigner
@@ -57,6 +62,9 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
 
     @Autowired
     private IOrderStatusLogService orderStatusLogService;
+
+    @Autowired
+    private UserClient userClient;
 
     @Override
     public void add(OrderDTO orderDTO) {
@@ -156,22 +164,47 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
     }
 
     @Override
-    public OrderProfileVO listUser(SearchDTO searchDTO) {
-        return null;
+    public Page<OrderProfileVO> listUser(SearchDTO searchDTO) {
+        Page<OrderProfileVO> page = baseMapper.listUser(
+                new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), searchDTO.getSearch());
+        List<Long> merchantIds = page.getRecords()
+                .stream()
+                .map(OrderProfileVO::getMerchantId)
+                .toList();
+//        List<UserProfileVO> userProfileVOS = userClient.profiles(merchantIds);
+
+        //        在用户端根据订单的状态(全部,未付款,待发货,待收货,已完成,已取消)来查询没有被删除的订单的列表,
+//- 当再次访问这个接口时前一次的返回结果会保留,
+//- 携带的用户信息是商家信息
+//- 返回List<OrderProfileVO>并由PageResult包装
     }
 
     @Override
-    public OrderProfileVO listMerchant(SearchDTO searchDTO) {
+    public Page<OrderProfileVO> listMerchant(SearchDTO searchDTO) {
+        Page<OrderProfileVO> page = baseMapper.listMerchant(
+                new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), searchDTO.getSearch());
         return null;
+        //        在商户端根据订单的状态,
+//- 来查询没有被删除的订单的列表,
+//- 支持根据商户名称,购买者名称,商品名称和商品规格进行关键字检索
+//- - 携带的用户信息是用户信息
+//- 返回List<OrderProfileVO>并由PageResult包装
     }
 
     @Override
-    public OrderProfileVO listAdmin(SearchDTO searchDTO) {
+    public Page<OrderProfileVO> listAdmin(SearchDTO searchDTO) {
+        Page<OrderProfileVO> page = baseMapper.listAdmin(
+                new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), searchDTO.getSearch());
         return null;
+//        在后台端根据订单的状态,
+//- 来查询没有被删除的订单的列表,
+//- 支持根据商户名称,购买者名称,商品名称和商品规格进行关键字检索
+//- - 携带的用户信息是用户信息
+//- 返回List<OrderProfileVO>并由PageResult包装
     }
 
     @Override
-    public OrderProfileVO detail(Long id) {
+    public OrderDetailVO detail(Long id) {
         return null;
     }
 

@@ -87,14 +87,12 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public List<UserProfileVO> profiles(Long[] ids) {
-        return null;
+        return baseMapper.selectUserProfileVOListByIds(ids);
     }
 
     @Override
     public UserProfileVO profile(Long id) {
-        //因为其他用户也会调用这个方法,所以保留id参数
-        User user = this.getById(id);
-        return BeanUtil.copyProperties(user, UserProfileVO.class);
+        return baseMapper.selectUserProfileVOById(id);
     }
 
 

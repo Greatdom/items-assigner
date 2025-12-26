@@ -13,7 +13,8 @@ import java.math.BigDecimal;
 public class OrderProfileVO {
 
     private Long id;
-    private Long userId;
+    private Long buyerId;
+    private Long merchantId;
     private Long productId;
     private Long skuId;
     private Integer quantity;
@@ -34,7 +35,8 @@ public class OrderProfileVO {
     public String toString() {
         return "OrderProfileVO{" +
                 "id=" + id +
-                ", userId=" + userId +
+                ", buyerId=" + buyerId +
+                ", merchantId=" + merchantId +
                 ", productId=" + productId +
                 ", skuId=" + skuId +
                 ", quantity=" + quantity +
@@ -57,12 +59,20 @@ public class OrderProfileVO {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getBuyerId() {
+        return buyerId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setBuyerId(Long buyerId) {
+        this.buyerId = buyerId;
+    }
+
+    public Long getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(Long merchantId) {
+        this.merchantId = merchantId;
     }
 
     public Long getProductId() {

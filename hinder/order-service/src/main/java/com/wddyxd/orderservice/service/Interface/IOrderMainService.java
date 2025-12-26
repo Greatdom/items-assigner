@@ -1,9 +1,11 @@
 package com.wddyxd.orderservice.service.Interface;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.orderservice.pojo.DTO.OrderDTO;
+import com.wddyxd.orderservice.pojo.VO.OrderDetailVO;
 import com.wddyxd.orderservice.pojo.VO.OrderProfileVO;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 
@@ -18,13 +20,13 @@ public interface IOrderMainService extends IService<OrderMain> {
 
     public void add(OrderDTO orderDTO);
 
-    public OrderProfileVO listUser(SearchDTO searchDTO);
+    public Page<OrderProfileVO> listUser(SearchDTO searchDTO);
 
-    public OrderProfileVO listMerchant(SearchDTO searchDTO);
+    public Page<OrderProfileVO> listMerchant(SearchDTO searchDTO);
 
-    public OrderProfileVO listAdmin(SearchDTO searchDTO);
+    public Page<OrderProfileVO> listAdmin(SearchDTO searchDTO);
 
-    public OrderProfileVO detail(Long id);
+    public OrderDetailVO detail(Long id);
 
     public void update(OrderDTO orderDTO);
 

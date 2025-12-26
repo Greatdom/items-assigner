@@ -83,7 +83,7 @@ public class UserController {
     public Result<List<UserProfileVO>> profiles(@RequestParam Long[] ids){
 
         log.info("user.profiles");
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(userService.profiles(ids));
     }
 
     @GetMapping("/profile/{id}")

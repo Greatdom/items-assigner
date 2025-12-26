@@ -25,6 +25,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+
 
 /**
  * @program: items-assigner
@@ -72,6 +75,15 @@ public class UserController {
 //- 注意无论该用户是否被逻辑删除都应该被被查到,但不应该查到被删除的子信息
         log.info("user.detail");
     throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+    }
+
+    @GetMapping("/profiles")
+    //任何用户无需登录都可访问
+    @Operation(summary = "多用户概要接口", description = "远程调用接口")
+    public Result<List<HashMap<String,UserProfileVO>>> profiles(@RequestParam Long[] buyers, @RequestParam Long[] merchants){
+
+        log.info("user.profiles");
+        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
     @GetMapping("/profile/{id}")

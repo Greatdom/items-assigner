@@ -12,6 +12,9 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * @program: items-assigner
  * @description: description
@@ -40,6 +43,12 @@ public class UserClientFallbackFactory implements FallbackFactory<UserClient> {
 
             @Override
             public Result<Void> updateAvatar(UpdateAvatarDTO updateAvatarDTO) {
+                log.error(LogPrompt.FEIGN_ERROR.msg);
+                return Result.error();
+            }
+
+            @Override
+            public Result<List<HashMap<String, UserProfileVO>>> profiles(Long[] buyers, Long[] merchants) {
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }

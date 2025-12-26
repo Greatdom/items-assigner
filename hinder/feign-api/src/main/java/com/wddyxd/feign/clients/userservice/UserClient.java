@@ -1,6 +1,8 @@
 package com.wddyxd.feign.clients.userservice;
 
 
+import com.wddyxd.common.constant.ResultCodeEnum;
+import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.paramValidateGroup.UpdateGroup;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.fallback.userservice.UserClientFallbackFactory;
@@ -10,10 +12,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.Min;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * @program: items-assigner
@@ -39,5 +41,7 @@ public interface UserClient {
     @Operation(summary = "更新头像接口", description = "更新头像")
     public Result<Void> updateAvatar(@Validated(UpdateGroup.class) @RequestBody UpdateAvatarDTO updateAvatarDTO);
 
+    @GetMapping("/user/user/profiles")
+    public Result<List<HashMap<String,UserProfileVO>>> profiles(@RequestParam Long[] buyers, @RequestParam Long[] merchants);
 
 }

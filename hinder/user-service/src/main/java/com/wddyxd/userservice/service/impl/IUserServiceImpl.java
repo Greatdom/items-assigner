@@ -30,6 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * @program: 新建文件夹
  * @description: description
@@ -79,6 +82,11 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
         //获取用户详细信息
 
+        return null;
+    }
+
+    @Override
+    public List<HashMap<String, UserProfileVO>> profiles(Long[] buyers, Long[] merchants) {
         return null;
     }
 

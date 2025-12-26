@@ -1,6 +1,7 @@
 package com.wddyxd.orderservice.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.paramValidateGroup.AddGroup;
@@ -58,7 +59,7 @@ public class OrderMainController {
     @GetMapping("/list/user")
     //需要order.list权限而且访问者的id等于参数的userId
     @Operation(summary = "用户端分页查询订单列表接口", description = "用户端在个人中心查看订单列表")
-    public Result<OrderProfileVO> listUser(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Page<OrderProfileVO>> listUser(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
 
 //        在用户端根据订单的状态(全部,未付款,待发货,待收货,已完成,已取消)来查询没有被删除的订单的列表,
 //- 当再次访问这个接口时前一次的返回结果会保留,
@@ -70,7 +71,7 @@ public class OrderMainController {
     @GetMapping("/list/merchant")
     //需要order.list权限而且访问者的id等于参数的userId而且是商户
     @Operation(summary = "商户端分页查询订单列表接口", description = "商户端在订单管理页面查看商家的所有商品的订单列表")
-    public Result<OrderProfileVO> listMerchant(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Page<OrderProfileVO>> listMerchant(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
 
 //        在商户端根据订单的状态,
 //- 来查询没有被删除的订单的列表,
@@ -83,7 +84,7 @@ public class OrderMainController {
     @GetMapping("/list/admin")
     //需要order.list权限而且是管理员
     @Operation(summary = "后台端分页查询订单列表接口", description = "后台端在订单管理页面查看网站的所有订单列表")
-    public Result<OrderProfileVO> listAdmin(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Page<OrderProfileVO>> listAdmin(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
 
 //        在后台端根据订单的状态,
 //- 来查询没有被删除的订单的列表,

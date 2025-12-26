@@ -22,7 +22,7 @@ public class OrderDTO {
     private Long id;
     @NotNull(message = "订单状态不能为空",groups = {UpdateGroup.class})
     @Min(value = 0,message = "订单状态必须大于0",groups = {UpdateGroup.class})
-    @Max(value = 4,message = "订单状态必须小于5",groups = {UpdateGroup.class})
+    @Max(value = 5,message = "订单状态必须小于6",groups = {UpdateGroup.class})
     private Integer status;
     @NotNull(message = "支付方式不能为空",groups = {UpdateGroup.class})
     @Min(value = 0,message = "支付方式必须大于0",groups = {UpdateGroup.class})

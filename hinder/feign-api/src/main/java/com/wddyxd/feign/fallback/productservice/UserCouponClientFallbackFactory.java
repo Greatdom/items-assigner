@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * @program: items-assigner
  * @description: description
@@ -27,7 +29,7 @@ public class UserCouponClientFallbackFactory implements FallbackFactory<UserCoup
         return new UserCouponClient() {
 
             @Override
-            public Result<Void> consume(@NotNull(message = "优惠券id不能为空") Long[] couponIds, Long orderId) {
+            public Result<List<Long>> consume(@NotNull(message = "优惠券id不能为空") Long[] couponIds, Long orderId) {
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }

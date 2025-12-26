@@ -13,6 +13,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
+import java.util.List;
+
 /**
  * @program: items-assigner
  * @description: description
@@ -26,7 +28,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 public interface UserCouponClient {
 
     @PutMapping("/product/userCoupon/consume/{id}/{orderId}")
-    public Result<Void> consume(@PathVariable @NotNull(message = "优惠券id不能为空") Long[] couponIds,
-                                @PathVariable @Min(value = 1L, message = "优惠券id不能小于1") Long orderId);
+    public Result<List<Long>> consume(@PathVariable @NotNull(message = "优惠券id不能为空") Long[] couponIds,
+                                      @PathVariable @Min(value = 1L, message = "优惠券id不能小于1") Long orderId);
 
 }

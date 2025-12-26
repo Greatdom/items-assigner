@@ -25,7 +25,7 @@ public class OrderMain extends BaseEntity implements Serializable {
     private BigDecimal totalPrice;//订单总金额
     private BigDecimal payPrice;//实际支付金额
     private String remark;//订单备注
-    private Integer status;//0-待付款 1-待发货 2-待收货 3-已完成 4-已取消
+    private Integer status;//0-待付款 1-待发货 2-待收货 3-已完成 4-已取消 5-发起失败
     private Integer payMethod;//0-未选择 1-微信支付 2-支付宝支付
 
     @Override

@@ -20,7 +20,7 @@ public interface IUserCouponService extends IService<UserCoupon> {
 
     public void add(Long id);
 
-    public void consume(Long[] couponIds,Long orderId);
+    public List<Long> consume(Long[] couponIds,Long orderId);
 
     public void destroy(Long id);
 

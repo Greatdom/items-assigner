@@ -59,11 +59,10 @@ public class UserCouponController {
     @PutMapping("/consume/{id}/{orderId}")
     //需要userCoupon.update权限且访问者的id等于参数的userId
     @Operation(summary = "消费优惠券接口", description = "管理员可以在商品分类管理界面更新商品分类信息")
-    public Result<Void> consume(@PathVariable @NotNull(message = "优惠券id不能为空") Long[] couponIds,
+    public Result<List<Long>> consume(@PathVariable @NotNull(message = "优惠券id不能为空") Long[] couponIds,
                                 @PathVariable @Min(value = 1L, message = "优惠券id不能小于1") Long orderId){
 //        用户在下单时进行优惠券的消费,传入orderId后生成useTime,status代表该优惠券被消费
-        userCouponService.consume(couponIds,orderId);
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(userCouponService.consume(couponIds,orderId));
     }
 
     @DeleteMapping("/destroy/{id}")

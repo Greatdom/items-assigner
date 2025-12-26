@@ -84,7 +84,7 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
     }
 
     @Override
-    public void consume(Long[] couponIds, Long orderId) {
+    public List<Long> consume(Long[] couponIds, Long orderId) {
         //TODO 也许优惠券不完全合法的时候可以进行消费但是要给警告
         for(Long couponId:couponIds)
             if(couponId==null || couponId<=0){
@@ -118,6 +118,9 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
         userCoupon.setOrderId(orderId);
         }
         updateBatchById(userCoupons);
+
+        //返回实际使用的优惠券Id列表
+        return null;
     }
 
     @Override

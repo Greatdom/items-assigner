@@ -18,7 +18,7 @@ public class OrderStatusLog extends BaseEntity implements Serializable {
     private Long orderId;
     private Long operatorId;//0-系统，其他为用户/商户/管理员ID
     private Date operateTime;//操作时间
-    private String status;//0-待付款 1-待发货 2-待收货 3-已完成 4-已取消
+    private Integer status;//0-待付款 1-待发货 2-待收货 3-已完成 4-已取消
     private String remark;//状态变更说明
 
     @Override
@@ -57,11 +57,11 @@ public class OrderStatusLog extends BaseEntity implements Serializable {
         this.operateTime = operateTime;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

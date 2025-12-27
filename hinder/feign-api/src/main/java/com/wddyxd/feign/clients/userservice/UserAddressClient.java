@@ -25,7 +25,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 )
 public interface UserAddressClient {
 
-    @GetMapping("/user/userAddress/get/{id}")
-    public Result<UserAddress> get(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id);
+    @GetMapping("/user/userAddress/get/default/{id}")
+    public Result<UserAddress> getDefault(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id);
+
+    @GetMapping("/get/special/{id}")
+    //访问者的id等于参数的id
+    @Operation(summary = "获取个人用户地址簿", description = "获取个人用户地址簿")
+    public Result<UserAddress> getSpecial(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id);
+
 
 }

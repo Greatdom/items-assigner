@@ -33,6 +33,8 @@ import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,6 +50,8 @@ import java.util.stream.Collectors;
  **/
 @Service
 public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMain> implements IOrderMainService {
+
+    private static final Logger log = LoggerFactory.getLogger(IOrderMainServiceImpl.class);
 
     @Autowired
     private GetCurrentUserInfoService getCurrentUserInfoService;
@@ -160,7 +164,7 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         orderStatusLog.setRemark("订单待付款");
         orderStatusLogService.save(orderStatusLog);
         //然后存储收货地址快照
-        Result<UserAddress> userAddress = userAddressClient.get(userId);
+        Result<UserAddress> userAddress = userAddressClient.getDefault(userId);
         //判断结果集合法性
         OrderAddress orderAddress = new OrderAddress();
         BeanUtil.copyProperties(userAddress.getData(),orderAddress);

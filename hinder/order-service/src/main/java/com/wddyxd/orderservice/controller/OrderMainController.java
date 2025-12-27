@@ -17,6 +17,8 @@ import com.wddyxd.security.service.GetCurrentUserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class OrderMainController {
 
-
+    private static final Logger log = LoggerFactory.getLogger(OrderMainController.class);
 
     @PostMapping("/add")
     //需要order.add权限而且访问者的id等于参数的userId
@@ -51,6 +53,7 @@ public class OrderMainController {
 //- 添加订单备注,比如用了什么优惠券,
 //- 然后将该订单存入数据库.
 //- 将该订单传入定时任务,如果15分钟没有付款就执行取消订单操作
+        log.info("新增订单");
 
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
@@ -65,6 +68,7 @@ public class OrderMainController {
 //- 当再次访问这个接口时前一次的返回结果会保留,
 //- 携带的用户信息是商家信息
 //- 返回List<OrderProfileVO>并由PageResult包装
+        log.info("用户端分页查询订单列表接口");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
@@ -78,6 +82,7 @@ public class OrderMainController {
 //- 支持根据商户名称,购买者名称,商品名称和商品规格进行关键字检索
 //- - 携带的用户信息是用户信息
 //- 返回List<OrderProfileVO>并由PageResult包装
+        log.info("商户端分页查询订单列表接口");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
@@ -91,6 +96,7 @@ public class OrderMainController {
 //- 支持根据商户名称,购买者名称,商品名称和商品规格进行关键字检索
 //- - 携带的用户信息是用户信息
 //- 返回List<OrderProfileVO>并由PageResult包装
+        log.info("后台端分页查询订单列表接口");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
@@ -100,6 +106,7 @@ public class OrderMainController {
     public Result<OrderDetailVO> detail(@PathVariable @Min( value = 1 , message = "ID必须大于0" ) Long id){
 
     //        返回OrderDetailVO,包括访问被下架或删除的订单
+        log.info("查看订单详细信息接口");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 

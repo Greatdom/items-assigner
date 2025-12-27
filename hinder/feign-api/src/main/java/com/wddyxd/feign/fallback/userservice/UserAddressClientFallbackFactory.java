@@ -30,7 +30,13 @@ public class UserAddressClientFallbackFactory implements FallbackFactory<UserAdd
     public UserAddressClient create(Throwable cause) {
         return new UserAddressClient() {
             @Override
-            public Result<UserAddress> get(Long id) {
+            public Result<UserAddress> getDefault(Long id) {
+                log.error(LogPrompt.FEIGN_ERROR.msg);
+                return Result.error();
+            }
+
+            @Override
+            public Result<UserAddress> getSpecial(Long id) {
                 log.error(LogPrompt.FEIGN_ERROR.msg);
                 return Result.error();
             }

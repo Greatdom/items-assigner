@@ -4,6 +4,7 @@ package com.wddyxd.userservice.service.Interface;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.userservice.pojo.DTO.UserAddressDTO;
 import com.wddyxd.userservice.pojo.entity.UserAddress;
+import jakarta.validation.constraints.Min;
 
 import java.util.List;
 
@@ -26,5 +27,7 @@ public interface IUserAddressService extends IService<UserAddress> {
 
     public void delete(Long id);
 
-    public UserAddress get(Long id);
+    public UserAddress getDefault(Long id);
+
+    public UserAddress getSpecial(Long id);
 }

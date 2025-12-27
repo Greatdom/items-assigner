@@ -13,10 +13,6 @@ import com.wddyxd.orderservice.pojo.entity.OrderAddress;
 
 public interface IOrderAddressService extends IService<OrderAddress> {
 
-    public void add();
-
-    public OrderAddress detail(Long id);
-
-    public void update(Long id);
+    public void update(Long userAddressId,Long orderAddressId);
 
 }

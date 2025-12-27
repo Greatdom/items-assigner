@@ -4,10 +4,20 @@ package com.wddyxd.orderservice.controller;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
+import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
+import com.wddyxd.orderservice.service.Interface.IOrderMainService;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
+import org.springframework.statemachine.support.DefaultStateMachineContext;
+import org.springframework.statemachine.state.State;
+import org.springframework.statemachine.support.StateMachineUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +34,12 @@ import java.util.List;
 @Tag(name = "订单状态控制器", description = "订单状态相关接口")
 @Validated
 public class OrderStatusLogController {
+
+    @Autowired
+    private IOrderMainService orderMainService;
+
+    @Autowired
+    private StateMachineFactory<OrderStatus, OrderEvent> stateMachineFactory;
 
     @GetMapping("/list/{id}")
     //需要orderStatusLog.list权限
@@ -74,5 +90,23 @@ public class OrderStatusLogController {
 //- 不编写退货后退回已收货的商品的业务逻辑
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
+
+    //设置状态机:订单有6种状态,Integer status;//0-待付款 1-待发货 2-待收货 3-已完成 4-已取消
+    //待付款可以通过调用pay方法变成待发货,
+    //待发货可以通过调用ship方法变成待收货,
+    //待收货可以通过调用receive方法变成已完成,
+    //只有订单在待付款时可以调用cancel方法变成已取消,否则可以调用rollback方法变成已取消,
+
+
+
+    //状态机实验:
+    //步骤
+    //1. 配置状态和事件常量
+    //2. 创建状态机配置类,要用工厂而不是单例,然后配置默认状态和状态改变规则,还要用导入尝试状态器来补强
+    //3. service层传入订单来导入初始状态,判断状态和进行事件,然后根据条件判断来调用具体业务,还可以用监听器补强
+    //坑
+    //1. 高并发下状态机配置类不能用单例,要用工厂类
+    //2. 可以用状态机池也可以为某个线程创建一个状态机,这里采用后者方法
+    //3. 用Persist调用数据库获取并载入订单状态到状态机是更佳的实践
 
 }

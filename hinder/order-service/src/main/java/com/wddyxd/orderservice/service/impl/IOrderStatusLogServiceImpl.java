@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
  **/
 @Service
 public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper, OrderStatusLog> implements IOrderStatusLogService {
+
+
     @Override
     public OrderStatusLog list(Long id) {
         return null;

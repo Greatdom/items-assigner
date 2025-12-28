@@ -1,6 +1,7 @@
 package com.wddyxd.orderservice.stateMachine;
 
 
+import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,16 @@ public class StateMachineTrigger {
     @Autowired
     private StateMachinePersister<OrderStatus, OrderEvent, Long> persister;
 
+    @Autowired
+    private IOrderStatusLogService orderStatusLogService;
+
     public void doAction(Long orderId, OrderEvent event) {
         StateMachine<OrderStatus, OrderEvent> stateMachine = stateMachineFactory.getStateMachine(orderId.toString());
         try {
             // 从数据库恢复状态机上下文
             persister.restore(stateMachine, orderId);
 
-            // 启动状态机（恢复到数据库中的状态）
+            // 启动状态机,恢复到数据库中的状态
             stateMachine.startReactively().block();
 
             OrderStatus currentState = stateMachine.getState().getId();
@@ -52,11 +56,11 @@ public class StateMachineTrigger {
 
     private void executeBusiness(Long orderId, OrderEvent event) {
         switch (event) {
-            case PAY -> System.out.println("执行支付业务，订单ID=" + orderId);
-            case SHIP -> System.out.println("执行发货业务，订单ID=" + orderId);
-            case RECEIVE -> System.out.println("执行确认收货业务，订单ID=" + orderId);
-            case CANCEL -> System.out.println("执行取消订单业务，订单ID=" + orderId);
-            case ROLLBACK -> System.out.println("执行退货业务，订单ID=" + orderId);
+            case PAY -> orderStatusLogService.pay(orderId);
+            case SHIP -> orderStatusLogService.ship(orderId);
+            case RECEIVE -> orderStatusLogService.receive(orderId);
+            case CANCEL -> orderStatusLogService.cancel(orderId);
+            case ROLLBACK -> orderStatusLogService.rollback(orderId);
         }
     }
 

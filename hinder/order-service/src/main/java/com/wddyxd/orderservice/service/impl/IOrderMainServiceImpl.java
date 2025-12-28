@@ -32,6 +32,7 @@ import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -308,5 +309,20 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         return orderDetailVO;
     }
 
+    @Override
+    public void update(Long id,OrderStatus orderStatus) {
+        OrderMain orderMain = baseMapper.selectById(id);
+        if(orderMain==null||orderMain.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        orderMain.setStatus(orderStatus.getCode());
+        baseMapper.updateById(orderMain);
+    }
 
+    @Override
+    public OrderStatus getOrderStatus(Long id) {
+        OrderMain orderMain = baseMapper.selectById(id);
+        if(orderMain==null||orderMain.getIsDeleted())
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        return OrderStatus.fromCode(orderMain.getStatus());
+    }
 }

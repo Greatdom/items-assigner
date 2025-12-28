@@ -3,6 +3,7 @@ package com.wddyxd.orderservice.service.Interface;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 
 /**
  * @program: items-assigner
@@ -12,6 +13,8 @@ import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
  **/
 
 public interface IOrderStatusLogService extends IService<OrderStatusLog> {
+
+    public void add(Long id, OrderStatus orderStatus);
 
     public OrderStatusLog list(Long id);
 

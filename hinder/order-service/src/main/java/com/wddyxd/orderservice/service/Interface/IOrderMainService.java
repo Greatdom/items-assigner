@@ -8,6 +8,7 @@ import com.wddyxd.orderservice.pojo.DTO.OrderDTO;
 import com.wddyxd.orderservice.pojo.VO.OrderDetailVO;
 import com.wddyxd.orderservice.pojo.VO.OrderProfileVO;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 
 /**
  * @program: items-assigner
@@ -27,5 +28,9 @@ public interface IOrderMainService extends IService<OrderMain> {
     public Page<OrderProfileVO> listAdmin(SearchDTO searchDTO);
 
     public OrderDetailVO detail(Long id);
+
+    public void update(Long id,OrderStatus orderStatus);
+
+    public OrderStatus getOrderStatus(Long id);
 
 }

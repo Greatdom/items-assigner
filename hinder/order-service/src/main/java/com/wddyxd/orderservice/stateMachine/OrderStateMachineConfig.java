@@ -1,16 +1,17 @@
-package com.wddyxd.orderservice.stateMachine.config;
+package com.wddyxd.orderservice.stateMachine;
 
 
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
-import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
+import org.springframework.statemachine.persist.DefaultStateMachinePersister;
+import org.springframework.statemachine.persist.StateMachinePersister;
+
 import java.util.EnumSet;
 
 /**
@@ -76,4 +77,10 @@ public class OrderStateMachineConfig extends StateMachineConfigurerAdapter<Order
                 .target(OrderStatus.CANCELLED)
                 .event(OrderEvent.ROLLBACK);
     }
+
+    @Bean
+    public StateMachinePersister<OrderStatus, OrderEvent, Long> persister(InMemoryStateMachinePersist persist) {
+        return new DefaultStateMachinePersister<>(persist);
+    }
+
 }

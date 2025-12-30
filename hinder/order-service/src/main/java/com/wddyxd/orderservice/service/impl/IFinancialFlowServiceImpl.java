@@ -1,6 +1,7 @@
 package com.wddyxd.orderservice.service.impl;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.pojo.SearchDTO;
@@ -41,6 +42,18 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
         }else{
             financialFlow.setOutTradeNo(financialFlow.getId());
         }
+        baseMapper.insert(financialFlow);
+        return financialFlow;
+    }
+
+    @Override
+    public FinancialFlow refunding(FinancialFlow oldFinancialFlow) {
+        FinancialFlow financialFlow = new FinancialFlow();
+        BeanUtil.copyProperties(oldFinancialFlow,financialFlow);
+        financialFlow.setId(IdWorker.getId());
+        financialFlow.setTradeType(3);
+        financialFlow.setStatus(0);
+        financialFlow.setRemark("正在进行订单退款");
         baseMapper.insert(financialFlow);
         return financialFlow;
     }

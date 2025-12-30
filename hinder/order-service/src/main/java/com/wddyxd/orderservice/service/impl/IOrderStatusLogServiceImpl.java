@@ -2,6 +2,7 @@ package com.wddyxd.orderservice.service.impl;
 
 
 import com.alipay.api.AlipayApiException;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
@@ -169,7 +170,23 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
         //生成在退款财务
+        FinancialFlow dbFinancialFlow = financialFlowService.getBaseMapper().selectOne(
+                new LambdaQueryWrapper<FinancialFlow>()
+                .eq(FinancialFlow::getOrderId, id)
+        );
+        if(dbFinancialFlow == null||dbFinancialFlow.getIsDeleted()){
+            log.error("财务不存在或者已删除");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
+
+        FinancialFlow financialFlow = financialFlowService.refunding(dbFinancialFlow);
 
         //调用订单支付宝/微信退款接口
+        try {
+            alipayTemplate.refund(financialFlow);
+        } catch (AlipayApiException e) {
+            log.error("试图发起支付宝退款时异常");
+            throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
+        }
     }
 }

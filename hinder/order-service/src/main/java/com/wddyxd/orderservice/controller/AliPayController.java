@@ -3,10 +3,14 @@ package com.wddyxd.orderservice.controller;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.easysdk.factory.Factory;
+import com.wddyxd.orderservice.service.Interface.IOrderMainService;
+import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,6 +28,13 @@ import java.util.Map;
 public class AliPayController {
 
     private static final Logger log = LoggerFactory.getLogger(AliPayController.class);
+
+    @Autowired
+    private IOrderMainService orderMainService;
+
+    @Autowired
+    private IOrderStatusLogService orderStatusLogService;
+
 
 //    @Resource
 //    AlipayTemplate alipayTemplate;
@@ -60,6 +71,10 @@ public class AliPayController {
 
             Map<String, String> params = new HashMap<>();
             Map<String, String[]> requestParams = request.getParameterMap();
+            for (String name : requestParams.keySet()) {
+                params.put(name, request.getParameter(name));
+                 System.out.println(name + " = " + request.getParameter(name));
+            }
             // 支付宝验签
             if (Factory.Payment.Common().verifyNotify(params)) {
                 // 验签通过
@@ -72,15 +87,20 @@ public class AliPayController {
                 System.out.println("买家在支付宝唯一id: " + params.get("buyer_id"));
                 System.out.println("买家付款时间: " + params.get("gmt_payment"));
                 System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
-                // 更新订单状态
-//                System.out.println("=========分账========");
-//                Settle settle = new Settle();
-//                settle.setId(params.get("trade_no"));
-//                settle.setTransIn(params.get("seller_id"));
-//                settle.setTransOut(params.get("seller_id"));
-//                settle.setAmount(0.11);
-//                settle.setTradeNo(params.get("trade_no"));
-//                alipayTemplate.settlePay(settle);
+
+                Long orderId = Long.parseLong(params.get("out_trade_no"));
+                OrderStatus orderStatus = OrderStatus.PENDING_SHIPMENT;
+
+
+                //TODO 异步操作
+                //TODO 给平台分账
+
+                //TODO 确定最终财务
+
+                //TODO 更新订单和订单日志
+                orderMainService.update(orderId, orderStatus);
+                orderStatusLogService.add(orderId, orderStatus);
+
 
             }else{
                 System.out.println("验签失败");

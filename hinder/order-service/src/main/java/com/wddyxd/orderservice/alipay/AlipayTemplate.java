@@ -14,8 +14,12 @@ import com.alipay.easysdk.kernel.Config;
 import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.orderservice.controller.OrderMainController;
 import com.wddyxd.orderservice.pojo.entity.FinancialFlow;
+import com.wddyxd.orderservice.service.Interface.IOrderMainService;
+import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -31,6 +35,12 @@ public class AlipayTemplate {
 
     private static final Logger log = LoggerFactory.getLogger(AlipayTemplate.class);
 
+//    @Autowired
+//    private IOrderMainService orderMainService;
+//
+//    @Autowired
+//    private IOrderStatusLogService orderStatusLogService;
+
     @Bean
     public void initAlipaySdk() {
         Config config = new Config();
@@ -45,6 +55,7 @@ public class AlipayTemplate {
         log.info("初始化支付宝SDK成功");
     }
 
+    // 支付请求
     public String pay(FinancialFlow financialFlow) throws
             AlipayApiException {
 
@@ -73,78 +84,83 @@ public class AlipayTemplate {
 
     }
 
-//    public void refund(Order order) throws
-//            AlipayApiException {
-//
-//        AlipayClient alipayClient = getAlipayClient();
-//
-//        AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
-//
-//        JSONObject jsonObject = new JSONObject();
-//        // 1. 确保订单号是字符串类型（避免数字格式问题）
-//        jsonObject.put("out_trade_no", String.valueOf(order.getId()));
-//        // 2. 退款金额保留2位小数（符合支付宝金额规范）
-//        jsonObject.put("refund_amount", String.format("%.2f", order.getMoney()));
-//        // 3. 退款请求号使用唯一值（建议用UUID，避免重复）
-//        String refundRequestNo = String.valueOf(order.getRefundId()) + "_" + System.currentTimeMillis();
-//        jsonObject.put("out_request_no", refundRequestNo);
-//
-//        request.setBizContent(jsonObject.toString());
-//        AlipayTradeRefundResponse response = alipayClient.execute(request);
-//        if (response.isSuccess()) {
-//            System.out.println("退款成功：" + response.getBody());
-//        } else {
-//            System.out.println("退款失败：" + response.getSubMsg());
-//        }
-//    }
+    // 退款请求
+    public void refund(FinancialFlow financialFlow) throws
+            AlipayApiException {
 
-//    public void settlePay(Settle settle) throws
-//            AlipayApiException {
-//
-//        AlipayClient alipayClient = getAlipayClient();
-//        AlipayTradeOrderSettleRequest request = new AlipayTradeOrderSettleRequest();
-//        JSONObject jsonObject = new JSONObject();
-//        String refundRequestNo = String.valueOf(settle.getId()) + "_" + System.currentTimeMillis();
-//        jsonObject.put("out_request_no", refundRequestNo);
-//        jsonObject.put("trade_no", settle.getTradeNo());
-//        JSONArray royaltyParameters = new JSONArray();
-//        JSONObject royaltyParam = new JSONObject();
-//        royaltyParam.put("trans_out", settle.getTransOut()); // 出账方
-//        royaltyParam.put("trans_in", settle.getTransIn());   // 入账方
-//        royaltyParam.put("amount", String.format("%.2f", settle.getAmount())); // 金额保留2位小数
-//        royaltyParameters.add(royaltyParam);
-//        jsonObject.put("royalty_parameters", royaltyParameters); // 传入数组
-//        request.setBizContent(jsonObject.toString());
-//
-//
-//        request.setBizContent(jsonObject.toString());
-//        AlipayTradeOrderSettleResponse response = alipayClient.execute(request);
-//        if (response.isSuccess()) {
-//            System.out.println("分账成功：" + response.getBody());
-//        } else {
-//            System.out.println("分账失败：" + response.getSubMsg());
-//        }
-//
-//
-//    }
+        AlipayClient alipayClient = getAlipayClient();
 
+        AlipayTradeRefundRequest request = new AlipayTradeRefundRequest();
+
+        JSONObject jsonObject = new JSONObject();
+        // 1. 确保订单号是字符串类型（避免数字格式问题）
+        jsonObject.put("out_trade_no", String.valueOf(financialFlow.getOutTradeNo()));
+        // 2. 退款金额保留2位小数（符合支付宝金额规范）
+        jsonObject.put("refund_amount", String.format("%.2f", financialFlow.getMoney()));
+        // 3. 退款请求号使用唯一值（建议用UUID，避免重复）
+        String refundRequestNo = String.valueOf(financialFlow.getId()) + "_" + System.currentTimeMillis();
+        jsonObject.put("out_request_no", refundRequestNo);
+
+        request.setBizContent(jsonObject.toString());
+        AlipayTradeRefundResponse response = alipayClient.execute(request);
+        if (response.isSuccess()) {
+            System.out.println("退款成功：" + response.getBody());
+
+//            Long orderId = financialFlow.getOrderId();
+//            OrderStatus orderStatus = OrderStatus.CANCELLED;
+//
+              //TODO 异步操作
+//            //TODO 给平台分账退款
+//
+//            //TODO 确定最终财务
+//
+//            //TODO 更新订单和订单日志
+//            orderMainService.update(orderId, orderStatus);
+//            orderStatusLogService.add(orderId, orderStatus);
+
+
+
+        } else {
+            System.out.println("退款失败：" + response.getSubMsg());
+        }
+    }
+
+    // 分账请求
+    public void settlePay(FinancialFlow financialFlow) throws
+            AlipayApiException {
+
+        AlipayClient alipayClient = getAlipayClient();
+        AlipayTradeOrderSettleRequest request = new AlipayTradeOrderSettleRequest();
+        JSONObject jsonObject = new JSONObject();
+        String refundRequestNo = String.valueOf(financialFlow.getId()) + "_" + System.currentTimeMillis();
+        jsonObject.put("out_request_no", refundRequestNo);
+        jsonObject.put("trade_no", financialFlow.getTradeNo());
+        JSONArray royaltyParameters = new JSONArray();
+        JSONObject royaltyParam = new JSONObject();
+        royaltyParam.put("trans_out", financialFlow.getTransOutId()); // 出账方
+        royaltyParam.put("trans_in", financialFlow.getTransInId());   // 入账方
+        royaltyParam.put("amount", String.format("%.2f", financialFlow.getMoney())); // 金额保留2位小数
+        royaltyParameters.add(royaltyParam);
+        jsonObject.put("royalty_parameters", royaltyParameters); // 传入数组
+        request.setBizContent(jsonObject.toString());
+
+
+        request.setBizContent(jsonObject.toString());
+        AlipayTradeOrderSettleResponse response = alipayClient.execute(request);
+        if (response.isSuccess()) {
+            System.out.println("分账成功：" + response.getBody());
+        } else {
+            System.out.println("分账失败：" + response.getSubMsg());
+        }
+
+
+    }
+
+    // 分账退款请求
 //    public void settleRefund(Order order) throws
 //            AlipayApiException {
 //        AlipayClient alipayClient = getAlipayClient();
 //        AlipayTradeOrderSettleRefundRequest request = new AlipayTradeOrderSettleRefundRequest();
-
-//        {
-//            "out_request_no": "分账退款请求号",
-//                "trade_no": "支付宝交易号",
-//                "refund_royalty_parameters": [
-//            {
-//                "trans_out": "分账退款出账方",
-//                    "trans_in": "分账退款入账方",
-//                    "amount": "分账退款金额"
-//            }
-//  ]
-//        }
-//
 //        AlipayTradeOrderSettleRefundRequest request = new AlipayTradeOrderSettleRefundRequest();
 //        request.setBizContent("{"
 //                + "\"out_request_no\":\"20240620001_SettleRefund001\","
@@ -161,7 +177,6 @@ public class AlipayTemplate {
 //        } else {
 //            System.out.println("分账退款失败：" + response.getSubMsg());
 //        }
-
 //    }
 
     private AlipayClient getAlipayClient() {

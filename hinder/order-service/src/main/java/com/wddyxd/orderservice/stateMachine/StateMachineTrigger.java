@@ -60,12 +60,12 @@ public class StateMachineTrigger {
             // 保存新的状态机上下文到数据库
             //TODO 用异步事件和重试机制完成事务
             //TODO 不过支付和退款接口时要等支付回调且更新财务后再更新订单状态
-            try {
-                persister.persist(stateMachine, orderId);
-            } catch (Exception e) {
-                log.error("保存状态机上下文失败", e);
-                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
-            }
+//            try {
+//                persister.persist(stateMachine, orderId);
+//            } catch (Exception e) {
+//                log.error("保存状态机上下文失败", e);
+//                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+//            }
         } else {
             log.error("订单 {} 当前状态 {} 不允许执行事件 {}", orderId, currentState, event);
         }

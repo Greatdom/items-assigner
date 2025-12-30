@@ -20,7 +20,7 @@ public class FinancialFlow extends BaseEntity implements Serializable {
     private Long merchantId;//入账者在本平台id
     private Long transOutId;//出账者在支付平台id
     private Long transInId;//入账者在支付平台id
-    private Long refundId;//退款号
+    private String refundId;//退款号
     private Long orderId;//订单号-如果财务种类是订单
     private Long outTradeNo;//支付单号
     private String tradeNo;//回调单号
@@ -66,11 +66,11 @@ public class FinancialFlow extends BaseEntity implements Serializable {
         this.merchantId = merchantId;
     }
 
-    public Long getRefundId() {
+    public String getRefundId() {
         return refundId;
     }
 
-    public void setRefundId(Long refundId) {
+    public void setRefundId(String refundId) {
         this.refundId = refundId;
     }
 

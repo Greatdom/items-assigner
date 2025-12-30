@@ -36,7 +36,11 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
         financialFlow.setStatus(0);
         financialFlow.setPayMethod(orderMain.getPayMethod());
         financialFlow.setRemark("正在进行订单支付");
-        financialFlow.setOutTradeNo(financialFlow.getId());
+        if(financialFlow.getTradeType()==2){
+            financialFlow.setOutTradeNo(orderMain.getId());
+        }else{
+            financialFlow.setOutTradeNo(financialFlow.getId());
+        }
         baseMapper.insert(financialFlow);
         return financialFlow;
     }

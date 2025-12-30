@@ -94,7 +94,7 @@ CREATE TABLE `financial_flow` (
   `trans_out_id` bigint DEFAULT NULL COMMENT '出账者在支付平台id',
   `trans_in_id` bigint DEFAULT NULL COMMENT '入账者在支付平台id',
   `trade_type` tinyint unsigned NOT NULL COMMENT '0-充值 1-提现 2-订单支付 3-退款 4-平台佣金',
-  `refund_id` bigint DEFAULT NULL COMMENT '退款号',
+  `refund_id` varchar(255) DEFAULT NULL COMMENT '退款号',
   `out_trade_no` bigint NOT NULL COMMENT '支付单号',
   `trade_no` varchar(255) DEFAULT NULL COMMENT '回调单号',
   `order_id` bigint DEFAULT NULL COMMENT '订单号-如果财务种类是订单',

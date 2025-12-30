@@ -42,28 +42,28 @@ public class AlipayTemplate {
     public String pay(FinancialFlow financialFlow) throws
             AlipayApiException {
 
-        //1、根据支付宝的配置生成一个支付客户端
-        AlipayClient alipayClient = getAlipayClient();
-
-        //2、创建一个支付请求，并设置请求参数
-        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-        alipayRequest.setReturnUrl(returnUrl);
-        alipayRequest.setNotifyUrl(notifyUrl);
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("out_trade_no", order.getId());
-        jsonObject.put("total_amount", order.getMoney());
-        jsonObject.put("subject", order.getInterfaceInfoId());
-        jsonObject.put("body", order.getPaymentMethod());
-        jsonObject.put("timeout_express", timeout);
-        jsonObject.put("product_code", "FAST_INSTANT_TRADE_PAY");
-
-        alipayRequest.setBizContent(jsonObject.toString());
-        String result = alipayClient.pageExecute(alipayRequest).getBody();
-        //会收到支付宝的响应，响应的是一个页面，只要浏览器显示这个页面，就会自动来到支付宝的收银台页面
-        System.out.println("支付宝的响应：" + result);
-        return result;
-
+//        //1、根据支付宝的配置生成一个支付客户端
+//        AlipayClient alipayClient = getAlipayClient();
+//
+//        //2、创建一个支付请求，并设置请求参数
+//        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
+//        alipayRequest.setReturnUrl(returnUrl);
+//        alipayRequest.setNotifyUrl(notifyUrl);
+//
+//        JSONObject jsonObject = new JSONObject();
+//        jsonObject.put("out_trade_no", order.getId());
+//        jsonObject.put("total_amount", order.getMoney());
+//        jsonObject.put("subject", order.getInterfaceInfoId());
+//        jsonObject.put("body", order.getPaymentMethod());
+//        jsonObject.put("timeout_express", timeout);
+//        jsonObject.put("product_code", "FAST_INSTANT_TRADE_PAY");
+//
+//        alipayRequest.setBizContent(jsonObject.toString());
+//        String result = alipayClient.pageExecute(alipayRequest).getBody();
+//        //会收到支付宝的响应，响应的是一个页面，只要浏览器显示这个页面，就会自动来到支付宝的收银台页面
+//        System.out.println("支付宝的响应：" + result);
+//        return result;
+        return null;
 
 
     }

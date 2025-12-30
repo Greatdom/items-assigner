@@ -45,11 +45,14 @@ public class StateMachineTrigger {
                 System.out.println("订单 " + orderId + " 状态从 " + currentState + " 迁移到 " + stateMachine.getState().getId());
                 executeBusiness(orderId, event);
                 // 保存新的状态机上下文到数据库
+                //TODO 用异步事件和重试机制完成事务
+                //TODO 不过支付和退款接口时要等支付回调且更新财务后再更新订单状态
                 persister.persist(stateMachine, orderId);
             } else {
                 System.out.println("订单 " + orderId + " 当前状态 " + currentState + " 不允许执行事件 " + event);
             }
         } catch (Exception e) {
+            //TODO 优雅的异常处理
             e.printStackTrace();
         }
     }

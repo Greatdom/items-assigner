@@ -12,6 +12,8 @@ import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
@@ -41,11 +43,15 @@ public class OrderStatusLogController {
     @Autowired
     private StateMachineFactory<OrderStatus, OrderEvent> stateMachineFactory;
 
+    private static final Logger log = LoggerFactory.getLogger(OrderStatusLogController.class);
+
+
     @GetMapping("/list/{id}")
     //需要orderStatusLog.list权限
     @Operation(summary = "列出订单状态接口", description = "查看订单的详细信息时调用该接口")
     public Result<List<OrderStatusLog>> list(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
 //       传入订单id返回List<OrderStatusLog>
+        log.info("列出订单状态");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
@@ -53,8 +59,14 @@ public class OrderStatusLogController {
     //需要orderStatusLog.add权限且访问者的id等于订单的userId
     @Operation(summary = "订单支付接口", description = "用户支付订单")
     public Result<Void> pay(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
-//       传入订单id,检查订单是否处于 "待支付" 状态,直接生成order_status_log表,
+//       传入订单id,检查订单是否处于 "待支付" 状态,
+//       是则生成正在支付的财务
+//       调用支付接口,然后接收回调,如果有回调则根据回调结果来生成最终财务,比如支付成功/支付失败
+//       如果没有成功更新最终财务就要主动查单
+//       次日要进行T+1对账
+//       最后生成order_status_log表和更新order_main表
 //- 后续接入支付服务器,然后调用修改订单接口,解决幂等性问题,调用新增财务接口
+        log.info("订单支付");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/ship/{id}")
@@ -63,6 +75,7 @@ public class OrderStatusLogController {
     public Result<Void> ship(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
 //       传入订单id,检查订单是否处于 "已支付" 状态,直接生成order_status_log表,
 //       然后调用修改订单接口,解决幂等性问题
+        log.info("订单发货");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/receive/{id}")
@@ -71,6 +84,7 @@ public class OrderStatusLogController {
     public Result<Void> receive(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
 //       传入订单id,检查订单是否处于 "已发货" 状态,直接生成order_status_log表,
 //- 然后调用修改订单接口,解决幂等性问题
+        log.info("订单收货");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/cancel/{id}")
@@ -79,6 +93,7 @@ public class OrderStatusLogController {
     public Result<Void> cancel(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
 //       传入订单id,检查订单是否处于 "待支付" 状态,直接生成order_status_log表,
 //- 然后恢复商品规格库存,然后退还优惠券给用户,然后调用修改订单接口,解决幂等性问题
+        log.info("取消订单");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/rollback/{id}")
@@ -88,6 +103,7 @@ public class OrderStatusLogController {
 //       传入订单id,检查订单是否不是处于 "待支付" 状态,直接生成order_status_log表,
 //- 然后将已支付的钱退回给用户,然后恢复商品规格库存,然后退还优惠券给用户,然后调用修改订单接口,解决幂等性问题
 //- 不编写退货后退回已收货的商品的业务逻辑
+        log.info("订单退货");
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 

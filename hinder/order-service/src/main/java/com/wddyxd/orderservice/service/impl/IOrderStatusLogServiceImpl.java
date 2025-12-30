@@ -47,6 +47,11 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
     @Override
     public void pay(Long id) {
         System.out.println("执行支付业务，订单ID=" + id);
+        //查询订单且判断订单合法和处于待支付状态
+
+        //生成在支付财务
+
+        //调用订单支付宝/微信支付接口
     }
 
     @Override
@@ -67,5 +72,10 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
     @Override
     public void rollback(Long id) {
         System.out.println("执行退货业务，订单ID=" + id);
+        //查询订单且判断订单合法和处于待发货及之后的状态
+
+        //生成在支付财务
+
+        //调用订单支付宝/微信退款接口
     }
 }

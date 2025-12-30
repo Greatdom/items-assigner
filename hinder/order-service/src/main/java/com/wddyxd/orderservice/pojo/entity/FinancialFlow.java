@@ -16,9 +16,13 @@ import java.util.Date;
  **/
 @TableName("financial_flow")
 public class FinancialFlow extends BaseEntity implements Serializable {
-    private Long buyerId;//出账者id
-    private Long merchantId;//入账者id
+    private Long buyerId;//出账者在本平台id
+    private Long merchantId;//入账者在本平台id
+    private Long transOutId;//出账者在支付平台id
+    private Long transInId;//入账者在支付平台id
     private Long refundId;//退款号
+    private Long orderId;//订单号-如果财务种类是订单
+    private Long outTradeNo;//支付单号
     private String tradeNo;//回调单号
     private Integer tradeType;//0-充值 1-提现 2-订单支付 3-退款 4-平台佣金
     private BigDecimal money;//金额
@@ -32,7 +36,11 @@ public class FinancialFlow extends BaseEntity implements Serializable {
                 super.toString() +
                 "buyerId=" + buyerId +
                 ", merchantId=" + merchantId +
+                ", transOutId=" + transOutId +
+                ", transInId=" + transInId +
                 ", refundId=" + refundId +
+                ", orderId=" + orderId +
+                ", outTradeNo=" + outTradeNo +
                 ", tradeNo='" + tradeNo + '\'' +
                 ", tradeType=" + tradeType +
                 ", money=" + money +
@@ -112,5 +120,37 @@ public class FinancialFlow extends BaseEntity implements Serializable {
 
     public void setPayMethod(Integer payMethod) {
         this.payMethod = payMethod;
+    }
+
+    public Long getTransOutId() {
+        return transOutId;
+    }
+
+    public void setTransOutId(Long transOutId) {
+        this.transOutId = transOutId;
+    }
+
+    public Long getTransInId() {
+        return transInId;
+    }
+
+    public void setTransInId(Long transInId) {
+        this.transInId = transInId;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Long getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(Long outTradeNo) {
+        this.outTradeNo = outTradeNo;
     }
 }

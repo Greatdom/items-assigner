@@ -89,11 +89,15 @@ INSERT INTO `coupon` VALUES (2003666159022485505, 'ADMIN_SHOP', '超级管理员
 DROP TABLE IF EXISTS `financial_flow`;
 CREATE TABLE `financial_flow` (
   `id` bigint NOT NULL COMMENT '主键',
-  `buyer_id` bigint DEFAULT NULL COMMENT '出账者id',
-  `merchant_id` bigint NOT NULL COMMENT '入账者id',
+  `buyer_id` bigint NOT NULL COMMENT '出账者在本平台id',
+  `merchant_id` bigint NOT NULL COMMENT '入账者在本平台id',
+  `trans_out_id` bigint DEFAULT NULL COMMENT '出账者在支付平台id',
+  `trans_in_id` bigint DEFAULT NULL COMMENT '入账者在支付平台id',
   `trade_type` tinyint unsigned NOT NULL COMMENT '0-充值 1-提现 2-订单支付 3-退款 4-平台佣金',
   `refund_id` bigint DEFAULT NULL COMMENT '退款号',
+  `out_trade_no` bigint NOT NULL COMMENT '支付单号',
   `trade_no` varchar(255) DEFAULT NULL COMMENT '回调单号',
+  `order_id` bigint DEFAULT NULL COMMENT '订单号-如果财务种类是订单',
   `money` decimal(10,2) NOT NULL COMMENT '金额',
   `status` tinyint unsigned NOT NULL COMMENT '0-处理中 1-成功 2-失败',
   `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT '' COMMENT '交易备注',
@@ -104,7 +108,6 @@ CREATE TABLE `financial_flow` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_user_id` (`buyer_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='财务流水表';
-
 -- ----------------------------
 -- Records of financial_flow
 -- ----------------------------

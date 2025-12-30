@@ -9,6 +9,7 @@ import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
+import com.wddyxd.orderservice.stateMachine.StateMachineTrigger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
@@ -38,13 +39,9 @@ import java.util.List;
 public class OrderStatusLogController {
 
     @Autowired
-    private IOrderMainService orderMainService;
-
-    @Autowired
-    private StateMachineFactory<OrderStatus, OrderEvent> stateMachineFactory;
+    private StateMachineTrigger stateMachineTrigger;
 
     private static final Logger log = LoggerFactory.getLogger(OrderStatusLogController.class);
-
 
     @GetMapping("/list/{id}")
     //需要orderStatusLog.list权限
@@ -55,10 +52,16 @@ public class OrderStatusLogController {
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
+//    @GetMapping(value = "/pay", produces = "text/html")
+//    @ResponseBody
+//    public String pay(@RequestParam long id) throws AlipayApiException {
+//      ......
+//    }
+
     @PostMapping("/pay/{id}")
     //需要orderStatusLog.add权限且访问者的id等于订单的userId
     @Operation(summary = "订单支付接口", description = "用户支付订单")
-    public Result<Void> pay(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
+    public Result<String> pay(@PathVariable @Min(value = 1L, message = "id不能小于1") Long id){
 //       传入订单id,检查订单是否处于 "待支付" 状态,
 //       是则生成正在支付的财务
 //       调用支付接口,然后接收回调,如果有回调则根据回调结果来生成最终财务,比如支付成功/支付失败
@@ -67,7 +70,7 @@ public class OrderStatusLogController {
 //       最后生成order_status_log表和更新order_main表
 //- 后续接入支付服务器,然后调用修改订单接口,解决幂等性问题,调用新增财务接口
         log.info("订单支付");
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(stateMachineTrigger.doAction(id, OrderEvent.PAY));
     }
     @PostMapping("/ship/{id}")
     //需要orderStatusLog.add权限且访问者的id等于订单的userId且是商家

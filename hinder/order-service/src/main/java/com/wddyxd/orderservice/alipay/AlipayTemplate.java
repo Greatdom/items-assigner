@@ -45,34 +45,33 @@ public class AlipayTemplate {
         log.info("初始化支付宝SDK成功");
     }
 
-//    public String pay(Order order) throws
-//            AlipayApiException {
-//
-//        //1、根据支付宝的配置生成一个支付客户端
-//        AlipayClient alipayClient = getAlipayClient();
-//
-//        //2、创建一个支付请求，并设置请求参数
-//        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
-//        alipayRequest.setReturnUrl(returnUrl);
-//        alipayRequest.setNotifyUrl(notifyUrl);
-//
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("out_trade_no", order.getId());
-//        jsonObject.put("total_amount", order.getMoney());
-//        jsonObject.put("subject", order.getInterfaceInfoId());
-//        jsonObject.put("body", order.getPaymentMethod());
-//        jsonObject.put("timeout_express", timeout);
-//        jsonObject.put("product_code", "FAST_INSTANT_TRADE_PAY");
-//
-//        alipayRequest.setBizContent(jsonObject.toString());
-//        String result = alipayClient.pageExecute(alipayRequest).getBody();
-//        //会收到支付宝的响应，响应的是一个页面，只要浏览器显示这个页面，就会自动来到支付宝的收银台页面
-//        System.out.println("支付宝的响应：" + result);
-//        return result;
-//
-//
-//
-//    }
+    public String pay(FinancialFlow financialFlow) throws
+            AlipayApiException {
+
+        //1、根据支付宝的配置生成一个支付客户端
+        AlipayClient alipayClient = getAlipayClient();
+
+        //2、创建一个支付请求，并设置请求参数
+        AlipayTradePagePayRequest alipayRequest = new AlipayTradePagePayRequest();
+        alipayRequest.setReturnUrl(CommonConstant.ALIPAY_RETURN_URL);
+        alipayRequest.setNotifyUrl(CommonConstant.ALIPAY_NOTIFY_URL);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("out_trade_no", financialFlow.getOutTradeNo());
+        jsonObject.put("total_amount", financialFlow.getMoney());
+        jsonObject.put("subject", financialFlow.getRemark());
+        jsonObject.put("body", financialFlow.getRemark());
+        jsonObject.put("timeout_express", "5m");
+        jsonObject.put("product_code", "FAST_INSTANT_TRADE_PAY");
+
+        alipayRequest.setBizContent(jsonObject.toString());
+        String result = alipayClient.pageExecute(alipayRequest).getBody();
+        //会收到支付宝的响应，响应的是一个页面，只要浏览器显示这个页面，就会自动来到支付宝的收银台页面
+        log.info("支付宝的响应：{}", result);
+        return result;
+
+
+    }
 
 //    public void refund(Order order) throws
 //            AlipayApiException {
@@ -165,9 +164,14 @@ public class AlipayTemplate {
 
 //    }
 
-//    private AlipayClient getAlipayClient() {
-//        return new DefaultAlipayClient(gatewayUrl, appId, merchantPrivateKey,
-//                "json", charset, alipayPublicKey, signType);
-//    }
+    private AlipayClient getAlipayClient() {
+        return new DefaultAlipayClient(CommonConstant.ALIPAY_GATEWAY_URL,
+                CommonConstant.ALIPAY_APP_ID,
+                CommonConstant.ALIPAY_PRIVATE_KEY,
+                "json",
+                CommonConstant.CHARSET,
+                CommonConstant.ALIPAY_PUBLIC_KEY,
+                CommonConstant.SIGN_TYPE);
+    }
 
 }

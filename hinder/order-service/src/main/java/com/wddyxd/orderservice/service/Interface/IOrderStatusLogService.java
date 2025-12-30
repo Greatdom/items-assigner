@@ -18,7 +18,7 @@ public interface IOrderStatusLogService extends IService<OrderStatusLog> {
 
     public OrderStatusLog list(Long id);
 
-    public void pay(Long id);
+    public String pay(Long id);
 
     public void ship(Long id);
 

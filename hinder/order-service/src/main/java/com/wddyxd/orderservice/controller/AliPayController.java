@@ -5,6 +5,8 @@ import com.alipay.api.AlipayApiException;
 import com.alipay.easysdk.factory.Factory;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,6 +22,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/alipay")
 public class AliPayController {
+
+    private static final Logger log = LoggerFactory.getLogger(AliPayController.class);
 
 //    @Resource
 //    AlipayTemplate alipayTemplate;
@@ -48,35 +52,27 @@ public class AliPayController {
 //        order.setPaymentMethod("支付宝");
 //        alipayTemplate.refund(order);
 //    }
-//
-//    @PostMapping("/notify")  // 注意这里必须是POST接口
-//    public String payNotify(HttpServletRequest request) throws Exception {
-//        if (request.getParameter("trade_status").equals("TRADE_SUCCESS")) {
-//            System.out.println("=========支付宝异步回调========");
-//
-//            Map<String, String> params = new HashMap<>();
-//            Map<String, String[]> requestParams = request.getParameterMap();
-//            for (String name : requestParams.keySet()) {
-//                params.put(name, request.getParameter(name));
-//                // System.out.println(name + " = " + request.getParameter(name));
-//            }
-//
-//            String tradeNo = params.get("out_trade_no");
-//            String gmtPayment = params.get("gmt_payment");
-//            String alipayTradeNo = params.get("trade_no");
-//            // 支付宝验签
-//            if (Factory.Payment.Common().verifyNotify(params)) {
-//                // 验签通过
-//                System.out.println("交易名称: " + params.get("subject"));
-//                System.out.println("交易状态: " + params.get("trade_status"));
-//                System.out.println("支付宝交易凭证号: " + params.get("trade_no"));
-//                System.out.println("商户订单号: " + params.get("out_trade_no"));
-//                System.out.println("交易金额: " + params.get("total_amount"));
-//                System.out.println("卖家在支付宝唯一id: " + params.get("seller_id"));
-//                System.out.println("买家在支付宝唯一id: " + params.get("buyer_id"));
-//                System.out.println("买家付款时间: " + params.get("gmt_payment"));
-//                System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
-//                // 更新订单状态
+
+    @PostMapping("/notify")  // 注意这里必须是POST接口
+    public String payNotify(HttpServletRequest request) throws Exception {
+        if (request.getParameter("trade_status").equals("TRADE_SUCCESS")) {
+            log.info("=========支付宝异步回调========");
+
+            Map<String, String> params = new HashMap<>();
+            Map<String, String[]> requestParams = request.getParameterMap();
+            // 支付宝验签
+            if (Factory.Payment.Common().verifyNotify(params)) {
+                // 验签通过
+                System.out.println("交易名称: " + params.get("subject"));
+                System.out.println("交易状态: " + params.get("trade_status"));
+                System.out.println("支付宝交易凭证号: " + params.get("trade_no"));
+                System.out.println("商户订单号: " + params.get("out_trade_no"));
+                System.out.println("交易金额: " + params.get("total_amount"));
+                System.out.println("卖家在支付宝唯一id: " + params.get("seller_id"));
+                System.out.println("买家在支付宝唯一id: " + params.get("buyer_id"));
+                System.out.println("买家付款时间: " + params.get("gmt_payment"));
+                System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
+                // 更新订单状态
 //                System.out.println("=========分账========");
 //                Settle settle = new Settle();
 //                settle.setId(params.get("trade_no"));
@@ -85,11 +81,11 @@ public class AliPayController {
 //                settle.setAmount(0.11);
 //                settle.setTradeNo(params.get("trade_no"));
 //                alipayTemplate.settlePay(settle);
-//
-//            }else{
-//                System.out.println("验签失败");
-//            }
-//        }
-//        return "success";
-//    }
+
+            }else{
+                System.out.println("验签失败");
+            }
+        }
+        return "success";
+    }
 }

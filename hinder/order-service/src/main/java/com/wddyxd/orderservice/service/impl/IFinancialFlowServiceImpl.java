@@ -25,8 +25,9 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
     }
 
     @Override
-    public void paying(OrderMain orderMain) {
+    public FinancialFlow paying(OrderMain orderMain) {
         FinancialFlow financialFlow = new FinancialFlow();
+        financialFlow.setId(IdWorker.getId());
         financialFlow.setBuyerId(orderMain.getBuyerId());
         financialFlow.setMerchantId(orderMain.getMerchantId());
         financialFlow.setOrderId(orderMain.getId());
@@ -35,8 +36,9 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
         financialFlow.setStatus(0);
         financialFlow.setPayMethod(orderMain.getPayMethod());
         financialFlow.setRemark("正在进行订单支付");
-        financialFlow.setOutTradeNo(IdWorker.getId());
+        financialFlow.setOutTradeNo(financialFlow.getId());
         baseMapper.insert(financialFlow);
+        return financialFlow;
     }
 
     @Override

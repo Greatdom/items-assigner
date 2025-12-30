@@ -24,13 +24,13 @@ public class FinancialFlowDTO {
     private Integer tradeType;
     @NotNull(message = "金额不能为空", groups = {AddGroup.class, UpdateGroup.class})
     @DecimalMin(value = "0.01", message = "数额必须大于0", groups = {AddGroup.class, UpdateGroup.class})
-    private BigDecimal amount;
+    private BigDecimal money;
 
     @Override
     public String toString() {
         return "FinancialFlowDTO{" +
                 "tradeType=" + tradeType +
-                ", amount=" + amount +
+                ", amount=" + money +
                 '}';
     }
 
@@ -42,11 +42,11 @@ public class FinancialFlowDTO {
         this.tradeType = tradeType;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getMoney() {
+        return money;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setMoney(BigDecimal money) {
+        this.money = money;
     }
 }

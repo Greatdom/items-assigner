@@ -29,6 +29,14 @@ public class CommonConstant {
     public static final String deleteQueue="file-delete-queue";//RabbitMQ删除队列
     public static final String fileStoragePath="E:/FILE_STORAGE/";//文件存储路径
     public static final float COMPRESS_QUALITY = 0.5f; // 图片压缩质量（0-1，数值越小压缩率越高，失真越严重）
-
+    //alipay
+    public static final String ALIPAY_APP_ID = "2021XXXXXX695127";
+    public static final String ALIPAY_PRIVATE_KEY = "XXXXXX";
+    public static final String ALIPAY_PUBLIC_KEY = "XXXXXX";
+    public static final String ALIPAY_NOTIFY_URL = "http://dfd46925.naXXXXXXee.cc/api/pay/alipay/notify";
+    public static final String ALIPAY_RETURN_URL = "http://dfd46925.naXXXXXXee.cc/api/pay/alipay/return";
+    public static final String ALIPAY_GATEWAY_URL = "https://openapi-sandbox.dl.alipaydev.com/gateway.do";
+    public static final String SIGN_TYPE = "RSA2";
+    public static final String CHARSET = "UTF-8";
 
 }

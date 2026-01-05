@@ -12,13 +12,9 @@ import com.alipay.api.response.AlipayTradeRefundResponse;
 import com.alipay.easysdk.factory.Factory;
 import com.alipay.easysdk.kernel.Config;
 import com.wddyxd.common.constant.CommonConstant;
-import com.wddyxd.orderservice.controller.OrderMainController;
 import com.wddyxd.orderservice.pojo.entity.FinancialFlow;
 import com.wddyxd.orderservice.service.Interface.IFinancialFlowService;
-import com.wddyxd.orderservice.service.Interface.IOrderMainService;
-import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
-import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import com.wddyxd.orderservice.stateMachine.StateMachineTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,9 +30,9 @@ import org.springframework.stereotype.Component;
  **/
 
 @Component
-public class AlipayTemplate {
+public class AlipayServer {
 
-    private static final Logger log = LoggerFactory.getLogger(AlipayTemplate.class);
+    private static final Logger log = LoggerFactory.getLogger(AlipayServer.class);
 
     @Autowired
     private IFinancialFlowService financialFlowService;

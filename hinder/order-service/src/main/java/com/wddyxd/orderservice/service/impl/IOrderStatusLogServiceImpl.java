@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
-import com.wddyxd.orderservice.alipay.AlipayTemplate;
+import com.wddyxd.orderservice.alipay.AlipayModel;
 import com.wddyxd.orderservice.mapper.OrderStatusLogMapper;
 import com.wddyxd.orderservice.pojo.entity.FinancialFlow;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
@@ -43,7 +43,7 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
     private IFinancialFlowService financialFlowService;
 
     @Autowired
-    private AlipayTemplate alipayTemplate;
+    private AlipayModel alipayModel;
 
     private static final Logger log = LoggerFactory.getLogger(IOrderStatusLogServiceImpl.class);
 
@@ -81,7 +81,7 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
         FinancialFlow financialFlow = financialFlowService.OrderPaying(orderMain);
         //调用订单支付宝/微信支付接口
         try {
-            return alipayTemplate.pay(financialFlow);
+            return alipayModel.pay(financialFlow);
         } catch (AlipayApiException e) {
             log.error("试图发起支付宝支付时异常");
             throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
@@ -136,7 +136,7 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
 
         //调用订单支付宝/微信退款接口
         try {
-            alipayTemplate.refund(financialFlow);
+            alipayModel.refund(financialFlow);
         } catch (AlipayApiException e) {
             log.error("试图发起支付宝退款时异常");
             throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);

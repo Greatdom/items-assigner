@@ -47,34 +47,6 @@ public class AliPayController {
     private IFinancialFlowService financialFlowService;
 
 
-//    @Resource
-//    AlipayTemplate alipayTemplate;
-//
-//    @GetMapping(value = "/pay", produces = "text/html")
-//    @ResponseBody
-//    public String pay(@RequestParam long id) throws AlipayApiException {
-//        Order order = new Order();
-//        order.setId(id);
-//        order.setUserId(id+1);
-//        order.setInterfaceInfoId(id+2);
-//        order.setMoney(id+3.0);
-//        order.setRefundId(id+4);
-//        order.setPaymentMethod("支付宝");
-//        return alipayTemplate.pay(order);
-//    }
-//
-//    @GetMapping("/refund")
-//    public void refund(@RequestParam long id) throws AlipayApiException {
-//        Order order = new Order();
-//        order.setId(id);
-//        order.setUserId(id+1);
-//        order.setInterfaceInfoId(id+2);
-//        order.setMoney(id+3.0);
-//        order.setRefundId(id+4);
-//        order.setPaymentMethod("支付宝");
-//        alipayTemplate.refund(order);
-//    }
-
     @PostMapping("/notify")  // 注意这里必须是POST接口
     public String payNotify(HttpServletRequest request) throws Exception {
         if (request.getParameter("trade_status").equals("TRADE_SUCCESS")) {

@@ -20,7 +20,15 @@ public interface IFinancialFlowService extends IService<FinancialFlow> {
 
     public FinancialFlow paying(OrderMain orderMain);
 
+    public void paid(Long orderId);
+
+    public void payingFail(Long orderId);
+
     public FinancialFlow refunding(FinancialFlow financialFlow);
+
+    public void refunded(Long orderId);
+
+    public void refundingFail(Long orderId);
 
     public void List(SearchDTO searchDTO);
 

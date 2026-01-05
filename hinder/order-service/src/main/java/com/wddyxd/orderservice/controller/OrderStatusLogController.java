@@ -7,6 +7,7 @@ import com.wddyxd.common.utils.Result;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
+import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import com.wddyxd.orderservice.stateMachine.StateMachineTrigger;
@@ -43,6 +44,9 @@ public class OrderStatusLogController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderStatusLogController.class);
 
+    @Autowired
+    private IOrderStatusLogService orderStatusLogService;
+
     @GetMapping("/list/{id}")
     //需要orderStatusLog.list权限
     @Operation(summary = "列出订单状态接口", description = "查看订单的详细信息时调用该接口")
@@ -70,7 +74,8 @@ public class OrderStatusLogController {
 //       最后生成order_status_log表和更新order_main表
 //- 后续接入支付服务器,然后调用修改订单接口,解决幂等性问题,调用新增财务接口
         log.info("订单支付");
-        return Result.success(stateMachineTrigger.doAction(id, OrderEvent.PAY));
+//        stateMachineTrigger.doAction(id, OrderEvent.PAY)
+        return Result.success(orderStatusLogService.pay(id));
     }
     @PostMapping("/ship/{id}")
     //需要orderStatusLog.add权限且访问者的id等于订单的userId且是商家
@@ -79,7 +84,9 @@ public class OrderStatusLogController {
 //       传入订单id,检查订单是否处于 "已支付" 状态,直接生成order_status_log表,
 //       然后调用修改订单接口,解决幂等性问题
         log.info("订单发货");
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        stateMachineTrigger.doAction(id, OrderEvent.SHIP);
+        return Result.success();
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/receive/{id}")
     //需要orderStatusLog.add权限且访问者的id等于订单的userId
@@ -88,7 +95,9 @@ public class OrderStatusLogController {
 //       传入订单id,检查订单是否处于 "已发货" 状态,直接生成order_status_log表,
 //- 然后调用修改订单接口,解决幂等性问题
         log.info("订单收货");
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        stateMachineTrigger.doAction(id, OrderEvent.RECEIVE);
+        return Result.success();
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/cancel/{id}")
     //需要orderStatusLog.add权限
@@ -97,7 +106,9 @@ public class OrderStatusLogController {
 //       传入订单id,检查订单是否处于 "待支付" 状态,直接生成order_status_log表,
 //- 然后恢复商品规格库存,然后退还优惠券给用户,然后调用修改订单接口,解决幂等性问题
         log.info("取消订单");
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        stateMachineTrigger.doAction(id, OrderEvent.CANCEL);
+        return Result.success();
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
     @PostMapping("/rollback/{id}")
     //需要orderStatusLog.add权限
@@ -107,7 +118,9 @@ public class OrderStatusLogController {
 //- 然后将已支付的钱退回给用户,然后恢复商品规格库存,然后退还优惠券给用户,然后调用修改订单接口,解决幂等性问题
 //- 不编写退货后退回已收货的商品的业务逻辑
         log.info("订单退货");
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        orderStatusLogService.rollback(id);
+        return Result.success();
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }
 
     //设置状态机:订单有6种状态,Integer status;//0-待付款 1-待发货 2-待收货 3-已完成 4-已取消

@@ -14,9 +14,12 @@ import com.alipay.easysdk.kernel.Config;
 import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.orderservice.controller.OrderMainController;
 import com.wddyxd.orderservice.pojo.entity.FinancialFlow;
+import com.wddyxd.orderservice.service.Interface.IFinancialFlowService;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
+import com.wddyxd.orderservice.stateMachine.StateMachineTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +38,11 @@ public class AlipayTemplate {
 
     private static final Logger log = LoggerFactory.getLogger(AlipayTemplate.class);
 
-//    @Autowired
-//    private IOrderMainService orderMainService;
-//
-//    @Autowired
-//    private IOrderStatusLogService orderStatusLogService;
+    @Autowired
+    private IFinancialFlowService financialFlowService;
+
+    @Autowired
+    private StateMachineTrigger stateMachineTrigger;
 
     @Bean
     public void initAlipaySdk() {
@@ -104,7 +107,7 @@ public class AlipayTemplate {
         request.setBizContent(jsonObject.toString());
         AlipayTradeRefundResponse response = alipayClient.execute(request);
         if (response.isSuccess()) {
-            System.out.println("退款成功：" + response.getBody());
+            log.info("退款成功：{}", response.getBody());
 
 //            Long orderId = financialFlow.getOrderId();
 //            OrderStatus orderStatus = OrderStatus.CANCELLED;
@@ -113,15 +116,13 @@ public class AlipayTemplate {
 //            //TODO 给平台分账退款
 //
 //            //TODO 确定最终财务
-//
 //            //TODO 更新订单和订单日志
-//            orderMainService.update(orderId, orderStatus);
-//            orderStatusLogService.add(orderId, orderStatus);
-
+            stateMachineTrigger.doAction(financialFlow.getOrderId(), OrderEvent.ROLLBACK);
 
 
         } else {
-            System.out.println("退款失败：" + response.getSubMsg());
+            log.info("退款失败：{}", response.getBody());
+            financialFlowService.refundingFail(financialFlow.getOrderId());
         }
     }
 

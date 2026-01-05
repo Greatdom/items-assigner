@@ -3,9 +3,12 @@ package com.wddyxd.orderservice.controller;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.easysdk.factory.Factory;
+import com.wddyxd.orderservice.service.Interface.IFinancialFlowService;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
+import com.wddyxd.orderservice.stateMachine.StateMachineTrigger;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -34,6 +37,12 @@ public class AliPayController {
 
     @Autowired
     private IOrderStatusLogService orderStatusLogService;
+
+    @Autowired
+    private StateMachineTrigger stateMachineTrigger;
+
+    @Autowired
+    private IFinancialFlowService financialFlowService;
 
 
 //    @Resource
@@ -75,9 +84,11 @@ public class AliPayController {
                 params.put(name, request.getParameter(name));
                  System.out.println(name + " = " + request.getParameter(name));
             }
+            Long orderId = Long.parseLong(params.get("out_trade_no"));
             // 支付宝验签
             if (Factory.Payment.Common().verifyNotify(params)) {
                 // 验签通过
+                log.info("验签成功");
                 System.out.println("交易名称: " + params.get("subject"));
                 System.out.println("交易状态: " + params.get("trade_status"));
                 System.out.println("支付宝交易凭证号: " + params.get("trade_no"));
@@ -88,22 +99,19 @@ public class AliPayController {
                 System.out.println("买家付款时间: " + params.get("gmt_payment"));
                 System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
 
-                Long orderId = Long.parseLong(params.get("out_trade_no"));
-                OrderStatus orderStatus = OrderStatus.PENDING_SHIPMENT;
 
 
                 //TODO 异步操作
                 //TODO 给平台分账
 
-                //TODO 确定最终财务
-
-                //TODO 更新订单和订单日志
-                orderMainService.update(orderId, orderStatus);
-                orderStatusLogService.add(orderId, orderStatus);
+                //确定最终财务
+                //更新订单和订单日志
+                stateMachineTrigger.doAction(orderId, OrderEvent.PAY);
 
 
             }else{
-                System.out.println("验签失败");
+                log.error("验签失败");
+                financialFlowService.payingFail(orderId);
             }
         }
         return "success";

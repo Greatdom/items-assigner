@@ -6,6 +6,7 @@ import com.wddyxd.common.pojo.BaseEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -28,6 +29,8 @@ public class OrderMain extends BaseEntity implements Serializable {
     private String remark;//订单备注
     private Integer status;//0-待付款 1-待发货 2-待收货 3-已完成 4-已取消
     private Integer payMethod;//0-未选择 1-微信支付 2-支付宝支付
+    @TableField(exist = false)
+    private Long[] couponIds;
 
     @Override
     public String toString() {
@@ -45,6 +48,7 @@ public class OrderMain extends BaseEntity implements Serializable {
                 ", remark='" + remark + '\'' +
                 ", status=" + status +
                 ", payMethod=" + payMethod +
+                ", couponIds=" + Arrays.toString(couponIds) +
                 '}';
     }
 
@@ -142,6 +146,14 @@ public class OrderMain extends BaseEntity implements Serializable {
 
     public void setPayMethod(Integer payMethod) {
         this.payMethod = payMethod;
+    }
+
+    public Long[] getCouponIds() {
+        return couponIds;
+    }
+
+    public void setCouponIds(Long[] couponIds) {
+        this.couponIds = couponIds;
     }
 
 }

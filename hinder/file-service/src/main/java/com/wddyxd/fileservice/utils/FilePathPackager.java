@@ -18,15 +18,15 @@ public class FilePathPackager {
 
 
     public String getTotalFileStoragePath(UserFileBind userFileBind){
-        return CommonConstant.fileStoragePath + File.separator + userFileBind.getUserId() + File.separator + userFileBind.getFileName();
+        return CommonConstant.FILE_STORAGE_PATH + File.separator + userFileBind.getUserId() + File.separator + userFileBind.getFileName();
     }
 
     public String getTotalFileStoragePath(Long userId, String uniqueFileName){
-        return CommonConstant.fileStoragePath + File.separator + userId + File.separator + uniqueFileName;
+        return CommonConstant.FILE_STORAGE_PATH + File.separator + userId + File.separator + uniqueFileName;
     }
 
     public String getFileStorageDir(Long userId){
-        return CommonConstant.fileStoragePath + File.separator + userId;
+        return CommonConstant.FILE_STORAGE_PATH + File.separator + userId;
     }
 
 }

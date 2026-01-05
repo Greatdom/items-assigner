@@ -60,7 +60,7 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
         HashMap<String, String> map = transferToFile(userId, file, true);
         String filePath = map.get("filePath");
         String fileName = map.get("uniqueFileName");
-        rabbitTemplate.convertAndSend(CommonConstant.compressQueue,filePath);
+        rabbitTemplate.convertAndSend(CommonConstant.FILE_COMPRESS_QUEUE,filePath);
         UserFileBind userFileBind = new UserFileBind();
         userFileBind.setFileName(fileName);
         userFileBind.setUserId(userId);
@@ -134,7 +134,7 @@ public class IUserFileBindServiceImpl extends ServiceImpl<UserFileBindMapper, Us
         }
         fileRedisManager.deleteFileMeta(userId,fileName);
         String filePath = filePathPackager.getTotalFileStoragePath(userId,fileName);
-        rabbitTemplate.convertAndSend(CommonConstant.deleteQueue,filePath);
+        rabbitTemplate.convertAndSend(CommonConstant.FILE_DELETE_QUEUE,filePath);
     }
 
     private void validateFile(MultipartFile file){

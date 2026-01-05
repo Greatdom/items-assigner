@@ -17,6 +17,7 @@ import com.wddyxd.orderservice.stateMachine.StateMachineTrigger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @program: items-assigner
@@ -36,6 +37,7 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
     //TODO如果是订单支付和订单退款财务的话允许一个orderId在某个时间只能存在一个正在支付财务,多个支付失败财务和一个支付成功财务
 
     @Override
+    @Transactional
     public FinancialFlow paying(OrderMain orderMain) {
         FinancialFlow financialFlow = new FinancialFlow();
         financialFlow.setId(IdWorker.getId());
@@ -47,10 +49,12 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
         financialFlow.setStatus(0);
         financialFlow.setPayMethod(orderMain.getPayMethod());
         financialFlow.setRemark("正在进行订单支付");
-        if(financialFlow.getTradeType()==2){
-            financialFlow.setOutTradeNo(orderMain.getId());
-        }else{
-            financialFlow.setOutTradeNo(financialFlow.getId());
+        financialFlow.setOutTradeNo(orderMain.getId());
+        // 加锁查询
+        int activeCount = baseMapper.countActivePayment(financialFlow.getOrderId());
+        if (activeCount > 0) {
+            log.error("该订单已有未完成或已成功的支付记录，无法重复发起付款");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
         baseMapper.insert(financialFlow);
         return financialFlow;
@@ -58,6 +62,7 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
 
     @Override
     public void paid(Long orderId) {
+        //TODO 应该要获取支付回调的数据
         log.info("正在生成支付订单的最终财务");
         FinancialFlow financialFlow = baseMapper.selectOne(new LambdaQueryWrapper<FinancialFlow>()
                 .eq(FinancialFlow::getOrderId,orderId)
@@ -91,6 +96,7 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
     }
 
     @Override
+    @Transactional
     public FinancialFlow refunding(FinancialFlow oldFinancialFlow) {
         FinancialFlow financialFlow = new FinancialFlow();
         BeanUtil.copyProperties(oldFinancialFlow,financialFlow);
@@ -98,18 +104,44 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
         financialFlow.setTradeType(3);
         financialFlow.setStatus(0);
         financialFlow.setRemark("正在进行订单退款");
+        // 加锁查询
+        int activeCount = baseMapper.countActiveRefund(financialFlow.getOrderId());
+        if (activeCount > 0) {
+            log.error("该订单已有未完成或已成功的退款记录，无法重复发起退款");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
         baseMapper.insert(financialFlow);
         return financialFlow;
     }
 
     @Override
     public void refunded(Long orderId) {
-
+        FinancialFlow financialFlow = baseMapper.selectOne(new LambdaQueryWrapper<FinancialFlow>()
+                .eq(FinancialFlow::getOrderId,orderId)
+                .eq(FinancialFlow::getTradeType,3)
+                .eq(FinancialFlow::getStatus,0)
+        );
+        if(financialFlow== null||financialFlow.getIsDeleted()){
+            log.error("未找到该订单的退款信息");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
+        financialFlow.setStatus(1);
+        baseMapper.updateById(financialFlow);
     }
 
     @Override
     public void refundingFail(Long orderId) {
-
+        FinancialFlow financialFlow = baseMapper.selectOne(new LambdaQueryWrapper<FinancialFlow>()
+                .eq(FinancialFlow::getOrderId,orderId)
+                .eq(FinancialFlow::getTradeType,3)
+                .eq(FinancialFlow::getStatus,0)
+        );
+        if(financialFlow== null||financialFlow.getIsDeleted()){
+            log.error("未找到该订单的退款信息");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
+        financialFlow.setStatus(2);
+        baseMapper.updateById(financialFlow);
     }
 
     @Override

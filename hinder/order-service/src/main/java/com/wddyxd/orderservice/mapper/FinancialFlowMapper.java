@@ -13,4 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  **/
 @Mapper
 public interface FinancialFlowMapper extends BaseMapper<FinancialFlow> {
+    int countActivePayment(Long orderId);
+    int countActiveRefund(Long orderId);
 }

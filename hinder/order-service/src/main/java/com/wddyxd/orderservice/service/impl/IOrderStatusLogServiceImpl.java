@@ -78,7 +78,7 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
 //            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
 //        }
         //生成在支付财务
-        FinancialFlow financialFlow = financialFlowService.paying(orderMain);
+        FinancialFlow financialFlow = financialFlowService.OrderPaying(orderMain);
         //调用订单支付宝/微信支付接口
         try {
             return alipayTemplate.pay(financialFlow);
@@ -132,7 +132,7 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
 
-        FinancialFlow financialFlow = financialFlowService.refunding(dbFinancialFlow);
+        FinancialFlow financialFlow = financialFlowService.OrderRefunding(dbFinancialFlow);
 
         //调用订单支付宝/微信退款接口
         try {

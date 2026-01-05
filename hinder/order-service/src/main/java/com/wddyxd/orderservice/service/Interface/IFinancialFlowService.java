@@ -16,19 +16,17 @@ import com.wddyxd.orderservice.pojo.entity.OrderMain;
 
 public interface IFinancialFlowService extends IService<FinancialFlow> {
 
-    public void add(FinancialFlowDTO financialFlowDTO);
+    public FinancialFlow OrderPaying(OrderMain orderMain);
 
-    public FinancialFlow paying(OrderMain orderMain);
+    public void OrderPaid(OrderMain orderMain,FinancialFlow getFinancialFlow);
 
-    public void paid(Long orderId);
+    public void OrderPayingFail(Long orderId);
 
-    public void payingFail(Long orderId);
+    public FinancialFlow OrderRefunding(FinancialFlow financialFlow);
 
-    public FinancialFlow refunding(FinancialFlow financialFlow);
+    public void OrderRefunded(Long orderId);
 
-    public void refunded(Long orderId);
-
-    public void refundingFail(Long orderId);
+    public void OrderRefundingFail(Long orderId);
 
     public void List(SearchDTO searchDTO);
 

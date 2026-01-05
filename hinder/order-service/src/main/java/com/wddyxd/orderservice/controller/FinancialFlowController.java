@@ -26,14 +26,6 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 public class FinancialFlowController {
 
-    @PostMapping("/add")
-    //非基础角色登录后可用
-    @Operation(summary = "新增财务接口", description = "用户访问涉及支付的接口时调用该接口")
-    public Result<Void> add(@Validated(AddGroup.class) @RequestBody FinancialFlowDTO financialFlowDTO){
-//        传入FinancialFlowDTO,生成财务
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
-    }
-
 
     @GetMapping("/list")
     //需要financialFlow.list权限

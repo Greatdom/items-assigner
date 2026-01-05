@@ -3,6 +3,8 @@ package com.wddyxd.orderservice.controller;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.easysdk.factory.Factory;
+import com.wddyxd.orderservice.pojo.entity.FinancialFlow;
+import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.service.Interface.IFinancialFlowService;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
@@ -98,7 +100,13 @@ public class AliPayController {
                 System.out.println("买家在支付宝唯一id: " + params.get("buyer_id"));
                 System.out.println("买家付款时间: " + params.get("gmt_payment"));
                 System.out.println("买家付款金额: " + params.get("buyer_pay_amount"));
-
+                FinancialFlow financialFlow = new FinancialFlow();
+                financialFlow.setTransInId(Long.valueOf(params.get("seller_id")));
+                financialFlow.setTransOutId(Long.valueOf(params.get("buyer_id")));
+                financialFlow.setTradeNo(params.get("trade_no"));
+                financialFlow.setPayMethod(2);
+                OrderMain orderMain = new OrderMain();
+                orderMain.setId(orderId);
 
 
                 //TODO 异步操作
@@ -106,12 +114,12 @@ public class AliPayController {
 
                 //确定最终财务
                 //更新订单和订单日志
-                stateMachineTrigger.doAction(orderId, OrderEvent.PAY);
+                stateMachineTrigger.doAction(orderMain, financialFlow, OrderEvent.PAY);
 
 
             }else{
                 log.error("验签失败");
-                financialFlowService.payingFail(orderId);
+                financialFlowService.OrderPayingFail(orderId);
             }
         }
         return "success";

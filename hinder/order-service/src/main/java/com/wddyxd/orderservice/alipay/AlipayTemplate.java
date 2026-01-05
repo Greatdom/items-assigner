@@ -122,7 +122,7 @@ public class AlipayTemplate {
 
         } else {
             log.info("退款失败：{}", response.getBody());
-            financialFlowService.refundingFail(financialFlow.getOrderId());
+            financialFlowService.OrderRefundingFail(financialFlow.getOrderId());
         }
     }
 

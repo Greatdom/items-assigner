@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
         fallbackFactory = ProductSkuClientFallbackFactory.class)
 public interface ProductSkuClient {
 
-    @Operation(summary = "修改商品规格接口", description = "在创建商品后编辑商品时可用")
+    @PutMapping("/product/productSku/update/consume")
     public Result<Void> updateConsume(@RequestParam Long skuId, @RequestParam Integer quantity);
 
 }

@@ -1,17 +1,14 @@
 package com.wddyxd.orderservice.controller;
 
 
-import com.alipay.api.AlipayApiException;
 import com.alipay.easysdk.factory.Factory;
 import com.wddyxd.orderservice.pojo.entity.FinancialFlow;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.service.Interface.IFinancialFlowService;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
-import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.service.Interface.ICommonOrderStatusLogService;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
-import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import com.wddyxd.orderservice.stateMachine.StateMachineTrigger;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +33,6 @@ public class AliPayController {
 
     @Autowired
     private IOrderMainService orderMainService;
-
-    @Autowired
-    private IOrderStatusLogService orderStatusLogService;
 
     @Autowired
     private StateMachineTrigger stateMachineTrigger;

@@ -4,12 +4,10 @@ package com.wddyxd.orderservice.controller;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
-import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
-import com.wddyxd.orderservice.service.Interface.IOrderMainService;
-import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.service.Interface.ICommonOrderStatusLogService;
+import com.wddyxd.orderservice.service.Interface.IPaymentOrderStatusLogService;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
-import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import com.wddyxd.orderservice.stateMachine.StateMachineTrigger;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,11 +15,6 @@ import jakarta.validation.constraints.Min;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.config.StateMachineFactory;
-import org.springframework.statemachine.support.DefaultStateMachineContext;
-import org.springframework.statemachine.state.State;
-import org.springframework.statemachine.support.StateMachineUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,7 +38,10 @@ public class OrderStatusLogController {
     private static final Logger log = LoggerFactory.getLogger(OrderStatusLogController.class);
 
     @Autowired
-    private IOrderStatusLogService orderStatusLogService;
+    private ICommonOrderStatusLogService commonOrderStatusLogService;
+
+    @Autowired
+    private IPaymentOrderStatusLogService paymentOrderStatusLogService;
 
     @GetMapping("/list/{id}")
     //需要orderStatusLog.list权限
@@ -75,7 +71,7 @@ public class OrderStatusLogController {
 //- 后续接入支付服务器,然后调用修改订单接口,解决幂等性问题,调用新增财务接口
         log.info("订单支付");
 //        stateMachineTrigger.doAction(id, OrderEvent.PAY)
-        return Result.success(orderStatusLogService.pay(id));
+        return Result.success(paymentOrderStatusLogService.pay(id));
     }
     @PostMapping("/ship/{id}")
     //需要orderStatusLog.add权限且访问者的id等于订单的userId且是商家
@@ -118,7 +114,7 @@ public class OrderStatusLogController {
 //- 然后将已支付的钱退回给用户,然后恢复商品规格库存,然后退还优惠券给用户,然后调用修改订单接口,解决幂等性问题
 //- 不编写退货后退回已收货的商品的业务逻辑
         log.info("订单退货");
-        orderStatusLogService.rollback(id);
+        paymentOrderStatusLogService.rollback(id);
         return Result.success();
 //        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
     }

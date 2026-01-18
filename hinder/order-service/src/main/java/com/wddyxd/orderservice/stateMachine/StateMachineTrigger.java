@@ -3,11 +3,10 @@ package com.wddyxd.orderservice.stateMachine;
 
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
-import com.wddyxd.orderservice.controller.OrderStatusLogController;
 import com.wddyxd.orderservice.pojo.entity.FinancialFlow;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.service.Interface.IFinancialFlowService;
-import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.service.Interface.ICommonOrderStatusLogService;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import org.slf4j.Logger;
@@ -37,7 +36,7 @@ public class StateMachineTrigger {
     private StateMachinePersister<OrderStatus, OrderEvent, Long> persister;
 
     @Autowired
-    private IOrderStatusLogService orderStatusLogService;
+    private ICommonOrderStatusLogService commonOrderStatusLogService;
 
     private static final Logger log = LoggerFactory.getLogger(StateMachineTrigger.class);
 
@@ -86,9 +85,9 @@ public class StateMachineTrigger {
         switch (event) {
             //TODO PAY时调用回调方法
             case PAY -> financialFlowService.OrderPaid(orderMain,financialFlow);
-            case SHIP -> orderStatusLogService.ship(orderMain.getId());
-            case RECEIVE -> orderStatusLogService.receive(orderMain.getId());
-            case CANCEL -> orderStatusLogService.cancel(orderMain.getId());
+            case SHIP -> commonOrderStatusLogService.ship(orderMain.getId());
+            case RECEIVE -> commonOrderStatusLogService.receive(orderMain.getId());
+            case CANCEL -> commonOrderStatusLogService.cancel(orderMain.getId());
             //TODO 退款时调用回调方法
             case ROLLBACK -> financialFlowService.OrderRefunded(orderMain.getId());
         }

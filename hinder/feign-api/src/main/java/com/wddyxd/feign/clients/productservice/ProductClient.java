@@ -24,12 +24,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ProductClient {
 
     @GetMapping("/product/product/visit/{id}")
-    //任何用户登录后可访问
-    @Operation(summary = "在用户端访问商品接口", description = "在用户端点击被推送的商品可以访问该商品")
     public Result<ProductDetailVO> visit(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id);
 
     @GetMapping("/product/product/get/{id}")
-    @Operation(summary = "获取商品接口", description = "远程调用接口")
     public Result<ProductProfileVO> get(@PathVariable @Min(value = 1, message = "ID必须大于0") Long id);
 
 }

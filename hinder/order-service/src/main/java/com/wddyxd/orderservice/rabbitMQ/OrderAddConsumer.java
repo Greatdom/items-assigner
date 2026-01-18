@@ -3,7 +3,6 @@ package com.wddyxd.orderservice.rabbitMQ;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.wddyxd.common.constant.CommonConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -13,11 +12,10 @@ import com.wddyxd.feign.clients.userservice.UserAddressClient;
 import com.wddyxd.feign.pojo.userservice.usercontroller.UserAddress;
 import com.wddyxd.orderservice.mapper.OrderAddressMapper;
 import com.wddyxd.orderservice.mapper.OrderMainMapper;
-import com.wddyxd.orderservice.pojo.DTO.OrderDTO;
 import com.wddyxd.orderservice.pojo.entity.OrderAddress;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
-import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import com.wddyxd.orderservice.service.Interface.ICommonOrderStatusLogService;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,10 +23,7 @@ import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.io.File;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -44,7 +39,7 @@ public class OrderAddConsumer {
     private static final Logger log = LoggerFactory.getLogger(OrderAddConsumer.class);
 
     @Autowired
-    private IOrderStatusLogService orderStatusLogService;
+    private ICommonOrderStatusLogService commonOrderStatusLogService;
     @Autowired
     private OrderAddressMapper orderAddressMapper;
     @Autowired
@@ -94,7 +89,7 @@ public class OrderAddConsumer {
         orderStatusLog.setOperatorId(orderMain.getBuyerId());
         orderStatusLog.setOperateTime(new Date());
         orderStatusLog.setRemark("订单待付款");
-        orderStatusLogService.save(orderStatusLog);
+        commonOrderStatusLogService.save(orderStatusLog);
 
         //然后存储收货地址快照
         Result<UserAddress> userAddress = userAddressClient.getDefault(orderMain.getBuyerId());

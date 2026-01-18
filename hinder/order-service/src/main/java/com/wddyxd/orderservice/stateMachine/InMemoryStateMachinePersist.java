@@ -7,9 +7,6 @@ import com.wddyxd.orderservice.mapper.OrderMainMapper;
 import com.wddyxd.orderservice.mapper.OrderStatusLogMapper;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
-import com.wddyxd.orderservice.service.Interface.IOrderMainService;
-import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
-import com.wddyxd.orderservice.service.impl.IOrderStatusLogServiceImpl;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderEvent;
 import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
@@ -23,8 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @program: items-assigner

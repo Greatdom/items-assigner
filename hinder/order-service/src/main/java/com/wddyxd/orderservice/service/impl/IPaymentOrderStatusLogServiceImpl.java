@@ -13,28 +13,23 @@ import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.IFinancialFlowService;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
-import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
-import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
-import com.wddyxd.security.service.GetCurrentUserInfoService;
+import com.wddyxd.orderservice.service.Interface.IPaymentOrderStatusLogService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-
 /**
  * @program: items-assigner
  * @description: description
  * @author: wddyxd
- * @create: 2025-12-24 20:30
+ * @create: 2026-01-18 11:48
  **/
 @Service
-public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper, OrderStatusLog> implements IOrderStatusLogService {
+public class IPaymentOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper, OrderStatusLog> implements IPaymentOrderStatusLogService {
 
-    @Autowired
-    private GetCurrentUserInfoService getCurrentUserInfoService;
+    private static final Logger log = LoggerFactory.getLogger(IPaymentOrderStatusLogServiceImpl.class);
 
     @Autowired
     private IOrderMainService orderMainService;
@@ -44,13 +39,6 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
 
     @Autowired
     private AlipayModel alipayModel;
-
-    private static final Logger log = LoggerFactory.getLogger(IOrderStatusLogServiceImpl.class);
-
-    @Override
-    public OrderStatusLog list(Long id) {
-        return null;
-    }
 
     @Override
     @Transactional
@@ -76,21 +64,6 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
     }
 
     @Override
-    public void ship(Long id) {
-        log.info("执行发货业务，订单ID={}", id);
-    }
-
-    @Override
-    public void receive(Long id) {
-        log.info("执行确认收货业务，订单ID={}", id);
-    }
-
-    @Override
-    public void cancel(Long id) {
-        log.info("执行取消订单业务，订单ID={}", id);
-    }
-
-    @Override
     @Transactional
     public void rollback(Long id) {
         log.info("执行退货业务，订单ID={}", id);
@@ -112,7 +85,7 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
         //生成在退款财务
         FinancialFlow dbFinancialFlow = financialFlowService.getBaseMapper().selectOne(
                 new LambdaQueryWrapper<FinancialFlow>()
-                .eq(FinancialFlow::getOrderId, id)
+                        .eq(FinancialFlow::getOrderId, id)
         );
         if(dbFinancialFlow == null||dbFinancialFlow.getIsDeleted()){
             log.error("财务不存在或者已删除");
@@ -129,4 +102,5 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
             throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
         }
     }
+
 }

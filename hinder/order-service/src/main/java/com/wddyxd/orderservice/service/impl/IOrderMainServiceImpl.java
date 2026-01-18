@@ -12,16 +12,12 @@ import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.pojo.SearchDTO;
 import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.clients.productservice.ProductClient;
-import com.wddyxd.feign.clients.productservice.ProductSkuClient;
-import com.wddyxd.feign.clients.productservice.UserCouponClient;
 import com.wddyxd.feign.clients.userservice.MerchantSupplementClient;
-import com.wddyxd.feign.clients.userservice.UserAddressClient;
 import com.wddyxd.feign.clients.userservice.UserClient;
 import com.wddyxd.feign.pojo.productservice.Coupon;
 import com.wddyxd.feign.pojo.productservice.ProductDetailVO;
 import com.wddyxd.feign.pojo.productservice.ProductProfileVO;
 import com.wddyxd.feign.pojo.productservice.ProductSkuVO;
-import com.wddyxd.feign.pojo.userservice.usercontroller.UserAddress;
 import com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO;
 import com.wddyxd.orderservice.mapper.OrderAddressMapper;
 import com.wddyxd.orderservice.mapper.OrderMainMapper;
@@ -30,10 +26,7 @@ import com.wddyxd.orderservice.pojo.VO.OrderDetailVO;
 import com.wddyxd.orderservice.pojo.VO.OrderProfileVO;
 import com.wddyxd.orderservice.pojo.entity.OrderAddress;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
-import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
-import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
-import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +36,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @program: items-assigner

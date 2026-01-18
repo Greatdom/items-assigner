@@ -3,7 +3,6 @@ package com.wddyxd.orderservice.service.Interface;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
-import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 
 /**
  * @program: items-assigner
@@ -12,19 +11,14 @@ import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
  * @create: 2025-12-24 20:12
  **/
 
-public interface IOrderStatusLogService extends IService<OrderStatusLog> {
-
+public interface ICommonOrderStatusLogService extends IService<OrderStatusLog> {
 
     public OrderStatusLog list(Long id);
-
-    public String pay(Long id);
 
     public void ship(Long id);
 
     public void receive(Long id);
 
     public void cancel(Long id);
-
-    public void rollback(Long id);
 
 }

@@ -18,6 +18,7 @@ import com.wddyxd.orderservice.pojo.entity.OrderAddress;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.IOrderStatusLogService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.Queue;
@@ -62,7 +63,7 @@ public class OrderAddConsumer {
             exclusive = "false",
             autoDelete = "false"
     ))
-    @Transactional
+    @GlobalTransactional
     public void handleOrderAdd( OrderMain orderMain) {
         //远程调用商品和规格库存减少接口,远程接口第二次判断quantity是否比sku的stock大
         Result<Void> getProductSkuConsume= productSkuClient.updateConsume(orderMain.getSkuId(), orderMain.getQuantity());
@@ -80,7 +81,7 @@ public class OrderAddConsumer {
         //TODO 要根据优惠券的使用情况和性质计算payPrice
         orderMain.setPayPrice(orderMain.getTotalPrice());
         //添加remark,如果订单发起成功则记录优惠券使用情况,否则则记录订单发起失败
-        orderMain.setRemark("如果订单发起成功则记录优惠券使用情况,否则则记录订单发起失败");
+        orderMain.setRemark("消费优惠券: "+getUserCouponConsume.getData().toString());
         //成功则设置status=0
         orderMain.setStatus(0);
         //设置payMethod=0

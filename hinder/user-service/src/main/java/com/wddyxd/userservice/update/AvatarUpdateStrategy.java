@@ -9,6 +9,7 @@ import com.wddyxd.userservice.pojo.DTO.update.UpdateAvatarDTO;
 import com.wddyxd.userservice.pojo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class AvatarUpdateStrategy implements UserUpdateStrategy<UpdateAvatarDTO>
     }
 
     @Override
+    @Transactional
     public void update(UpdateAvatarDTO dto, UserRelatedData userRelatedData) {
         //TODO 用分布式事务
 

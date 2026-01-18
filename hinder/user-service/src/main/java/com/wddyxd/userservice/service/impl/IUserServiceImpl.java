@@ -28,6 +28,7 @@ import com.wddyxd.userservice.update.UserUpdateStrategyFactory;
 import com.wddyxd.userservice.update.UserUpdateTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -136,6 +137,7 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     }
 
     @Override
+    @Transactional
     public void updateAvatar(UpdateAvatarDTO updateAvatarDTO) {
         UserUpdateStrategy<UpdateAvatarDTO> strategy = userUpdateStrategyFactory.getStrategy(UpdateAvatarDTO.class);
         updateTemplate.update(updateAvatarDTO, strategy);

@@ -56,6 +56,7 @@ public class UserUpdateTemplate {
 
     }
     //按需加载关联表数据
+    @Transactional
     private UserRelatedData loadRelatedData(Long userId, List<UserUpdateStrategy.RelatedTableType> needLoadTables){
         UserRelatedData relatedData = new UserRelatedData();
         //按需加载表
@@ -75,7 +76,6 @@ public class UserUpdateTemplate {
 
         return relatedData;
     }
-
     private <T extends BaseUserUpdateDTO> void postProcess(T dto, UserRelatedData relatedData,UserUpdateStrategy<T> strategy){
         //比如设置redis时间戳来解决幂等性问题
     }

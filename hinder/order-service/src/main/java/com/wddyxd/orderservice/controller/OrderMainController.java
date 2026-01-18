@@ -13,6 +13,7 @@ import com.wddyxd.feign.clients.userservice.MerchantSupplementClient;
 import com.wddyxd.orderservice.pojo.DTO.OrderDTO;
 import com.wddyxd.orderservice.pojo.VO.OrderDetailVO;
 import com.wddyxd.orderservice.pojo.VO.OrderProfileVO;
+import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,6 +39,9 @@ public class OrderMainController {
 
     private static final Logger log = LoggerFactory.getLogger(OrderMainController.class);
 
+    @Autowired
+    private IOrderMainService orderMainService;
+
     @PostMapping("/add")
     //需要order.add权限而且访问者的id等于参数的userId
     @Operation(summary = "新增订单接口", description = "用户进行下单操作")
@@ -55,7 +59,8 @@ public class OrderMainController {
 //- 将该订单传入定时任务,如果15分钟没有付款就执行取消订单操作
         log.info("新增订单");
 
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        orderMainService.add(orderDTO);
+        return Result.success();
     }
 
 

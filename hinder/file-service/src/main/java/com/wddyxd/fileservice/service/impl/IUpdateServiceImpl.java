@@ -9,6 +9,7 @@ import com.wddyxd.feign.clients.userservice.UserClient;
 import com.wddyxd.feign.pojo.userservice.usercontroller.UpdateAvatarDTO;
 import com.wddyxd.fileservice.service.Interface.IUpdateService;
 import com.wddyxd.fileservice.service.Interface.IUserFileBindService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,8 @@ public class IUpdateServiceImpl implements IUpdateService {
     private static final Logger log = LoggerFactory.getLogger(IUpdateServiceImpl.class);
 
     @Override
+    @GlobalTransactional
     public String updateAvatar(MultipartFile file, Long userId, String oldAvatar) {
-        //TODO 用分布式事务
-
         //调用上传文件接口来更新头像
         String avatar = userFileBindService.uploadIncompressibleFile(file, userId);
         //远程更新user数据

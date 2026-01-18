@@ -2,6 +2,18 @@ server:
   port: 8084
 
 spring:
+  servlet:
+    multipart:
+      # 单个文件的最大大小
+      max-file-size: 100MB
+      # 单次请求的总文件大小
+      max-request-size: 200MB
+      # 是否启用文件上传支持（默认true）
+      enabled: true
+      # 文件临时存储位置（可选）
+      location: ${java.io.tmpdir}
+      # 文件大小阈值，超过则写入磁盘（默认0，即所有文件都写入磁盘）
+      file-size-threshold: 0
   application:
     name: file-service
   cloud:

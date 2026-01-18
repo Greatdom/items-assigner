@@ -88,7 +88,7 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         for(ProductSkuVO productSkuVO:getProductDetailVO.getData().getProductSkuVO())
             if(productSkuVO.getId().equals(orderDTO.getSkuId())){
                 //第一次判断quantity是否比sku的stock大
-                if(orderDTO.getQuantity()<productSkuVO.getStock()){
+                if(orderDTO.getQuantity()>productSkuVO.getStock()){
                     log.error("商品库存不足");
                     throw new CustomException(ResultCodeEnum.PARAM_ERROR);
                 }

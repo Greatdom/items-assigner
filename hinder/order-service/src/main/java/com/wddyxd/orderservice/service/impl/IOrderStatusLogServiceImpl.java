@@ -48,19 +48,6 @@ public class IOrderStatusLogServiceImpl extends ServiceImpl<OrderStatusLogMapper
     private static final Logger log = LoggerFactory.getLogger(IOrderStatusLogServiceImpl.class);
 
     @Override
-    public void add(Long id, OrderStatus orderStatus) {
-        if(orderStatus == null||id == null)
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        OrderStatusLog orderStatusLog = new OrderStatusLog();
-        orderStatusLog.setOperatorId(getCurrentUserInfoService.getCurrentUserId());
-        orderStatusLog.setOrderId(id);
-        orderStatusLog.setStatus(orderStatus.getCode());
-        orderStatusLog.setRemark(orderStatus.getDesc());
-        orderStatusLog.setOperateTime(new Date());
-        this.save(orderStatusLog);
-    }
-
-    @Override
     public OrderStatusLog list(Long id) {
         return null;
     }

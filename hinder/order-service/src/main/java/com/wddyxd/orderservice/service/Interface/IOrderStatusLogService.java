@@ -14,7 +14,6 @@ import com.wddyxd.orderservice.stateMachine.Enum.OrderStatus;
 
 public interface IOrderStatusLogService extends IService<OrderStatusLog> {
 
-    public void add(Long id, OrderStatus orderStatus);
 
     public OrderStatusLog list(Long id);
 

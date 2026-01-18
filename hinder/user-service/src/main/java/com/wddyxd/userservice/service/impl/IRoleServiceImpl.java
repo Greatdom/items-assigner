@@ -65,7 +65,6 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
     @Override
     public Page<Role> List(SearchDTO searchDTO) {
-        searchDTO.validatePageParams(searchDTO);
 
         LambdaQueryWrapper<Role> wrapper = Wrappers.lambdaQuery(Role.class)
                 .like(StringUtils.hasText(searchDTO.getSearch()), Role::getName, searchDTO.getSearch());

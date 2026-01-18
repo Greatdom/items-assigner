@@ -26,7 +26,6 @@ public class IShopCategoryServiceImpl extends ServiceImpl<ShopCategoryMapper, Sh
 
     @Override
     public Page<ShopCategory> List(SearchDTO searchDTO) {
-        searchDTO.validatePageParams(searchDTO);
         LambdaQueryWrapper<ShopCategory> wrapper = Wrappers.lambdaQuery(ShopCategory.class)
                 .like(StringUtils.hasText(searchDTO.getSearch()), ShopCategory::getName, searchDTO.getSearch());
         return this.page(new Page<>(searchDTO.getPageNum(), searchDTO.getPageSize()), wrapper);

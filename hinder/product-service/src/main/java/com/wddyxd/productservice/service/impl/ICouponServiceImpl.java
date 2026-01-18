@@ -54,7 +54,6 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
 
     @Override
     public Page<Coupon> List(SearchDTO searchDTO) {
-        searchDTO.validatePageParams(searchDTO);
 
         LambdaQueryWrapper<Coupon> wrapper = Wrappers.lambdaQuery(Coupon.class)
                 .like(StringUtils.hasText(searchDTO.getSearch()), Coupon::getName, searchDTO.getSearch());

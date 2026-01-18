@@ -25,7 +25,6 @@ public class IProductCategoryServiceImpl extends ServiceImpl<ProductCategoryMapp
 
     @Override
     public Page<ProductCategory> List(SearchDTO searchDTO) {
-        searchDTO.validatePageParams(searchDTO);
 
         LambdaQueryWrapper<ProductCategory> wrapper = Wrappers.lambdaQuery(ProductCategory.class)
                 .like(StringUtils.hasText(searchDTO.getSearch()), ProductCategory::getName, searchDTO.getSearch());

@@ -44,7 +44,6 @@ public class IPermissionServiceImpl extends ServiceImpl<PermissionMapper, Permis
 
     @Override
     public Page<Permission> List(SearchDTO searchDTO) {
-        searchDTO.validatePageParams(searchDTO);
 
         LambdaQueryWrapper<Permission> wrapper = Wrappers.lambdaQuery(Permission.class)
                 .like(StringUtils.hasText(searchDTO.getSearch()), Permission::getName, searchDTO.getSearch());

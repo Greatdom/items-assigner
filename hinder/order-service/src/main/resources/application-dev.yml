@@ -2,6 +2,30 @@ server:
   port: 8082
 
 spring:
+  rabbitmq:
+    host: localhost # RabbitMQ 服务地址
+    port: 5672 # RabbitMQ 默认端口
+    username: guest # 默认用户名（本地测试无需修改）
+    password: guest # 默认密码（本地测试无需修改）
+    virtual-host: / # 虚拟主机
+    publisher-confirm-type: CORRELATED
+    publisher-returns: true
+    template:
+      mandatory: true
+    connection-timeout: 3000 # 连接超时时间
+    listener:
+      simple:
+        acknowledge-mode: auto # 自动确认消息（Demo场景简化配置，生产环境建议手动确认）
+        concurrency: 5 # 消费者最小并发数
+        max-concurrency: 10 # 消费者最大并发数
+        prefetch: 1 # 每次从队列获取1条消息处理，避免消息堆积
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-interval: 30000
+          multiplier: 1
+          max-attempts: 5
+          stateless: true #true则代表者处理一般消息,false则代表要处理事务消息
   datasource:
     url: jdbc:mysql://localhost:3306/items-assigner?useSSL=false&allowPublicKeyRetrieval=true&useAffectedRows=true
     username: root

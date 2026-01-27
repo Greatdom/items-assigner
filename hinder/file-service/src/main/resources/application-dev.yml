@@ -78,13 +78,16 @@ spring:
           min-idle: 5
           max-wait: 2000ms
 
-  # 4. RabbitMQ 配置（异步处理图片压缩、文件删除）
   rabbitmq:
     host: localhost # RabbitMQ 服务地址
     port: 5672 # RabbitMQ 默认端口
     username: guest # 默认用户名（本地测试无需修改）
     password: guest # 默认密码（本地测试无需修改）
     virtual-host: / # 虚拟主机
+    publisher-confirm-type: CORRELATED
+    publisher-returns: true
+    template:
+      mandatory: true
     connection-timeout: 3000 # 连接超时时间
     listener:
       simple:
@@ -92,6 +95,13 @@ spring:
         concurrency: 5 # 消费者最小并发数
         max-concurrency: 10 # 消费者最大并发数
         prefetch: 1 # 每次从队列获取1条消息处理，避免消息堆积
+        retry:
+          enabled: true
+          initial-interval: 1000
+          max-interval: 30000
+          multiplier: 1
+          max-attempts: 5
+          stateless: true
 
 # MyBatis-Plus 配置（操作MySQL，与实体类、Mapper兼容）
 mybatis-plus:

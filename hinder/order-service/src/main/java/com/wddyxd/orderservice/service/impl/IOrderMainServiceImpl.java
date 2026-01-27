@@ -2,6 +2,7 @@ package com.wddyxd.orderservice.service.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -30,12 +31,17 @@ import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
+import org.springframework.amqp.core.MessageProperties;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @program: items-assigner
@@ -138,8 +144,50 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
 
+
+
+
+        // 1. 生成ID
+        String messageId = UUID.randomUUID().toString(); // 简化UUID格式
+
+        // 2. 构建消息体
+        byte[] messageBody = JSON.toJSONString(orderMain).getBytes();
+        MessageProperties properties = new MessageProperties();
+        properties.setMessageId(messageId); // 为消息本身设置唯一ID（关键）
+        properties.setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN);
+        properties.setDeliveryMode(MessageProperties.DEFAULT_DELIVERY_MODE); // 持久化
+        //TODO 如果是分布式事务要设置消息本身的唯一ID
+        Message message = MessageBuilder.withBody(messageBody)
+                .andProperties(properties)
+                .build();
+
+        // 5. 构建CorrelationData用于发送确认回调
+        CorrelationData correlationData = new CorrelationData(messageId);
+        CompletableFuture<CorrelationData.Confirm> future = correlationData.getFuture();
+        future.whenComplete((result, ex) -> {
+            if (ex != null) {
+                System.err.printf("消息发送回调异常！MessageID: %s, CorrelationID: %s, 异常: %s%n",
+                        messageId, messageId, ex.getMessage());
+                return;
+            }
+
+            if (result != null) {
+                if (result.isAck()) {
+                    System.out.printf("消息发送成功！MessageID: %s, CorrelationID: %s, 订单ID: %s%n",
+                            messageId, messageId, orderMain.getId());
+                } else {
+                    System.err.printf("消息发送失败！MessageID: %s, CorrelationID: %s, 原因: %s%n",
+                            messageId, messageId, result.getReason() != null ? result.getReason() : "未知");
+                }
+            } else {
+                System.err.printf("消息状态未知！MessageID: %s, CorrelationID: %s%n",
+                        messageId, messageId);
+            }
+        });
+
+
         //开始异步添加订单
-        rabbitTemplate.convertAndSend(CommonConstant.ORDER_ADD_QUEUE,orderMain);
+        rabbitTemplate.convertAndSend(CommonConstant.ORDER_ADD_QUEUE,orderMain,correlationData);
 
     }
 

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  **/
 
 @Configuration
-public class RabbitOrderCancelTTLConfig {
+public class RabbitMQOrderCancelTTLConfig {
 
     @Bean
     public DirectExchange ttlDirectExchange() {

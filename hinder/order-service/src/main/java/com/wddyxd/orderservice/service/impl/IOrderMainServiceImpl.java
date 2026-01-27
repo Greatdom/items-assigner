@@ -187,7 +187,7 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
 
 
         //开始异步添加订单
-        rabbitTemplate.convertAndSend(CommonConstant.ORDER_ADD_QUEUE,orderMain,correlationData);
+        rabbitTemplate.convertAndSend(CommonConstant.ORDER_ADD_QUEUE,message,correlationData);
 
     }
 

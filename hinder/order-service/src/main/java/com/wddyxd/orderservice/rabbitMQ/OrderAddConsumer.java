@@ -2,7 +2,9 @@ package com.wddyxd.orderservice.rabbitMQ;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.rabbitmq.client.Channel;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -19,9 +21,12 @@ import com.wddyxd.orderservice.service.Interface.ICommonOrderStatusLogService;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -58,6 +63,33 @@ public class OrderAddConsumer {
             exclusive = "false",
             autoDelete = "false"
     ))
+    public void consumeOrderAdd(
+            String messageBody,
+            @Header(AmqpHeaders.MESSAGE_ID) String messageId,
+            Channel channel,
+            @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag,
+            Message message
+    ) {
+
+        // 1. 打印接收到的消息基本信息
+        System.out.printf("收到消息！消息ID: %s, 路由键: %s%n",
+                messageId, message.getMessageProperties().getReceivedRoutingKey());
+
+        // 2. 解析JSON消息体为Student对象
+        OrderMain orderMain = JSON.parseObject(messageBody, OrderMain.class);
+        System.out.println("解析后的订单ID:"+
+                orderMain.getId());
+
+        // 3. 核心业务逻辑处理（这里替换为你的实际业务）
+        handleOrderAdd(orderMain);
+
+        System.out.printf("消息确认成功！消息ID: %s%n", messageId);
+
+
+    }
+
+
+
     @GlobalTransactional
     public void handleOrderAdd( OrderMain orderMain) {
         //远程调用商品和规格库存减少接口,远程接口第二次判断quantity是否比sku的stock大

@@ -11,6 +11,7 @@ import com.wddyxd.common.utils.Result;
 import com.wddyxd.feign.clients.productservice.ProductSkuClient;
 import com.wddyxd.feign.clients.productservice.UserCouponClient;
 import com.wddyxd.feign.clients.userservice.UserAddressClient;
+import com.wddyxd.feign.interceptor.FeignAuthRequestInterceptor;
 import com.wddyxd.feign.pojo.userservice.usercontroller.UserAddress;
 import com.wddyxd.orderservice.mapper.OrderAddressMapper;
 import com.wddyxd.orderservice.mapper.OrderMainMapper;
@@ -29,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -80,8 +82,25 @@ public class OrderAddConsumer {
         System.out.println("解析后的订单ID:"+
                 orderMain.getId());
 
-        // 3. 核心业务逻辑处理（这里替换为你的实际业务）
-        handleOrderAdd(orderMain);
+
+
+        String token = null;
+        try {
+            // 1. 从消息headers中获取token
+            if (message.getMessageProperties().getHeaders().containsKey("token")) {
+                token = message.getMessageProperties().getHeader("token").toString();
+            }
+
+            // 2. 设置token到Feign拦截器的ThreadLocal中
+            FeignAuthRequestInterceptor.setMqToken(token);
+
+            // 3. 核心业务逻辑处理
+            handleOrderAdd(orderMain);
+
+        } finally {
+            // 4. 必须清除ThreadLocal中的token，防止内存泄漏
+            FeignAuthRequestInterceptor.clearMqToken();
+        }
 
         System.out.printf("消息确认成功！消息ID: %s%n", messageId);
 
@@ -89,21 +108,24 @@ public class OrderAddConsumer {
     }
 
 
-
     @GlobalTransactional
     public void handleOrderAdd( OrderMain orderMain) {
         //远程调用商品和规格库存减少接口,远程接口第二次判断quantity是否比sku的stock大
         Result<Void> getProductSkuConsume= productSkuClient.updateConsume(orderMain.getSkuId(), orderMain.getQuantity());
+        System.out.println("getProductSkuConsume: "+getProductSkuConsume);
         if(getProductSkuConsume==null||getProductSkuConsume.getCode()!=200){
             log.error("商品规格库存不足");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         //然后在用户领取的优惠券标记优惠券已经使用,然后计算订单总价格和实际价格
         Result<List<Long>> getUserCouponConsume = userCouponClient.consume(orderMain.getCouponIds(), orderMain.getId());
+        System.out.println("getUserCouponConsume: "+getUserCouponConsume);
         if(getUserCouponConsume==null||getUserCouponConsume.getCode()!=200){
             log.error("优惠券使用失败");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
+        if(getUserCouponConsume.getData()==null)
+            getUserCouponConsume.setData(new ArrayList<>());
         //计算payPrice
         //TODO 要根据优惠券的使用情况和性质计算payPrice
         orderMain.setPayPrice(orderMain.getTotalPrice());
@@ -124,13 +146,14 @@ public class OrderAddConsumer {
         commonOrderStatusLogService.save(orderStatusLog);
 
         //然后存储收货地址快照
-        Result<UserAddress> userAddress = userAddressClient.getDefault(orderMain.getBuyerId());
-        if(userAddress==null||userAddress.getCode()!=200||userAddress.getData()==null){
+        Result<UserAddress> getUserAddress = userAddressClient.getDefault(orderMain.getBuyerId());
+        System.out.println("getUserAddress: "+getUserAddress);
+        if(getUserAddress==null||getUserAddress.getCode()!=200||getUserAddress.getData()==null){
             log.error("获取用户地址失败");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         OrderAddress orderAddress = new OrderAddress();
-        BeanUtil.copyProperties(userAddress.getData(),orderAddress);
+        BeanUtil.copyProperties(getUserAddress.getData(),orderAddress);
         orderAddress.setOrderId(orderMain.getId());
         orderAddress.setOrderId(IdWorker.getId());
         orderAddress.setUpdateTime(new Date());

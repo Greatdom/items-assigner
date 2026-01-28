@@ -86,6 +86,8 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
     @Override
     public List<Long> consume(Long[] couponIds, Long orderId) {
         //TODO 也许优惠券不完全合法的时候可以进行消费但是要给警告
+        if(couponIds==null|| couponIds.length == 0)
+            return null;
         for(Long couponId:couponIds)
             if(couponId==null || couponId<=0){
                 log.error("优惠券id不能小于1");
@@ -119,7 +121,7 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
         }
         updateBatchById(userCoupons);
 
-        //返回实际使用的优惠券Id列表
+        //TODO返回实际使用的优惠券Id列表
         return null;
     }
 

@@ -29,6 +29,7 @@ import com.wddyxd.orderservice.pojo.entity.OrderAddress;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -38,6 +39,8 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -150,10 +153,20 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         // 1. 生成ID
         String messageId = UUID.randomUUID().toString(); // 简化UUID格式
 
+        String token = null;
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            token = request.getHeader("token");
+        }
+
         // 2. 构建消息体
         byte[] messageBody = JSON.toJSONString(orderMain).getBytes();
         MessageProperties properties = new MessageProperties();
         properties.setMessageId(messageId); // 为消息本身设置唯一ID（关键）
+        if (token != null) {
+            properties.setHeader("token", token);
+        }
         properties.setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN);
         properties.setDeliveryMode(MessageProperties.DEFAULT_DELIVERY_MODE); // 持久化
         //TODO 如果是分布式事务要设置消息本身的唯一ID
@@ -190,6 +203,9 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         rabbitTemplate.convertAndSend(CommonConstant.ORDER_ADD_QUEUE,message,correlationData);
 
     }
+
+
+
 
     @Override
     public Page<OrderProfileVO> listUser(SearchDTO searchDTO) {

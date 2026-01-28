@@ -17,15 +17,44 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Component
 public class FeignAuthRequestInterceptor implements RequestInterceptor {
+
+
+    // 定义一个ThreadLocal存储MQ消费者的token
+    private static final ThreadLocal<String> MQ_TOKEN_HOLDER = new ThreadLocal<>();
+
+    /**
+     * 供MQ消费者设置token的方法
+     */
+    public static void setMqToken(String token) {
+        MQ_TOKEN_HOLDER.set(token);
+    }
+
+    /**
+     * 清除当前线程的MQ token（防止内存泄漏）
+     */
+    public static void clearMqToken() {
+        MQ_TOKEN_HOLDER.remove();
+    }
+
     @Override
     public void apply(RequestTemplate template) {
+        String token = null;
+        // 1. 优先从HTTP请求上下文获取token（正常接口调用场景）
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
             HttpServletRequest request = attributes.getRequest();
-            String token = request.getHeader("token");
-            if (token != null) {
-                template.header("token", token);
-            }
+            token = request.getHeader("token");
+        }
+
+        // 2. 如果HTTP上下文没有，从MQ的ThreadLocal获取（消费者场景）
+        if (token == null) {
+            token = MQ_TOKEN_HOLDER.get();
+        }
+
+        // 3. 设置token到Feign请求头
+        if (token != null) {
+            template.header("token", token);
         }
     }
+
 }

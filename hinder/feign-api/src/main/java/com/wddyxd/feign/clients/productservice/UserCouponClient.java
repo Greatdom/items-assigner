@@ -12,6 +12,8 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -27,8 +29,9 @@ import java.util.List;
         fallbackFactory = UserCouponClientFallbackFactory.class)
 public interface UserCouponClient {
 
-    @PutMapping("/product/userCoupon/consume/{id}/{orderId}")
-    public Result<List<Long>> consume(@PathVariable @NotNull(message = "优惠券id不能为空") Long[] couponIds,
-                                      @PathVariable @Min(value = 1L, message = "优惠券id不能小于1") Long orderId);
-
+    @PutMapping("/product/userCoupon/consume")
+    Result<List<Long>> consume(
+            @RequestParam("couponIds") @NotNull(message = "优惠券id不能为空") Long[] couponIds,
+            @RequestParam("orderId") @Min(value = 1L, message = "优惠券id不能小于1") Long orderId
+    );
 }

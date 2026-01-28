@@ -137,6 +137,7 @@ public class IFinancialFlowServiceImpl extends ServiceImpl<FinancialFlowMapper, 
             log.error("未找到该订单的退款信息");
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
+        financialFlow.setRemark("完成订单退款");
         financialFlow.setStatus(1);
         baseMapper.updateById(financialFlow);
     }

@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import type {SearchDTO} from "@/types/user.ts";
 
 
 // 获取用户信息
@@ -11,19 +12,19 @@ export function me() {
 
 
 
-export function get(id: number){
+export function detail(id: number){
     return request({
-        url: `/user/user/get/${id}`,
+        url: `/user/user/detail/${id}`,
         method: 'get',
         params: { id }
     })
 }
 
-export function selectAll(pageNum: number, pageSize: number, search: string){
+export function list(SearchDTO:SearchDTO){
     return request({
         url: '/user/user/list',
         method: 'get',
-        params: { pageNum, pageSize, search }
+        params: SearchDTO
     })
 }
 
@@ -45,11 +46,3 @@ export function add(user: any){
         data: user
     })
 }
-export function remove(id: number): Promise<any>{
-    return request({
-        url: `/user/user/delete/${id}`,
-        method: 'delete',
-        params: { id }
-    })
-}
-

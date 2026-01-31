@@ -44,7 +44,7 @@ public class RoleController {
     @GetMapping("/list")
     //需要role.list权限
     @Operation(summary = "分页获取角色列表接口", description = "在管理员的角色管理主界面查看所有存在的角色")
-    public Result<Page<Role>> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Page<Role>> list(@Validated(SelectGroup.class)SearchDTO searchDTO){
         return Result.success(roleService.List(searchDTO));
     }
 

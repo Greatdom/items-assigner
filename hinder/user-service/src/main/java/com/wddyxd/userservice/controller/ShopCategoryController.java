@@ -36,7 +36,7 @@ public class ShopCategoryController {
     @GetMapping("/list")
     //需要shopCategory.list权限
     @Operation(summary = "分页查询店铺分类接口", description = "在管理员的角色管理主界面查看所有存在的店铺分类")
-    public Result<Page<ShopCategory>> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Page<ShopCategory>> list(@Validated(SelectGroup.class) SearchDTO searchDTO){
 
 //        在管理员的角色管理主界面查看所有存在的店铺分类,支持根据关键字搜索,
 //- 在mysql为店铺分类名建立索引以支持关键字搜索

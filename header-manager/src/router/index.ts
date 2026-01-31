@@ -35,7 +35,7 @@ export const constantRoutes = [
                         // 1. 有 user.update 权限直接通过
                         if (user.permissionValueList?.includes('user.update')) return true
                         // 2. 无权限时判断用户ID是否与路由参数ID一致
-                        return user.id === route.params.id
+                        // return user.id === route.params.id
                     }
                 }
             },
@@ -66,11 +66,14 @@ export const constantRoutes = [
             },
             {
                 path:'/components/permissions/list',
-                component: () => import('@/views/components/permissions/list.vue'),
+                component: () => import('@/views/components/permission/list.vue'),
                 meta: {
                     title: '权限列表',
                     icon: 'el-icon-s-custom',
-                    requiresAuth: false
+                    requiresAuth: true,
+                    hasPermission: (user:any, route:any) => {
+                        return user.permissionValueList?.includes('permission.list');
+                    }
                 }
             }
         ]

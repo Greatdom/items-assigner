@@ -32,8 +32,8 @@ public class OrderAddressController {
     @PutMapping("/update/{id}")
     //需要order.update权限而且访问者的id等于参数的userId
     @Operation(summary = "修改订单地址接口", description = "用户可用在订单收货前修改订单地址")
-    public Result<Void> update(@PathVariable @Min(value = 1L, message = "id不能小于1") Long userAddressId,
-                               @PathVariable @Min(value = 1L, message = "id不能小于1") Long orderAddressId
+    public Result<Void> update(@RequestParam @Min(value = 1L, message = "id不能小于1") Long userAddressId,
+                               @RequestParam @Min(value = 1L, message = "id不能小于1") Long orderAddressId
                                ){
 //       传入特定用户地址id和订单地址id,从而修改订单地址
         log.info("修改订单地址");

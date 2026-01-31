@@ -30,7 +30,7 @@ public class FinancialFlowController {
     @GetMapping("/list")
     //需要financialFlow.list权限
     @Operation(summary = "分页查询财务接口", description = "后台端在订单管理页面查看网站的所有财务列表")
-    public Result<Void> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Void> list(@Validated(SelectGroup.class)SearchDTO searchDTO){
 
 //        返回List<FinancialFlow>并由PageResult包装
         throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);

@@ -41,11 +41,14 @@ public class PermissionController {
     @GetMapping("/list")
     //需要permission.list权限
     @Operation(summary = "分页获取权限列表接口", description = "在管理员的权限管理主界面查看所有存在的权限")
-    public Result<Page<Permission>> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Page<Permission>> list(@Validated(SelectGroup.class) SearchDTO searchDTO){
 
         return Result.success(permissionService.List(searchDTO));
     }
 
+    @PostMapping("/assign")
+    //需要role.update权限
+    @Operation(summary = "手动为特定角色分配权限接口", description = "管理员可以在用户管理界面查看角色详细信息的时候为某角色分配权限")
     public Result<Void> assign(
             @RequestParam
             @Min(value = 1, message = "角色ID必须大于0") // 校验roleId > 0

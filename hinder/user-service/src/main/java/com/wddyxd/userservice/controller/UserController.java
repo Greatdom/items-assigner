@@ -58,7 +58,7 @@ public class UserController {
     @GetMapping("/list")
 //    @PreAuthorize("hasAuthority('user.list')")
     @Operation(summary = "分页获取用户列表接口", description = "在管理员的用户管理主界面查看所有用户")
-    public Result<Page<User>> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Page<User>> list(@Validated(SelectGroup.class) SearchDTO searchDTO){
         log.info("user.list");
         return Result.success(userService.List(searchDTO));
     }

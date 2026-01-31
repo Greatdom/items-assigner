@@ -44,7 +44,7 @@ public class CouponController {
     //需要coupon.list权限而且(访问者的id等于参数的userId或访问者是管理员)
     @Operation(summary = "分页查询优惠券列表接口", description = "在后台和商户端的优惠券管理界面查看平台的所有优惠券或当前商户的优惠券," +
             "或在商品管理界面查看商品可用的优惠券")
-    public Result<Page<Coupon>> list(@Validated(SelectGroup.class) @RequestBody SearchDTO searchDTO){
+    public Result<Page<Coupon>> list(@Validated(SelectGroup.class)SearchDTO searchDTO){
 
 //        传入CouponListDTO,在后台和商户端的商品管理界面查看所有存在的优惠券或当前商户的优惠券,
 //- 在mysql为优惠券名建立索引以支持关键字搜索

@@ -1,9 +1,12 @@
 import request from '@/utils/request'
+import type {SearchDTO} from "@/types/user.ts";
+import type {RoleAssignDTO} from "@/types/role.ts";
 
-export function list(){
+export function list(SearchDTO:SearchDTO){
     return request({
         url: '/user/role/list',
-        method: 'get'
+        method: 'get',
+        data:SearchDTO
     })
 }
 
@@ -15,18 +18,11 @@ export function add(role: any){
     })
 }
 
-export function getByUser(userId: number){
-    return request({
-        url: '/user/role/getByUser',
-        method: 'get',
-        params: { userId }
-    })
-}
 
-export function assignRole(userId: number,roleIds: number[]){
+export function assign(RoleAssignDTO : RoleAssignDTO){
     return request({
-        url: '/user/role/assignRole',
+        url: '/user/role/assign',
         method: 'post',
-        params: { userId,roleIds }
+        data: RoleAssignDTO
     })
 }

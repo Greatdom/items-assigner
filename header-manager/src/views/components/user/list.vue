@@ -53,9 +53,11 @@
 
 <script lang="ts" setup>
 import {onBeforeMount, reactive, ref} from "vue";
-import {remove,selectAll} from "@/api/user/user.ts";
+import {list} from "@/api/user/user.ts";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
+import type {SearchDTO} from "@/types/user.ts";
+
   const router = useRouter()
 
   let search = ref<string>('');
@@ -69,15 +71,22 @@ import {ElMessage} from "element-plus";
     load();
   });
 
-  function load() {
-      selectAll(pageNum.value, pageSize.value, search.value).then(
-          (response) => {
-            tableData.value = response.data.records
-            // Object.assign(tableData, response.data.records)
-            total.value = response.data.total
-          }
-      )
-  }
+function load() {
+  // 构造SearchDTO格式的参数对象
+  const searchParams: SearchDTO = {
+    pageNum: pageNum.value,
+    pageSize: pageSize.value,
+    search: search.value
+  };
+
+  // 传入对象格式的参数
+  list(searchParams).then(
+      (response) => {
+        tableData.value = response.data.records
+        total.value = response.data.total
+      }
+  )
+}
   function handleAdd(){
     router.push('/components/user/add')
   }
@@ -85,14 +94,7 @@ import {ElMessage} from "element-plus";
     router.push('/components/user/update/'+row.id)
   }
   function handleDelete(id:number) {
-    remove(id).then(res=>{
-      ElMessage({
-        message: res.msg,
-        type: 'success',
-        duration: 5 * 1000
-      })
-      load()
-    })
+
   }
   function handleSizeChange(size:number) {
     pageSize.value=size

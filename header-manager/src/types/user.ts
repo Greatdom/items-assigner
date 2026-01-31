@@ -17,3 +17,9 @@ export interface CurrentUser {
     permissionValueList: string[];
     roles: string[];
 }
+
+export interface SearchDTO {
+    pageNum?:number;
+    pageSize?:number;
+    search?:String;
+}

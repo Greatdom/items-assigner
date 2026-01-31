@@ -14,10 +14,25 @@
           class="sidebar-menu"
       >
         <el-menu-item >
-          <router-link to="/home">首页</router-link>
+          <router-link to="/home">个人界面</router-link>
         </el-menu-item>
         <el-menu-item >
           <router-link to="/user/list">用户管理</router-link>
+        </el-menu-item>
+        <el-menu-item >
+          <router-link to="/role/list">角色管理</router-link>
+        </el-menu-item>
+        <el-menu-item >
+          <router-link to="/product/list">商品推送</router-link>
+        </el-menu-item>
+        <el-menu-item >
+          <router-link to="/coupon/list">抢优惠券</router-link>
+        </el-menu-item>
+        <el-menu-item >
+          <router-link to="/order/list">我的订单</router-link>
+        </el-menu-item>
+        <el-menu-item >
+          <router-link to="/file/operate">大文件操作</router-link>
         </el-menu-item>
       </el-menu>
     </el-scrollbar>

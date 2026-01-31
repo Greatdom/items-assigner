@@ -1,12 +1,12 @@
 import request from "@/utils/request.ts";
-import type {SearchDTO} from "@/types/user.ts";
+import type {ProductFeedDTO} from "@/types/product.ts";
 
-export function feed(SearchDTO:SearchDTO) {
+export function feed(ProductFeedDTO:ProductFeedDTO) {
     // debugger
     return request({
         url: '/product/product/feed',
         method: 'get',
-        params: SearchDTO
+        params: ProductFeedDTO
     })
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 10px">
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="handleAdd">新增</el-button>
+<!--      <el-button type="primary" @click="handleAdd">新增</el-button>-->
       <el-button type="primary">导入</el-button>
       <el-button type="primary">导出</el-button>
     </div>
@@ -24,18 +24,18 @@
       <el-table-column prop="createTime" label="创建时间"/>
       <el-table-column prop="updateTime" label="更新时间"/>
 
-      <el-table-column fixed="right" label="操作" width="120">
-        <template #default="scope">
-          <el-button link type="primary" size="small" @click="handleEdit(scope.row)">
-            编辑
-          </el-button>
-          <el-popconfirm title="Delete this?" @confirm="handleDelete(scope.row.id)">
-            <template #reference>
-              <el-button link type="danger" size="small">删除</el-button>
-            </template>
-          </el-popconfirm>
-        </template>
-      </el-table-column>
+<!--      <el-table-column fixed="right" label="操作" width="120">-->
+<!--        <template #default="scope">-->
+<!--          <el-button link type="primary" size="small" @click="handleEdit(scope.row)">-->
+<!--            编辑-->
+<!--          </el-button>-->
+<!--          <el-popconfirm title="Delete this?" @confirm="handleDelete(scope.row.id)">-->
+<!--            <template #reference>-->
+<!--              <el-button link type="danger" size="small">删除</el-button>-->
+<!--            </template>-->
+<!--          </el-popconfirm>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
     <div style="margin: 10px 0">
       <el-pagination
@@ -82,20 +82,14 @@ function load() {
   // 传入对象格式的参数
   list(searchParams).then(
       (response) => {
+
         tableData.value = response.data.records
         total.value = response.data.total
       }
   )
 }
-  function handleAdd(){
-    router.push('/user/add')
-  }
-  function handleEdit(row:any) {
-    router.push('/user/update/'+row.id)
-  }
-  function handleDelete(id:number) {
 
-  }
+
   function handleSizeChange(size:number) {
     pageSize.value=size
     load()

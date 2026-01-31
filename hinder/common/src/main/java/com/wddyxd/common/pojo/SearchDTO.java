@@ -42,4 +42,13 @@ public class SearchDTO {
     public void setSearch(String search) {
         this.search = search;
     }
+
+    @Override
+    public String toString() {
+        return "SearchDTO{" +
+                "pageNum=" + pageNum +
+                ", pageSize=" + pageSize +
+                ", search='" + search + '\'' +
+                '}';
+    }
 }

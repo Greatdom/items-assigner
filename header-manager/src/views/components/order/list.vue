@@ -3,7 +3,7 @@
 </script>
 
 <template>
-
+<h1>order.add</h1>
 </template>
 
 <style scoped>

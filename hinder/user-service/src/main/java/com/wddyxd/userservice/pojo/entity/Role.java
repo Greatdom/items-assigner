@@ -17,6 +17,7 @@ import java.util.Date;
 @TableName("role")
 public class Role extends BaseEntity implements Serializable {
     private String name;//角色名称
+    @TableField(value = "`group`")
     private Integer group;
 
     @Override

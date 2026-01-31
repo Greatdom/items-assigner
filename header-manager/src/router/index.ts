@@ -16,7 +16,7 @@ export const constantRoutes = [
         children: [
             {
                 path: '/Home',
-                component: () => import('@/views/home/index.vue'),
+                component: () => import('@/views/components/person/index.vue'),
                 meta: {
                     title: '首页',
                     icon: 'el-icon-s-home',
@@ -25,17 +25,17 @@ export const constantRoutes = [
             },
             {
                 path: '/user/update/:id',
-                component: () => import('@/views/components/user/form.vue'),
+                component: () => import('@/views/components/person/form.vue'),
                 meta: {
-                    title: '更新用户',
+                    title: '更新用户头像',
                     icon: 'el-icon-s-custom',
                     requiresAuth: true,
                     // 权限判断函数：返回是否有权限访问
                     hasPermission: (user:any, route:any) => {
                         // 1. 有 user.update 权限直接通过
-                        if (user.permissionValueList?.includes('user.update')) return true
+                        // if (user.permissionValueList?.includes('user.update')) return true
                         // 2. 无权限时判断用户ID是否与路由参数ID一致
-                        // return user.id === route.params.id
+                        return user.id == route.params.id
                     }
                 }
             },
@@ -53,17 +53,116 @@ export const constantRoutes = [
                 }
             },
             {
-                path:'/user/add',
-                component: () => import('@/views/components/user/form.vue'),
-                meta:{
-                    title: '添加用户',
+                path:'/role/list',
+                component: () => import('@/views/components/role/list.vue'),
+                meta: {
+                    title: '角色列表',
                     icon: 'el-icon-s-custom',
                     requiresAuth: true,
                     hasPermission: (user:any, route:any) => {
-                        return user.permissionValueList?.includes('user.add');
+                        // 1. 有 user.list 权限直接通过
+                        return user.permissionValueList?.includes('role.list');
                     }
                 }
             },
+            {
+                path: '/role/detail/:id',
+                component: () => import('@/views/components/role/form.vue'),
+                meta: {
+                    title: '查看具体角色',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: true,
+                    // 权限判断函数：返回是否有权限访问
+                    hasPermission: (user:any, route:any) => {
+                        // 1. 有 user.update 权限直接通过
+                        if (user.permissionValueList?.includes('role.list')) return true
+                        // 2. 无权限时判断用户ID是否与路由参数ID一致
+                        // return user.id === route.params.id
+                    }
+                }
+            },
+            {
+                //实际上推送商品是不需要登录也能访问的
+                path:'/product/list',
+                component: () => import('@/views/components/product/list.vue'),
+                meta: {
+                    title: '推送商品列表',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: false
+
+                }
+            },
+            {
+                path: '/product/visit/:id',
+                component: () => import('@/views/components/product/visit.vue'),
+                meta: {
+                    title: '查看具体商品和下单',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: true,
+                    // 权限判断函数：返回是否有权限访问
+                    hasPermission: (user:any, route:any) => {
+                        // 1. 有 user.update 权限直接通过
+                        if (user.permissionValueList?.includes('product.list')) return true
+                        // 2. 无权限时判断用户ID是否与路由参数ID一致
+                        // return user.id === route.params.id
+                    }
+                }
+            },
+            {
+                path:'/coupon/list',
+                component: () => import('@/views/components/coupon/list.vue'),
+                meta: {
+                    title: '查看优惠券列表,抢优惠券',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: true,
+                    // 权限判断函数：返回是否有权限访问
+                    hasPermission: (user:any, route:any) => {
+                        // 1. 有 user.update 权限直接通过
+                        if (user.permissionValueList?.includes('product.list')) return true
+                        // 2. 无权限时判断用户ID是否与路由参数ID一致
+                        // return user.id === route.params.id
+                    }
+                }
+            },
+            {
+                path:'/file/operate',
+                component: () => import('@/views/components/file/video-operator.vue'),
+                meta: {
+                    title: '大文件操作',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: false
+
+                }
+            },
+            {
+                path: '/order/operate/:id',
+                component: () => import('@/views/components/order/Form.vue'),
+                meta: {
+                    title: '订单操作',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: true,
+                    // 权限判断函数：返回是否有权限访问
+                    hasPermission: (user:any, route:any) => {
+                        // 1. 有 user.update 权限直接通过
+                        if (user.permissionValueList?.includes('orderStatusLog.add')) return true
+                        // 2. 无权限时判断用户ID是否与路由参数ID一致
+                        // return user.id === route.params.id
+                    }
+                }
+            },
+            {
+                path:'/order/list',
+                component: () => import('@/views/components/order/list.vue'),
+                meta: {
+                    title: '用户的订单列表',
+                    icon: 'el-icon-s-custom',
+                    requiresAuth: true,
+                    hasPermission: (user:any, route:any) => {
+                        // 1. 有 user.list 权限直接通过
+                        return user.permissionValueList?.includes('order.list');
+                    }
+                }
+            }
         ]
     }
     ]

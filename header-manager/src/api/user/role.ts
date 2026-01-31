@@ -6,7 +6,7 @@ export function list(SearchDTO:SearchDTO){
     return request({
         url: '/user/role/list',
         method: 'get',
-        data:SearchDTO
+        params:SearchDTO
     })
 }
 

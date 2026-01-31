@@ -50,7 +50,28 @@
 
     </el-form>
   </div>
+  <div class="code-container">
+    <code-getter></code-getter>
+  </div>
 </template>
+<style>
+.login-container {
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.code-container {
+  height: 30vh;
+  width: 50%;
+  background-color: #999999;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
 
 <script setup lang="ts">
 import { ref,  } from 'vue'
@@ -59,6 +80,7 @@ import {isValidPassword, isValidUsername} from '@/utils/validate.ts'
 import type {UserLoginForm} from "@/types/user.ts";
 import {useUserStore} from "@/store/modules/user.ts";
 import {ElMessage} from "element-plus";
+import CodeGetter from "@/views/login/codeGetter.vue";
 const userStore = useUserStore()
 
 //TODO 可以监听路由实现登录后跳转到登录前的页面

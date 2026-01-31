@@ -20,3 +20,17 @@ export function logout() {
         method: 'post'
     })
 }
+export function phoneCode(phone:String){
+    return request({
+        url:`/user/auth/phoneCode/${phone}`,
+        method:"get",
+        params:{phone}
+    })
+}
+export function emailCode(email:String){
+    return request({
+        url:`/user/auth/emailCode/${email}`,
+        method:"get",
+        params:{email}
+    })
+}

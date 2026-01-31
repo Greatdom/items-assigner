@@ -88,10 +88,10 @@ function load() {
   )
 }
   function handleAdd(){
-    router.push('/components/user/add')
+    router.push('/user/add')
   }
   function handleEdit(row:any) {
-    router.push('/components/user/update/'+row.id)
+    router.push('/user/update/'+row.id)
   }
   function handleDelete(id:number) {
 

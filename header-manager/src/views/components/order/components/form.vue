@@ -1,9 +1,9 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 
 </script>
 
 <template>
-  <div>permissions.form</div>
+<h1>订单表单和操作</h1>
 </template>
 
 <style scoped>

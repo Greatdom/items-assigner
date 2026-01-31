@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>permissions.list</div>
+<h1>同步回调</h1>
 </template>
 
 <style scoped>

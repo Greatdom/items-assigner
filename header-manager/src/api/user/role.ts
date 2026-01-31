@@ -10,19 +10,11 @@ export function list(SearchDTO:SearchDTO){
     })
 }
 
-export function add(role: any){
+export function detail(id:number) {
+    //debugger
     return request({
-        url: '/user/role/add',
-        method: 'post',
-        data: role
-    })
-}
-
-
-export function assign(RoleAssignDTO : RoleAssignDTO){
-    return request({
-        url: '/user/role/assign',
-        method: 'post',
-        data: RoleAssignDTO
+        url: `/user/role/detail/${id}`,
+        method: 'get',
+        params:{id}
     })
 }

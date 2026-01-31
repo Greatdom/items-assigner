@@ -8,7 +8,7 @@
         auto-complete="on"
         label-position="left"
     >
-      <h3 class="title">计划经济分配机</h3>
+      <h3 class="title">items-assigner的登录界面</h3>
       <el-form-item prop="username">
         <span class="svg-container">
           用户名
@@ -50,27 +50,10 @@
 
     </el-form>
   </div>
-  <div class="code-container">
-    <code-getter></code-getter>
-  </div>
+
 </template>
-<style>
-.login-container {
-  height: 60vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-.code-container {
-  height: 30vh;
-  width: 50%;
-  background-color: #999999;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+<style scoped>
+
 </style>
 
 <script setup lang="ts">
@@ -80,7 +63,7 @@ import {isValidPassword, isValidUsername} from '@/utils/validate.ts'
 import type {UserLoginForm} from "@/types/user.ts";
 import {useUserStore} from "@/store/modules/user.ts";
 import {ElMessage} from "element-plus";
-import CodeGetter from "@/views/login/codeGetter.vue";
+import CodeGetter from "@/views/login/components/code-getter.vue";
 const userStore = useUserStore()
 
 //TODO 可以监听路由实现登录后跳转到登录前的页面

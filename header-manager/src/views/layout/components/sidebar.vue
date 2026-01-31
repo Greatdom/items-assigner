@@ -17,10 +17,7 @@
           <router-link to="/home">首页</router-link>
         </el-menu-item>
         <el-menu-item >
-          <router-link to="/components/user/list">用户管理</router-link>
-        </el-menu-item>
-        <el-menu-item >
-          <router-link to="/components/permissions/list">权限管理</router-link>
+          <router-link to="/user/list">用户管理</router-link>
         </el-menu-item>
       </el-menu>
     </el-scrollbar>

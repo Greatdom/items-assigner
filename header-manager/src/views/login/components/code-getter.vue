@@ -1,5 +1,5 @@
 <template>
-  <div class="login-container">
+  <div class="code-container">
     <el-form
         ref="loginFormRef"
         class="login-form"
@@ -56,7 +56,9 @@
 </template>
 
 <style scoped>
-
+.code-container{
+  background-color: #999999;
+}
 </style>
 
 <script setup lang="ts">

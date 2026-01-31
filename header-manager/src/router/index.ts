@@ -4,7 +4,7 @@ import {useUserStore} from "@/store/modules/user.ts";
 
 
 export const constantRoutes = [
-    {path: '/login', component: () => import('@/views/login/index.vue')},
+    {path: '/login', component: () => import('@/views/login/Layout.vue')},
     {path: '/404', component: () => import('@/views/404.vue')},
     {path: '/403', component: () => import('@/views/403.vue')},
 
@@ -24,7 +24,7 @@ export const constantRoutes = [
                 }
             },
             {
-                path: '/components/user/update/:id',
+                path: '/user/update/:id',
                 component: () => import('@/views/components/user/form.vue'),
                 meta: {
                     title: '更新用户',
@@ -40,7 +40,7 @@ export const constantRoutes = [
                 }
             },
             {
-                path:'/components/user/list',
+                path:'/user/list',
                 component: () => import('@/views/components/user/list.vue'),
                 meta: {
                     title: '用户列表',
@@ -53,7 +53,7 @@ export const constantRoutes = [
                 }
             },
             {
-                path:'/components/user/add',
+                path:'/user/add',
                 component: () => import('@/views/components/user/form.vue'),
                 meta:{
                     title: '添加用户',
@@ -64,18 +64,6 @@ export const constantRoutes = [
                     }
                 }
             },
-            {
-                path:'/components/permissions/list',
-                component: () => import('@/views/components/permission/list.vue'),
-                meta: {
-                    title: '权限列表',
-                    icon: 'el-icon-s-custom',
-                    requiresAuth: true,
-                    hasPermission: (user:any, route:any) => {
-                        return user.permissionValueList?.includes('permission.list');
-                    }
-                }
-            }
         ]
     }
     ]

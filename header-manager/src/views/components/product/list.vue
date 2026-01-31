@@ -3,8 +3,7 @@
 </script>
 
 <template>
-  <h1>404</h1>
-  <h3>你访问的这个页面不存在</h3>
+
 </template>
 
 <style scoped>

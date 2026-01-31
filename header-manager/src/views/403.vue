@@ -3,7 +3,8 @@
 </script>
 
 <template>
-  <div>403</div>
+  <h1>403</h1>
+  <h3>你缺乏访问这个页面的权限</h3>
 </template>
 
 <style scoped>

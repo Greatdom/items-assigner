@@ -3,8 +3,7 @@
 </script>
 
 <template>
-  <h1>404</h1>
-  <h3>你访问的这个页面不存在</h3>
+<h1>异步回调</h1>
 </template>
 
 <style scoped>

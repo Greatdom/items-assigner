@@ -14,7 +14,7 @@ export const useUserStore = defineStore('user', ()=>{
     let token = ref<string>(getToken() || ''); // 初始值取缓存，无则为空字符串
 
     let currentUser = ref<CurrentUser>({
-        id: -1,
+        id: '-1',
         username: '',
         nickName: '',
         avatar: '',

@@ -186,7 +186,7 @@ router.beforeEach(async (to, from, next) => {
     }
 
     // 2. 已登录但未加载用户信息（如刷新页面），先加载个人信息
-    if (isLogin && userStore.currentUser.id<=0) {
+    if (isLogin && +userStore.currentUser.id <= 0) {
         try {
             await userStore.getCurrentUser(); // 从接口加载用户信息（含权限）
         } catch (error) {

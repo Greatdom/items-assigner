@@ -1,6 +1,6 @@
 export interface orderParams {
-    productId:number;
-    skuId:number;
+    productId:string;
+    skuId:string;
     quantity:number;
-    couponIds:number[]
+    couponIds:string[]
 }

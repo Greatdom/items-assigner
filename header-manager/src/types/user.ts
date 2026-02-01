@@ -1,5 +1,5 @@
 export interface UserLoginForm {
-    id:number;
+    id:string;
     username: string;
     password: string;
     phone: string;
@@ -10,7 +10,7 @@ export interface UserLoginForm {
 
 }
 export interface CurrentUser {
-    id: number;
+    id: string;
     username: string;
     nickName: string;
     avatar: string;

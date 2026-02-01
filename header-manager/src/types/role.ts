@@ -1,4 +1,4 @@
 export interface RoleAssignDTO {
-    userId:number;
-    roleIds:number[]
+    userId:string;
+    roleIds:string[]
 }

@@ -10,7 +10,7 @@ export function list(SearchDTO:SearchDTO){
     })
 }
 
-export function detail(id:number) {
+export function detail(id:string) {
     //debugger
     return request({
         url: `/user/role/detail/${id}`,

@@ -74,6 +74,7 @@ public class IRoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements I
 
     @Override
     public RoleVO detail(Long id) {
+        System.out.println("ID" +id);
         return baseMapper.detail(id);
     }
 

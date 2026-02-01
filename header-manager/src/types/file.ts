@@ -1,5 +1,5 @@
 export interface UpdateAvatarParams {
     file: File;
-    userId: number;
+    userId: string;
     oldAvatar: string;
 }

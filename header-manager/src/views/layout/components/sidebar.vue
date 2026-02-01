@@ -56,10 +56,16 @@
   padding-top: 20px;
 }
 
-.el-menu-item {
+.sidebar-menu :deep(.el-menu-item) {
   height: 50px;
   line-height: 50px;
   margin-bottom: 5px;
   border-radius: 0 25px 25px 0;
+  color: #ffffff !important; /* 强制设为白色 */
+}
+
+.sidebar-menu :deep(.el-menu-item a) {
+  color: inherit; /* 继承父元素的白色 */
+  text-decoration: none; /* 去掉下划线 */
 }
 </style>

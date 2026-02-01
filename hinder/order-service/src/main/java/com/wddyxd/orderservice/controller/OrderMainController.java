@@ -74,7 +74,8 @@ public class OrderMainController {
 //- 携带的用户信息是商家信息
 //- 返回List<OrderProfileVO>并由PageResult包装
         log.info("用户端分页查询订单列表接口");
-        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+//        throw new CustomException(ResultCodeEnum.FUNCTION_ERROR);
+        return Result.success(orderMainService.listUser(searchDTO));
     }
 
     @GetMapping("/list/merchant")

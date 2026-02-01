@@ -23,19 +23,6 @@
       <el-table-column prop="salt" label="头像"/>
       <el-table-column prop="createTime" label="创建时间"/>
       <el-table-column prop="updateTime" label="更新时间"/>
-
-<!--      <el-table-column fixed="right" label="操作" width="120">-->
-<!--        <template #default="scope">-->
-<!--          <el-button link type="primary" size="small" @click="handleEdit(scope.row)">-->
-<!--            编辑-->
-<!--          </el-button>-->
-<!--          <el-popconfirm title="Delete this?" @confirm="handleDelete(scope.row.id)">-->
-<!--            <template #reference>-->
-<!--              <el-button link type="danger" size="small">删除</el-button>-->
-<!--            </template>-->
-<!--          </el-popconfirm>-->
-<!--        </template>-->
-<!--      </el-table-column>-->
     </el-table>
     <div style="margin: 10px 0">
       <el-pagination

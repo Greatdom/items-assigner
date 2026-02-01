@@ -84,11 +84,11 @@ public class Coupon extends BaseEntity implements Serializable {
         this.targetType = targetType;
     }
 
-    public Boolean getDiscount() {
+    public Boolean getIsDiscount() {
         return isDiscount;
     }
 
-    public void setDiscount(Boolean discount) {
+    public void setIsDiscount(Boolean discount) {
         isDiscount = discount;
     }
 

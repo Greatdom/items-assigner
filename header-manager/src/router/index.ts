@@ -136,7 +136,7 @@ export const constantRoutes = [
             },
             {
                 path: '/order/operate/:id',
-                component: () => import('@/views/components/order/Form.vue'),
+                component: () => import('@/views/components/order/form.vue'),
                 meta: {
                     title: '订单操作',
                     icon: 'el-icon-s-custom',

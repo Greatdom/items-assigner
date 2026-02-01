@@ -154,6 +154,7 @@ public class OrderAddConsumer {
         }
         OrderAddress orderAddress = new OrderAddress();
         BeanUtil.copyProperties(getUserAddress.getData(),orderAddress);
+        orderAddress.setId(IdWorker.getId());
         orderAddress.setOrderId(orderMain.getId());
         orderAddress.setOrderId(IdWorker.getId());
         orderAddress.setUpdateTime(new Date());

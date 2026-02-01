@@ -7,6 +7,13 @@
       <el-button type="primary" style="margin-left: 5px" @click="load">查询</el-button>
     </div>
     <el-table :data="tableData" border stripe style="width: 100%">
+      <el-table-column label="操作" width="120">
+        <template #default="scope">
+          <el-button link type="primary" size="small" @click="handleEdit(scope.row)">
+            访问
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column prop="id" label="ID" sortable/>
       <el-table-column prop="productSkuName" label="productSkuName"/>
       <el-table-column prop="productCategoryName" label="productCategoryName"/>
@@ -28,14 +35,6 @@
       </el-table-column>
       <el-table-column prop="createTime" label="创建时间"/>
       <el-table-column prop="updateTime" label="更新时间"/>
-
-      <el-table-column fixed="right" label="操作" width="120">
-        <template #default="scope">
-          <el-button link type="primary" size="small" @click="handleEdit(scope.row)">
-            编辑
-          </el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <div style="margin: 10px 0">
       <el-pagination
@@ -85,7 +84,6 @@ function load() {
   // 传入对象格式的参数
   feed(searchParams).then(
       (response) => {
-
         tableData.value = response.data.records
         total.value = response.data.total
       }

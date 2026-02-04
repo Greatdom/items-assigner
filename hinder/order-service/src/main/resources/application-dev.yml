@@ -15,7 +15,7 @@ spring:
     connection-timeout: 3000 # 连接超时时间
     listener:
       simple:
-        acknowledge-mode: auto # 自动确认消息（Demo场景简化配置，生产环境建议手动确认）
+        acknowledge-mode: manual # 自动确认消息（Demo场景简化配置，生产环境建议手动确认）
         concurrency: 5 # 消费者最小并发数
         max-concurrency: 10 # 消费者最大并发数
         prefetch: 1 # 每次从队列获取1条消息处理，避免消息堆积

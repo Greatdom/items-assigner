@@ -29,6 +29,7 @@ import com.wddyxd.orderservice.pojo.entity.OrderAddress;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.service.Interface.IOrderMainService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
+import io.seata.core.context.RootContext;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,6 +168,8 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
         if (token != null) {
             properties.setHeader("token", token);
         }
+        //seata XID
+//        properties.setHeader("seata_xid", RootContext.getXID());
         properties.setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN);
         properties.setDeliveryMode(MessageProperties.DEFAULT_DELIVERY_MODE); // 持久化
         //TODO 如果是分布式事务要设置消息本身的唯一ID

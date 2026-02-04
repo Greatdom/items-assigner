@@ -19,6 +19,7 @@ import com.wddyxd.orderservice.pojo.entity.OrderAddress;
 import com.wddyxd.orderservice.pojo.entity.OrderMain;
 import com.wddyxd.orderservice.pojo.entity.OrderStatusLog;
 import com.wddyxd.orderservice.service.Interface.ICommonOrderStatusLogService;
+import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,7 +62,10 @@ public class OrderAddConsumer {
             Channel channel,
             @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag,
             Message message
-    ) {
+    ) throws IOException {
+
+
+
 
         // 1. 打印接收到的消息基本信息
         System.out.printf("收到消息！消息ID: %s, 路由键: %s%n",
@@ -79,16 +84,31 @@ public class OrderAddConsumer {
             if (message.getMessageProperties().getHeaders().containsKey("token")) {
                 token = message.getMessageProperties().getHeader("token").toString();
             }
+//            String seataXid = null;
+//            if (message.getMessageProperties().getHeaders().containsKey("seata_xid")) {
+//                seataXid = message.getMessageProperties().getHeader("seata_xid").toString();
+//            }
+//            // 恢复 Seata 全局事务上下文
+//            if (seataXid != null) {
+//                RootContext.bind(seataXid);
+//            }
 
             // 2. 设置token到Feign拦截器的ThreadLocal中
             FeignAuthRequestInterceptor.setMqToken(token);
 
             // 3. 核心业务逻辑处理
             orderAddingService.handleOrderAdd(orderMain);
+            channel.basicAck(deliveryTag, false);
 
-        } finally {
+        } catch (Exception e) {
+            log.error("消费失败", e);
+            // 拒绝消息并重新入队（或根据业务死信队列）
+            channel.basicNack(deliveryTag, false, false);
+        }
+        finally {
             // 4. 必须清除ThreadLocal中的token，防止内存泄漏
             FeignAuthRequestInterceptor.clearMqToken();
+            RootContext.unbind();
         }
 
         System.out.printf("消息确认成功！消息ID: %s%n", messageId);

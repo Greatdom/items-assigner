@@ -169,7 +169,7 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
             properties.setHeader("token", token);
         }
         //seata XID
-//        properties.setHeader("seata_xid", RootContext.getXID());
+        properties.setHeader("seata_xid", RootContext.getXID());
         properties.setContentType(MessageProperties.CONTENT_TYPE_TEXT_PLAIN);
         properties.setDeliveryMode(MessageProperties.DEFAULT_DELIVERY_MODE); // 持久化
         //TODO 如果是分布式事务要设置消息本身的唯一ID

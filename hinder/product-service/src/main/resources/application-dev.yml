@@ -51,6 +51,13 @@ seata:
   data-source-proxy-mode: AT
   application-id: product-service
   tx-service-group: seata-group  # 仅保留事务组名即可
+  undo:
+    log:
+      parser: jackson # 替换为 jackson 解析器，避免 Protostuff 依赖问题
+    serializer: jackson # 全局序列化改为 jackson
+    client:
+      undo:
+        logSerialization: jackson
   registry:
     type: nacos
     nacos:

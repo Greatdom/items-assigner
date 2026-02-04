@@ -104,9 +104,9 @@ public class OrderAddingService {
         orderAddress.setUpdateTime(new Date());
         orderAddress.setCreateTime(new Date());
         orderAddressMapper.insert(orderAddress);
-        System.out.println(1/0);
         //将该订单存入数据库
         orderMainMapper.insert(orderMain);
+        System.out.println(1/0);
 
         //TODO 异步操作完成后要向前端返回信息使前端跳转到支付页面,有两个方案,但得在开发前端代码后考虑
 //        方案 1：前端轮询

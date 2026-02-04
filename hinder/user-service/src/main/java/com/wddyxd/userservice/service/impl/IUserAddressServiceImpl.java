@@ -40,6 +40,7 @@ public class IUserAddressServiceImpl extends ServiceImpl<UserAddressMapper, User
     private static final Logger log = LoggerFactory.getLogger(IUserAddressServiceImpl.class);
 
     @Override
+    @Transactional
     public UserAddress getDefault(Long id) {
         return baseMapper.selectOne(new LambdaQueryWrapper<UserAddress>()
                 .eq(UserAddress::getUserId, id)

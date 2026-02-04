@@ -136,6 +136,7 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
     }
 
     @Override
+    @Transactional
     public void updateConsume(Long skuId, Integer quantity) {
         ProductSku productSku = baseMapper.selectById(skuId);
         if(productSku == null||productSku.getIsDeleted()) {

@@ -84,6 +84,7 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
     }
 
     @Override
+    @Transactional
     public List<Long> consume(Long[] couponIds, Long orderId) {
         //TODO 也许优惠券不完全合法的时候可以进行消费但是要给警告
         if(couponIds==null|| couponIds.length == 0)

@@ -46,17 +46,22 @@ mybatis-plus:
 logging:
   config: classpath:logback-test.xml
 seata:
+  enabled: true
   data-source-proxy-mode: AT
-  registry: # TC服务注册中心的配置，微服务根据这些信息去注册中心获取tc服务地址
-    # 参考tc服务自己的registry.conf中的配置
+  application-id: user-service
+  tx-service-group: seata-group  # 仅保留事务组名即可
+  registry:
     type: nacos
-    nacos: # tc
+    nacos:
       server-addr: 127.0.0.1:8848
       namespace: ""
       group: DEFAULT_GROUP
-      application: seata-server # tc服务在nacos中的服务名称
+      application: seata-server
       cluster: default
-  tx-service-group: items-assigner # 事务组，根据这个获取tc服务的cluster名称
-  service:
-    vgroup-mapping: # 事务组与TC服务cluster的映射关系
-      items-assigner: default
+  config:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      namespace: ""
+      group: SEATA_GROUP  # 项目端也要指定读取SEATA_GROUP的配置
+      dataId: seataServer.properties

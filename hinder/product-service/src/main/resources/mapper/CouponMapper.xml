@@ -40,4 +40,17 @@
         AND uc.user_id = #{userId}
     </select>
 
+    <!-- 乐观锁更新优惠券领取数：sending_stock+1，version+1 -->
+    <update id="updateSendingStock">
+        UPDATE coupon
+        SET sending_stock = sending_stock + 1,
+            version = version + 1,
+            update_time = NOW()
+        WHERE id = #{couponId}
+          AND version = #{oldVersion}
+          AND sending_stock = #{oldSendingStock}
+          AND is_deleted = 0
+          AND status = 1
+    </update>
+
 </mapper>

@@ -163,4 +163,11 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
     public void delete(Long id) {
 
     }
+
+    @Override
+    @Transactional
+    public int updateSendingStock(Long couponId, Long oldVersion, Integer oldSendingStock) {
+        return this.baseMapper.updateSendingStock(couponId, oldVersion, oldSendingStock);
+    }
+
 }

@@ -25,4 +25,10 @@ public interface CouponMapper extends BaseMapper<Coupon> {
 
     List<Coupon> visitCouponVO(@Param("id") Long id, @Param("userId") Long userId);
 
+    int updateSendingStock(
+            @Param("couponId") Long couponId,
+            @Param("oldVersion") Long oldVersion,
+            @Param("oldSendingStock") Integer oldSendingStock
+    );
+
 }

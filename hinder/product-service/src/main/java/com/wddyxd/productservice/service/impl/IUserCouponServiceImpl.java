@@ -2,9 +2,11 @@ package com.wddyxd.productservice.service.impl;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
+import com.wddyxd.productservice.mapper.CouponMapper;
 import com.wddyxd.productservice.mapper.UserCouponMapper;
 import com.wddyxd.productservice.pojo.VO.UserCouponVO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
@@ -74,13 +76,13 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
         userCoupon.setCouponId(id);
         userCoupon.setStatus(0);
         userCoupon.setGetTime(new Date());
-        //TODO防止超拿,上乐观锁
+        //防止超拿,上乐观锁
+        int updateCount = couponService.updateSendingStock(id, coupon.getVersion(), coupon.getSendingStock());
+        if (updateCount == 0) {
+            log.error("优惠券领取并发冲突，id:{}, 旧版本:{}, 旧领取数:{}", id,  coupon.getVersion(), coupon.getSendingStock());
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
         baseMapper.insert(userCoupon);
-        coupon.setSendingStock(coupon.getSendingStock()+1);
-        couponService.updateById(coupon);
-
-
-
     }
 
     @Override

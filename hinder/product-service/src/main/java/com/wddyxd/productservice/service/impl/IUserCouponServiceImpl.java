@@ -3,7 +3,9 @@ package com.wddyxd.productservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.productservice.mapper.CouponMapper;
@@ -14,8 +16,11 @@ import com.wddyxd.productservice.pojo.entity.UserCoupon;
 import com.wddyxd.productservice.service.Interface.ICouponService;
 import com.wddyxd.productservice.service.Interface.IUserCouponService;
 import com.wddyxd.security.service.GetCurrentUserInfoService;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +44,9 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
     @Autowired
     private ICouponService couponService;
 
+    @Autowired
+    private RedissonClient redissonClient;
+
     private static final Logger log = LoggerFactory.getLogger(IUserCouponServiceImpl.class);
 
     @Override
@@ -48,9 +56,7 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
     }
 
     @Override
-    @Transactional
     public void add(Long id) {
-        //TODO一人一券
         //得到旧优惠券
         Coupon coupon = couponService.getById(id);
         if(coupon== null||coupon.getIsDeleted()) {
@@ -70,12 +76,46 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
             log.error("优惠券库存已空");
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
+        Long user_id = getCurrentUserInfoService.getCurrentUserId();
+
         //生成用户的优惠券
         UserCoupon userCoupon = new UserCoupon();
-        userCoupon.setUserId(getCurrentUserInfoService.getCurrentUserId());
+        userCoupon.setUserId(user_id);
         userCoupon.setCouponId(id);
         userCoupon.setStatus(0);
         userCoupon.setGetTime(new Date());
+        //执行抢券
+        RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_COUPON.key+user_id);
+        boolean isLock = lock.tryLock();
+        if(!isLock){
+            log.error("获取分布式锁失败");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
+
+        try {
+            IUserCouponService proxy = (IUserCouponService) AopContext.currentProxy();
+            proxy.createUserCoupon(coupon,userCoupon);
+        }finally {
+            lock.unlock();
+        }
+
+    }
+
+    @Transactional
+    @Override
+    public void createUserCoupon(Coupon coupon,UserCoupon userCoupon){
+        Long id =coupon.getId();
+        Long user_id = getCurrentUserInfoService.getCurrentUserId();
+        //一人一券
+        long count = new LambdaQueryChainWrapper<>(this.baseMapper)
+                .eq(UserCoupon::getUserId, user_id)
+                .eq(UserCoupon::getCouponId, id)
+                .eq(UserCoupon::getIsDeleted, 0)
+                .count();
+        if(count>0){
+            log.error("该用户已经抢过一次券了,user_id:{},coupon_id:{}",user_id,id);
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
         //防止超拿,上乐观锁
         int updateCount = couponService.updateSendingStock(id, coupon.getVersion());
         if (updateCount == 0) {
@@ -84,6 +124,8 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
         }
         baseMapper.insert(userCoupon);
     }
+
+
 
     @Override
     @Transactional

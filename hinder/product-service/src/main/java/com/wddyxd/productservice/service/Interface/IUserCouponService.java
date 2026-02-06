@@ -3,6 +3,7 @@ package com.wddyxd.productservice.service.Interface;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wddyxd.productservice.pojo.VO.UserCouponVO;
+import com.wddyxd.productservice.pojo.entity.Coupon;
 import com.wddyxd.productservice.pojo.entity.UserCoupon;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface IUserCouponService extends IService<UserCoupon> {
     public List<Long> consume(Long[] couponIds,Long orderId);
 
     public void destroy(Long id);
+
+    public void createUserCoupon(Coupon coupon, UserCoupon userCoupon);
 
 }

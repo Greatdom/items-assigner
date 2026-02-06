@@ -30,6 +30,6 @@ public interface ICouponService extends IService<Coupon> {
 
     public void delete(Long id);
 
-    public int updateSendingStock(Long couponId, Long oldVersion, Integer oldSendingStock);
+    public int updateSendingStock(Long couponId, Long oldVersion);
 
 }

@@ -48,7 +48,7 @@
             update_time = NOW()
         WHERE id = #{couponId}
           AND version = #{oldVersion}
-          AND sending_stock = #{oldSendingStock}
+          AND sending_stock &lt; stock
           AND is_deleted = 0
           AND status = 1
     </update>

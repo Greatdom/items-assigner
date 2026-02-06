@@ -77,9 +77,9 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
         userCoupon.setStatus(0);
         userCoupon.setGetTime(new Date());
         //防止超拿,上乐观锁
-        int updateCount = couponService.updateSendingStock(id, coupon.getVersion(), coupon.getSendingStock());
+        int updateCount = couponService.updateSendingStock(id, coupon.getVersion());
         if (updateCount == 0) {
-            log.error("优惠券领取并发冲突，id:{}, 旧版本:{}, 旧领取数:{}", id,  coupon.getVersion(), coupon.getSendingStock());
+            log.error("优惠券领取并发冲突，id:{}", id);
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
         baseMapper.insert(userCoupon);

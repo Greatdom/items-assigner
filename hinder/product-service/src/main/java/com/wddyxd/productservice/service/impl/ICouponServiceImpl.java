@@ -166,8 +166,8 @@ public class ICouponServiceImpl extends ServiceImpl<CouponMapper, Coupon> implem
 
     @Override
     @Transactional
-    public int updateSendingStock(Long couponId, Long oldVersion, Integer oldSendingStock) {
-        return this.baseMapper.updateSendingStock(couponId, oldVersion, oldSendingStock);
+    public int updateSendingStock(Long couponId, Long oldVersion) {
+        return this.baseMapper.updateSendingStock(couponId, oldVersion);
     }
 
 }

@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: items-assigner
@@ -86,17 +87,41 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
         userCoupon.setGetTime(new Date());
         //执行抢券
         RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_COUPON.key+user_id);
-        boolean isLock = lock.tryLock();
+        boolean isLock = false;
+        int retryCount = 0;
         if(!isLock){
             log.error("获取分布式锁失败");
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }
 
-        try {
+        try{
+            // 循环重试间隔1秒总耗时3秒
+            while(retryCount<3){
+                isLock = lock.tryLock(0,10, TimeUnit.SECONDS);
+                if(isLock)break;
+                retryCount++;
+                log.warn("第{}次获取锁失败（用户ID：{}），1秒后重试", retryCount, user_id);
+                Thread.sleep(1000);
+            }
+            // 所有重试完成后仍未获取锁
+            if (!isLock) {
+                log.error("用户ID：{} 3秒内重试3次仍未获取锁，抢券失败", user_id);
+                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+            }
+            // 获取锁成功
             IUserCouponService proxy = (IUserCouponService) AopContext.currentProxy();
-            proxy.createUserCoupon(coupon,userCoupon);
+            proxy.createUserCoupon(coupon, userCoupon);
+        }catch (InterruptedException e){
+            // 处理线程中断异常,恢复中断状态
+            log.error("抢券重试过程中线程被中断（用户ID：{}）", user_id, e);
+            Thread.currentThread().interrupt();
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
         }finally {
-            lock.unlock();
+            // 安全释放锁：仅当当前线程持有锁时才解锁
+            if (isLock && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+                log.info("用户ID：{} 抢券完成，已释放分布式锁", user_id);
+            }
         }
 
     }

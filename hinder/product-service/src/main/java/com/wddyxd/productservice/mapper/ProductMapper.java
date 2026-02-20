@@ -30,4 +30,9 @@ public interface ProductMapper extends BaseMapper<Product> {
 
     public ProductProfileVO getProductProfileVOById(Long id);
 
+    int updateStock(
+            @Param("skuId") Long skuId,
+            @Param("quantity") Integer quantity
+    );
+
 }

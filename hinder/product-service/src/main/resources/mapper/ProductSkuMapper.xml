@@ -25,6 +25,15 @@
         where product_id = #{productId}
         and is_deleted = 0
     </select>
-
+    <update id="updateStock">
+        UPDATE product_sku
+        SET stock = stock - #{quantity},
+            version = version + 1,
+            update_time = NOW()
+        WHERE id = #{skuId}
+          AND version = #{oldVersion}
+          AND #{quantity} &lt;= stock
+          AND is_deleted = 0
+    </update>
 
 </mapper>

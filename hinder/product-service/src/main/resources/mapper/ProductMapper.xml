@@ -74,4 +74,15 @@
         AND p.status = 1
     </select>
 
+    <update id="updateStock">
+        UPDATE product
+        SET stock = stock - #{quantity},
+            version = version + 1,
+            update_time = NOW()
+        WHERE product_sku_id = #{skuId}
+          AND #{quantity} &lt;= stock
+          AND is_deleted = 0
+          AND status = 1
+    </update>
+
 </mapper>

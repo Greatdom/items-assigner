@@ -21,8 +21,12 @@ import com.wddyxd.productservice.pojo.entity.Coupon;
 import com.wddyxd.productservice.pojo.entity.Product;
 import com.wddyxd.productservice.pojo.entity.ProductSku;
 import com.wddyxd.productservice.service.Interface.IProductSkuService;
+import com.wddyxd.productservice.service.Interface.IUserCouponService;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -47,6 +51,9 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
 
     @Autowired
     private RedisTemplate<String,Object> redisTemplate;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Override
     public List<ProductSkuVO> List(Long id) {
@@ -167,23 +174,64 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
             log.error("商品规格不存在");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
-        //TODO 判断是否超库存
-        if(productSku.getStock() < quantity) {
-            log.error("商品规格库存不足");
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
-        }
-        productSku.setStock(productSku.getStock() - quantity);
         Product product = productMapper.selectOne(new LambdaQueryWrapper<Product>()
                 .eq(Product::getId, productSku.getProductId()));
         if(product == null||product.getIsDeleted()) {
             log.error("商品不存在");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
-        product.setStock(product.getStock() - quantity);
-        //TODO 用乐观锁更新商品和规格
-        //TODO 如果乐观锁判定失败则用消息队列进行失败重试
-        productMapper.updateById(product);
-        baseMapper.updateById(productSku);
+        //判断是否超库存
+        if(productSku.getStock() < quantity) {
+            log.error("商品规格库存不足");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+
+        RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_PRODUCT.key+skuId);
+        boolean isLock = false;
+        int retryCount = 0;
+        if(!isLock){
+            log.error("获取分布式锁失败");
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
+
+        try{
+            // 循环重试间隔1秒总耗时3秒
+            while(retryCount<3){
+                isLock = lock.tryLock(0,10, TimeUnit.SECONDS);
+                if(isLock)break;
+                retryCount++;
+                log.warn("第{}次获取锁失败（ID：{}），1秒后重试", retryCount, skuId);
+                Thread.sleep(1000);
+            }
+            // 所有重试完成后仍未获取锁
+            if (!isLock) {
+                log.error("ID：{} 3秒内重试3次仍未获取锁，抢券失败", skuId);
+                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+            }
+            // 获取锁成功
+            int updateCount = baseMapper.updateStock(skuId, productSku.getVersion(),quantity);
+            if (updateCount == 0) {
+                log.error("商品规格消费并发冲突，id:{}", skuId);
+                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+            }
+            updateCount = productMapper.updateStock(skuId,quantity);
+            if (updateCount == 0) {
+                log.error("商品消费并发冲突，id:{}", skuId);
+                throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+            }
+        }catch (InterruptedException e){
+            // 处理线程中断异常,恢复中断状态
+            log.error("重试过程中线程被中断（ID：{}）", skuId, e);
+            Thread.currentThread().interrupt();
+            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }finally {
+            // 安全释放锁：仅当当前线程持有锁时才解锁
+            if (isLock && lock.isHeldByCurrentThread()) {
+                lock.unlock();
+                log.info("ID：{} 已释放分布式锁", skuId);
+            }
+        }
+
     }
 
     @Override

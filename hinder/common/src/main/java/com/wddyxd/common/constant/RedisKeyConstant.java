@@ -15,7 +15,10 @@ public enum RedisKeyConstant {
     USER_LOGIN_PHONE_CODE("user:login:phone:code:"),
     USER_LOGIN_EMAIL_CODE("user:login:email:code:"),
     LOCK_COUPON("lock:coupon:"),
-    LOCK_PRODUCT("lock:product"),
+    LOCK_PRODUCT("lock:product:"),
+    STORE_USER_PROFILE("store:user:profile:"),
+    STORE_PRODUCT_VISIT("store:product:visit:"),
+    STORE_PRODUCT_SKU_LIST("store:product:sku:list:"),
     FILE_META("file:meta:");
 
     public final String key;

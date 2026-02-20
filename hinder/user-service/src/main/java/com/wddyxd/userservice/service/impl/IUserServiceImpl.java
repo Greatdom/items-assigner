@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.constant.RoleConstant;
 import com.wddyxd.common.exceptionhandler.CustomException;
@@ -27,12 +28,15 @@ import com.wddyxd.userservice.update.UserUpdateStrategy;
 import com.wddyxd.userservice.update.UserUpdateStrategyFactory;
 import com.wddyxd.userservice.update.UserUpdateTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: 新建文件夹
@@ -57,6 +61,9 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Autowired
     private IUserRoleService userRoleService;
+
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Override
     public String getUsername(Long id) {
@@ -95,7 +102,15 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
 
     @Override
     public UserProfileVO profile(Long id) {
-        return baseMapper.selectUserProfileVOById(id);
+        Object redisGetObject = redisTemplate.opsForValue().get(RedisKeyConstant.STORE_USER_PROFILE.key+id);
+        //redis如果得到空对象或数据则直接返回
+        if(redisGetObject!=null&&redisGetObject.getClass()==UserProfileVO.class)
+            return (UserProfileVO) redisGetObject;
+        //否则在mysql查找数据
+        UserProfileVO mysqlGet = baseMapper.selectUserProfileVOById(id);
+        //如果mysql有数据则在redis传入数据,否则传入空对象,解决缓存穿透问题(不考虑缓存击穿和缓存雪崩问题)
+        redisTemplate.opsForValue().set(RedisKeyConstant.STORE_USER_PROFILE.key + id, Objects.requireNonNullElseGet(mysqlGet, UserProfileVO::new), 10, TimeUnit.MINUTES);
+        return mysqlGet;
     }
 
 

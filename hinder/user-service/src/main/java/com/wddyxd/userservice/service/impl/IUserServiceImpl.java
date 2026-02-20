@@ -104,8 +104,12 @@ public class IUserServiceImpl extends ServiceImpl<UserMapper, User> implements I
     public UserProfileVO profile(Long id) {
         Object redisGetObject = redisTemplate.opsForValue().get(RedisKeyConstant.STORE_USER_PROFILE.key+id);
         //redis如果得到空对象或数据则直接返回
-        if(redisGetObject!=null&&redisGetObject.getClass()==UserProfileVO.class)
-            return (UserProfileVO) redisGetObject;
+        if(redisGetObject!=null&&redisGetObject.getClass()==UserProfileVO.class) {
+            UserProfileVO userProfileVO = (UserProfileVO) redisGetObject;
+            if(userProfileVO.getId()!=null)
+                return userProfileVO;
+            else return null;
+        }
         //否则在mysql查找数据
         UserProfileVO mysqlGet = baseMapper.selectUserProfileVOById(id);
         //如果mysql有数据则在redis传入数据,否则传入空对象,解决缓存穿透问题(不考虑缓存击穿和缓存雪崩问题)

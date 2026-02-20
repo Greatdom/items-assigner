@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.CommonConstant;
+import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.common.utils.Result;
@@ -32,6 +33,7 @@ import com.wddyxd.security.service.GetCurrentUserInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -39,6 +41,8 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: items-assigner
@@ -64,6 +68,9 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
     @Autowired
     private ICouponService couponService;
 
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
+
     private static final Logger log = LoggerFactory.getLogger(IProductServiceImpl.class);
 
     @Override
@@ -85,15 +92,30 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
 
     @Override
     public ProductDetailVO visit(Long id) {
-        ProductProfileVO productProfileVO = baseMapper.getProductProfileVOById(id);
-        if(productProfileVO==null||productProfileVO.getIsDeleted()||productProfileVO.getStatus()!=1) {
+        ProductProfileVO productProfileVO=null;
+        Object redisGetProductProfileVO = redisTemplate.opsForValue().get(RedisKeyConstant.STORE_PRODUCT_VISIT.key+id);
+        if(redisGetProductProfileVO!=null&&redisGetProductProfileVO.getClass()== ProductProfileVO.class){
+            productProfileVO = (ProductProfileVO) redisGetProductProfileVO;
+            if(productProfileVO.getId()==null){
+                log.error("商品不存在");
+                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+            }
+        }
+        productProfileVO = baseMapper.getProductProfileVOById(id);
+        redisTemplate.opsForValue().set(RedisKeyConstant.STORE_PRODUCT_VISIT.key+id, Objects.requireNonNullElseGet(productProfileVO, ProductProfileVO::new),10, TimeUnit.MINUTES);
+        if(productProfileVO==null){
             log.error("商品不存在");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
+
+
+
         Result<com.wddyxd.feign.pojo.userservice.usercontroller.UserProfileVO> getUserProfileVO
                 = userClient.profile(productProfileVO.getUserId());
-        if(getUserProfileVO.getCode()!=200||getUserProfileVO.getData()==null)
+        if(getUserProfileVO.getCode()!=200||getUserProfileVO.getData()==null) {
+            log.error("用户信息不存在");
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
+        }
         UserProfileVO userProfileVO = new UserProfileVO();
         BeanUtil.copyProperties(getUserProfileVO.getData(),userProfileVO);
         List<Coupon> coupons =  couponService.visit(id);
@@ -105,9 +127,7 @@ public class IProductServiceImpl extends ServiceImpl<ProductMapper, Product> imp
         productDetailVO.setUserProfileVO(userProfileVO);
         return productDetailVO;
 
-        //       返回ProductDetailVO,这个类展示了商品详情页面的信息ProductProfileVO,
-//- 用户概要指向商户UserProfileVO,优惠券指向用户领取的生效的可用优惠券CouponVO,商品规格是该商品的所有规格ProductSkuVO,
-//- 用户端不应该访问被下架或删除的商品
+
     }
 
     @Override

@@ -8,12 +8,14 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wddyxd.common.constant.CommonConstant;
+import com.wddyxd.common.constant.RedisKeyConstant;
 import com.wddyxd.common.constant.ResultCodeEnum;
 import com.wddyxd.common.exceptionhandler.CustomException;
 import com.wddyxd.productservice.controller.ProductSkuController;
 import com.wddyxd.productservice.mapper.ProductMapper;
 import com.wddyxd.productservice.mapper.ProductSkuMapper;
 import com.wddyxd.productservice.pojo.DTO.ProductSkuDTO;
+import com.wddyxd.productservice.pojo.VO.ProductProfileVO;
 import com.wddyxd.productservice.pojo.VO.ProductSkuVO;
 import com.wddyxd.productservice.pojo.entity.Coupon;
 import com.wddyxd.productservice.pojo.entity.Product;
@@ -22,11 +24,14 @@ import com.wddyxd.productservice.service.Interface.IProductSkuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: items-assigner
@@ -40,9 +45,28 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
     @Autowired
     private ProductMapper productMapper;
 
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
+
     @Override
     public List<ProductSkuVO> List(Long id) {
-        return baseMapper.selectProductSkuVOByProductId(id);
+
+        List<ProductSkuVO> productSkuVOS = null;
+        Object redisGetProductSkuVOS = redisTemplate.opsForValue().get(RedisKeyConstant.STORE_PRODUCT_SKU_LIST.key+id);
+        if(redisGetProductSkuVOS!=null){
+            productSkuVOS = (ArrayList<ProductSkuVO>) redisGetProductSkuVOS;
+            if(productSkuVOS.getFirst().getId()==null){
+                log.error("商品规格不存在");
+                throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+            }
+        }
+        productSkuVOS = baseMapper.selectProductSkuVOByProductId(id);
+        redisTemplate.opsForValue().set(RedisKeyConstant.STORE_PRODUCT_SKU_LIST.key+id, Objects.requireNonNullElseGet(productSkuVOS, ArrayList<ProductSkuVO>::new),10, TimeUnit.MINUTES);
+        if(productSkuVOS==null){
+            log.error("商品规格不存在");
+            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+        }
+        return productSkuVOS;
     }
 
     private static final Logger log = LoggerFactory.getLogger(IProductSkuServiceImpl.class);

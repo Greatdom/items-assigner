@@ -71,7 +71,7 @@
     <select id="getProductProfileVOById" resultMap="ProductProfileMap">
         <include refid="BaseProductProfileSQL"/>
         AND p.id = #{id}
-        ORDER BY p.create_time DESC
+        AND p.status = 1
     </select>
 
 </mapper>

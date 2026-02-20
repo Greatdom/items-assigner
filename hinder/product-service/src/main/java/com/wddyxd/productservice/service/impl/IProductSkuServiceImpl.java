@@ -111,7 +111,6 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
                 .eq(Product::getIsDeleted, false);
 
         int updateCount = productMapper.update(product, updateWrapper);
-        //TODO 可用异步通信技术添加重试机制
         if (updateCount == 0)
             throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
 
@@ -148,8 +147,6 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         product.setStock(product.getStock()-productSkuDTO.getStock()+productSkuDTO.getStock());
-        //TODO 用乐观锁更新商品和规格
-        //TODO 如果乐观锁判定失败则用消息队列进行失败重试
         productMapper.updateById(product);
         baseMapper.updateById(productSku);
     }
@@ -185,15 +182,10 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
             log.error("商品规格库存不足");
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
-
+        //TODO 在更新规格库存接口也应该设置分布式锁
         RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_PRODUCT.key+skuId);
         boolean isLock = false;
         int retryCount = 0;
-        if(!isLock){
-            log.error("获取分布式锁失败");
-            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
-        }
-
         try{
             // 循环重试间隔1秒总耗时3秒
             while(retryCount<3){

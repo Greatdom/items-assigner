@@ -89,11 +89,6 @@ public class IUserCouponServiceImpl extends ServiceImpl<UserCouponMapper, UserCo
         RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_COUPON.key+user_id);
         boolean isLock = false;
         int retryCount = 0;
-        if(!isLock){
-            log.error("获取分布式锁失败");
-            throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
-        }
-
         try{
             // 循环重试间隔1秒总耗时3秒
             while(retryCount<3){

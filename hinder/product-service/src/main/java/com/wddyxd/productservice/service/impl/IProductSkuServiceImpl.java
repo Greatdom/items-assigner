@@ -178,10 +178,11 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
             throw new CustomException(ResultCodeEnum.PARAM_ERROR);
         }
         //判断是否超库存
-        if(productSku.getStock() < quantity) {
-            log.error("商品规格库存不足");
+        if(productSku.getStock() < quantity||product.getStock()< quantity) {
+            log.error("商品及其规格库存不足");
             throw new CustomException(ResultCodeEnum.STOCK_NOT_ENOUGH_ERROR);
         }
+
         //TODO 在更新规格库存接口也应该设置分布式锁
         RLock lock = redissonClient.getFairLock(RedisKeyConstant.LOCK_PRODUCT.key+skuId);
         boolean isLock = false;

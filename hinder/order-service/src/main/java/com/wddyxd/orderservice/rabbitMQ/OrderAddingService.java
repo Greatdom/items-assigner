@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @program: items-assigner
@@ -58,7 +59,7 @@ public class OrderAddingService {
         Result<Void> getProductSkuConsume= productSkuClient.updateConsume(orderMain.getSkuId(), orderMain.getQuantity());
         System.out.println("getProductSkuConsume: "+getProductSkuConsume);
         if(getProductSkuConsume==null||getProductSkuConsume.getCode()!=200){
-            if(getProductSkuConsume.getCode()==431){
+            if(getProductSkuConsume!=null&&Objects.equals(getProductSkuConsume.getCode(), ResultCodeEnum.STOCK_NOT_ENOUGH_ERROR.getCode())){
                 log.error("商品规格库存不足");
                 throw new CustomException(ResultCodeEnum.STOCK_NOT_ENOUGH_ERROR);
 

@@ -100,7 +100,7 @@ public class IOrderMainServiceImpl extends ServiceImpl<OrderMainMapper, OrderMai
                 //第一次判断quantity是否比sku的stock大
                 if(orderDTO.getQuantity()>productSkuVO.getStock()){
                     log.error("商品库存不足");
-                    throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+                    throw new CustomException(ResultCodeEnum.STOCK_NOT_ENOUGH_ERROR);
                 }
                 orderMain.setSkuSpecs(productSkuVO.getSpecs());
                 isSkuExist = true;

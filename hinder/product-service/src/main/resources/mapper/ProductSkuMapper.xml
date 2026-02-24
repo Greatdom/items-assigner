@@ -31,7 +31,7 @@
             version = version + 1,
             update_time = NOW()
         WHERE id = #{skuId}
-          AND version = #{oldVersion}
+
           AND #{quantity} &lt;= stock
           AND is_deleted = 0
     </update>

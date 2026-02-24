@@ -58,8 +58,14 @@ public class OrderAddingService {
         Result<Void> getProductSkuConsume= productSkuClient.updateConsume(orderMain.getSkuId(), orderMain.getQuantity());
         System.out.println("getProductSkuConsume: "+getProductSkuConsume);
         if(getProductSkuConsume==null||getProductSkuConsume.getCode()!=200){
-            log.error("商品规格库存不足");
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+            if(getProductSkuConsume.getCode()==431){
+                log.error("商品规格库存不足");
+                throw new CustomException(ResultCodeEnum.STOCK_NOT_ENOUGH_ERROR);
+
+            }else{
+                log.error("商品规格消费异常!");
+                throw new CustomException(ResultCodeEnum.UNKNOWN_ERROR);
+            }
         }
         //然后在用户领取的优惠券标记优惠券已经使用,然后计算订单总价格和实际价格
         Result<List<Long>> getUserCouponConsume = userCouponClient.consume(orderMain.getCouponIds(), orderMain.getId());

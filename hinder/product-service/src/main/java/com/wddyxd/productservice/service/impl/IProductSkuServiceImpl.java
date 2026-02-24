@@ -180,27 +180,20 @@ public class IProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Produc
         //判断是否超库存
         if(productSku.getStock() < quantity) {
             log.error("商品规格库存不足");
-            throw new CustomException(ResultCodeEnum.PARAM_ERROR);
+            throw new CustomException(ResultCodeEnum.STOCK_NOT_ENOUGH_ERROR);
         }
         //TODO 在更新规格库存接口也应该设置分布式锁
-        RLock lock = redissonClient.getLock(RedisKeyConstant.LOCK_PRODUCT.key+skuId);
+        RLock lock = redissonClient.getFairLock(RedisKeyConstant.LOCK_PRODUCT.key+skuId);
         boolean isLock = false;
-        int retryCount = 0;
         try{
-            // 循环重试间隔1秒总耗时3秒
-            while(retryCount<3){
-                isLock = lock.tryLock(0,10, TimeUnit.SECONDS);
-                if(isLock)break;
-                retryCount++;
-                log.warn("第{}次获取锁失败（ID：{}），1秒后重试", retryCount, skuId);
-                Thread.sleep(1000);
-            }
-            // 所有重试完成后仍未获取锁
+            isLock = lock.tryLock(1, 3, TimeUnit.SECONDS);
             if (!isLock) {
-                log.error("ID：{} 3秒内重试3次仍未获取锁，抢券失败", skuId);
+                log.error("ID：{} 获取分布式锁失败，库存扣减失败（高并发限流）", skuId);
+                // 抛自定义异常，让订单消费端捕获后走重试逻辑
                 throw new CustomException(ResultCodeEnum.UNDEFINED_ERROR);
             }
-            // 获取锁成功
+
+            // 优化3：锁内逻辑极致精简（只保留核心更新）
             int updateCount = baseMapper.updateStock(skuId, productSku.getVersion(),quantity);
             if (updateCount == 0) {
                 log.error("商品规格消费并发冲突，id:{}", skuId);

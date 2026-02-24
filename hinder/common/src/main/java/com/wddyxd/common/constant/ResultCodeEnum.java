@@ -36,6 +36,8 @@ public enum ResultCodeEnum {
 
     //430:存储资源达到上限
     STORAGE_LIMIT_ERROR(430, "数据存储有限制"),
+    //431:库存不足
+    STOCK_NOT_ENOUGH_ERROR(431, "库存不足"),
 
     //403:权限不足
     ACCESS_DENIED_ERROR(403, "权限不足"),

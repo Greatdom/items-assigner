@@ -150,7 +150,6 @@ public class OrderAddConsumer {
 
                     // 4.4 确认原消息已处理（拒绝并丢弃，避免重复）
                     channel.basicNack(deliveryTag, false, false);
-
                 } else {
                     // 5. 重试次数达到上限，路由到错误交换机
                     log.warn("消息重试次数达到上限，路由到错误交换机，消息ID: {}", messageId);
